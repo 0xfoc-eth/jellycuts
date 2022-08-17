@@ -1,0 +1,39 @@
+import Shortcuts
+#Color: grape,#Icon: moonCircle
+
+// This shortcut expects a rich text list of Safari Tab Group Links in the clipboard. For more details/help/etc, visit this shortcut's GitHub Issue: https://github.com/extratone/i/issues/124
+
+My contact information:
+
+Email: davidblue@extratone.com
+Contact card: bit.ly/whoisdavidblue
+RoutineHub Profile: https://routinehub.co/user/blue
+GitHub: https://github.com/extratone/i
+Telegram: t.me/extratone
+Twitter: twitter.com/NeoYokel
+Reddit: reddit.com/u/asphaltapostle
+Mastodon: mastodon.social/@DavidBlue
+EVERYWHERE: bit.ly/dbrolodex
+getClipboard() >> getClipboard
+markdownFromRich(text: Clipboard) >> markdownFromRich
+getURLSFromInput(text: "${Markdown from Rich Text}") >> getURLSFromInput
+splitText(text: URLs) >> splitText
+repeatEach(Split Text) {
+	urlComponent(url: "${Repeat Item}", component: Host) >> urlComponent
+	var domains += Component of URL >> variable
+	url(url: "https://${Component of URL}") >> url
+//Unable to get shortcuts action nl.jeffreykuiken.NoirApp.SetEnabledForSiteIntent
+//Unable to get shortcuts action nl.jeffreykuiken.NoirApp.SetImageDimmingForSiteIntent
+} >> Repeat Result
+combineText(text: domains, combine: New Lines) >> combineText
+var 6E079AC3-EEB6-46E9-8CFB-4FC4ADE10638 = """Noir Configuration Utility Results ￼
+
+Your chosen Noir settings were successfully stored for the following domains:
+
+￼"""
+text("${6E079AC3-EEB6-46E9-8CFB-4FC4ADE10638}")
+createNote(text: "${Text}", show: false) >> createNote
+setClipboard(variable: Combined Text) >> setClipboard
+count(input: domains) >> count
+sendNotification(body: "Configuration stored for ${Count} domains.", title: "Noir Configuration Utility Results", sound: false) >> sendNotification
+openApp(id: "nl.jeffreykuiken.NoirApp")

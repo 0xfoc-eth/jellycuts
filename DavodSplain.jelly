@@ -1,0 +1,44 @@
+import Shortcuts
+#Color: navy, #Icon: mute
+
+var DavodTime = CurrentDate
+adjustDate(duration: , date: "${DavodTime}") >> adjustDate
+var pubtime = Adjusted Date
+recordAudio(quality: Very High, start: Immediately, end: After Time, duration: ) >> recordAudio
+takePhoto(camera: Front, preview: false) >> takePhoto
+//Unable to get shortcuts action is.workflow.actions.image.removebackground
+cropImage(image: Image Without Background, height: 1500, width: 1500) >> cropImage
+//Unable to get shortcuts action com.alexhay.ToolboxPro2.AdjustImages
+//Unable to get shortcuts action com.appliedphasor.working-copy.WriteFileIntent
+encodeMedia(media: Recorded Audio, title: "DavodSplain - ${DavodTime}", artist: "Davod", album: "DavodSplain", genre: "Mansplain", year: "${CurrentDate}", artwork: File) >> encodeMedia
+//Unable to get shortcuts action com.appliedphasor.working-copy.WriteFileIntent
+//Unable to get shortcuts action com.sindresorhus.Actions.TranscribeAudioIntent
+var transcription = Speech Text
+//Unable to get shortcuts action com.appliedphasor.working-copy.WriteFileIntent
+url(url: "https://github.com/extratone/davod/raw/main/splain/${DavodTime}.m4a") >> url
+var splain = URL
+url(url: "https://github.com/extratone/davod/raw/main/images/${DavodTime}.png") >> url 1
+var ew = URL
+var B7C8E05A-6D8E-44FD-B8E5-C48D688FC14F = """<audio controls>
+  <source src="https://github.com/extratone/davod/blob/main/splain/08102022-180506.m4a">
+</audio>"""
+text("${B7C8E05A-6D8E-44FD-B8E5-C48D688FC14F}")
+var embed = Text
+var 585667B9-AF73-4B61-A61E-0FE588A6902B = """---
+![￼](￼)
+
+￼
+
+￼"""
+text("${585667B9-AF73-4B61-A61E-0FE588A6902B}")
+var md = Text
+//Unable to get shortcuts action com.appliedphasor.working-copy.WriteFileIntent
+//Unable to get shortcuts action com.appliedphasor.working-copy.CommitRepositoryIntent
+nothing()
+//Unable to get shortcuts action com.appliedphasor.working-copy.PushRepositoryIntent
+//Unable to get shortcuts action is.workflow.actions.wordpress.post
+//Unable to get shortcuts action is.workflow.actions.tumblr.post
+//Unable to get shortcuts action com.alexhay.Console.LogMessageIntent
+//Unable to get shortcuts action com.appliedphasor.working-copy.GetFilesIntent
+decode(input: Files) >> decode
+playSound(file: Base64 Encoded)

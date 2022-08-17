@@ -1,0 +1,4 @@
+import Shortcuts
+#Color: Red,#Icon: QRCode
+
+convertImage(image: Shortcut Input, format: PNG, metadata: false, quality: true) >> convertImage
