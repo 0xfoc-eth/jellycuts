@@ -1,4 +1,6 @@
 import Shortcuts
+import Drafts
+import DataJar
 #Color: grayBlue, #Icon: list
 
 /*
@@ -57,7 +59,7 @@ text("${86CD0B98-829E-4364-A9D9-C488D741957C}")
 var index = Text
 saveFile(input: index, ask: false, path: "index.md", overwrite: true) >> saveFile
 //Unable to get shortcuts action com.appliedphasor.working-copy.WriteFileIntent
-//Unable to get shortcuts action com.agiletortoise.Drafts5.GetDraftByUUIDIntent
+getDraftByUUID(uuid: ""3B7930BE-07BC-4DB9-A591-4254BEE42A82"")
 //Unable to get shortcuts action com.appliedphasor.working-copy.CommitRepositoryIntent
 //Unable to get shortcuts action com.appliedphasor.working-copy.PushRepositoryIntent
 //Unable to get shortcuts action com.agiletortoise.Drafts5.SetDraftIntent
