@@ -1,0 +1,4 @@
+import Shortcuts
+import aShell
+#Color: red, #Icon: shortcuts
+executeCommand(command: speedtest --json --share, openWindow: default, keepGoing: true)
