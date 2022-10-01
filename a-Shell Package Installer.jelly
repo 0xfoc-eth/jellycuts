@@ -22,11 +22,11 @@ Mastodon: https://mastodon.social/@DavidBlue
 EVERYWHERE: https://davidblue.wtf/socialdrop
 */
 text() >> text
-setClipboard(variable: Text) >> setClipboard
+setClipboard(variable: text) >> setClipboard
 url(url: "https://github.com/holzschu/a-Shell-commands/raw/master/list") >> url
-downloadURL(url: "${URL}") >> downloadURL
+downloadURL(url: url) >> downloadURL
 splitText(text: Contents of URL) >> splitText
-choose(list: "${splitText}", prompt: "Choose packages to install.", multiple: true, all: false) >> choose
+choose(list: splitText, prompt: "Choose packages to install.", multiple: true, all: false) >> choose
 combineText(text: Chosen Item, combine: Custom, separator: " ") >> combineText
 var pkgs = Combined Text
 var 02340E87-0986-4E06-BC44-C361D8A48EC6 = """pkg install ￼
