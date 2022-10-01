@@ -26,11 +26,11 @@ getItemFromList(list: Split Text, type: Last Item) >> getItemFromList
 var postid = Item from List
 text(text: "00000000-0000-0000-0000-000000000000") >> text
 var token = Text
-url(url: "https://${instance}/api/v1/statuses/${Variable}/bookmark") >> url 2
+url(url: "https://${postid}/api/v1/statuses/${Variable}/bookmark") >> url 2
 downloadURL(url: "${URL}", method: POST, headers: , requestType: JSON, requestJSON: ) >> downloadURL
 valuesFrom(dictionary: Contents of URL) >> valuesFrom
 if(Dictionary Value != nil) {
-var F908C818-7A41-4ED8-84A8-E3009B2B1BA1 = """AAAAHGZ0eXBNNEEgAAAAAE00QSBpc29tbXA0MgAAAAFtZGF0AAAAAAAAgKsA0EAHAPad/v1U/x8f
+var 8F1BBE05-64C6-484B-B756-64033EC29CAE = """AAAAHGZ0eXBNNEEgAAAAAE00QSBpc29tbXA0MgAAAAFtZGF0AAAAAAAAgKsA0EAHAPad/v1U/x8f
 L9caxn2tDq3pp/1az4fAAAAAAQoO9YIeGohPY4El44+KxD2t4jIeYeQEPyf82AAAAACHA9dk2gT2
 nWyUzZE+0+RiGJsEemuIW80AAAAAYNnCY8uR5v1En1zp5Pz746I/EbxuT59YIeEeLAAAAAFRCrkJ
 PbcGJ8A4CT73YI+DQEOhd/J9O4oAAAAASFfidehU8sn8ufPhPpe4IfCT2aR7ZwYAAAAAAAAAAJ+D
@@ -627,8 +627,8 @@ AAAAAAAAAAAAAAAAAAAAxGlsc3QAAAC8LS0tLQAAABxtZWFuAAAAAGNvbS5hcHBsZS5pVHVuZXMA
 AAAUbmFtZQAAAABpVHVuU01QQgAAAIRkYXRhAAAAAQAAAAAgMDAwMDAwMDAgMDAwMDA4NDAgMDAw
 MDAzMEEgMDAwMDAwMDAwMDAwQzRCNiAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAw
 MCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMA=="""
-text("${F908C818-7A41-4ED8-84A8-E3009B2B1BA1}")
-	decode(input: Text) >> decode
+text("${8F1BBE05-64C6-484B-B756-64033EC29CAE}")
+	encode(input: Text) >> encode
 	playSound(file: Base64 Encoded)
 } else {
 	sendNotification(body: "Oop", title: "Bookmark Failure", sound: false, attachment: Dictionary Value) >> sendNotification
