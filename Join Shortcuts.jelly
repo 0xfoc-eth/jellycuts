@@ -34,16 +34,16 @@ if(Shortcut Result == nil) {
 	exit()
 } >> IFResult 2
 getFileOfType(input: Shortcut Result, type: "public.json") >> mainshortcut
-var 98E481E2-6282-4E1A-A59B-B0E58DC7E4CB = """let q = d.WFWorkflowImportQuestions.map(q => q.ActionIndex);
+var E4F54604-2672-4812-9E9C-34829C19C1A7 = """let q = d.WFWorkflowImportQuestions.map(q => q.ActionIndex);
 let last = d.WFWorkflowActions.length;
 let c = {"0":0};
 c[last] = last;
 let comments = d.WFWorkflowActions.map((a,i) => (a.WFWorkflowActionIdentifier === 'is.workflow.actions.comment' && i != last-1) ? `(${i+1}) ${(['', undefined].includes(t = a.WFWorkflowActionParameters.WFCommentActionText) ? '[empty]' : t).trim().replace(/\s+/g,' ')}` : false).filter(a => a != false);
 comments.forEach(a => { n = a.match(/\((\d+)/)[1]; c[n] = parseInt(n); });
 document.body.textContent = encodeURIComponent(JSON.stringify({q:q, c:c, last:last, comments:comments}));"""
-text("${98E481E2-6282-4E1A-A59B-B0E58DC7E4CB}")
-url(url: "data:text/html;charset=utf-8,<body/><script>const d=${Text};${ActionOutput}</script>") >> url
-decodeURL(url: "${URL.as(RichText)}") >> decodeURL
+text("${E4F54604-2672-4812-9E9C-34829C19C1A7}")
+url(url: "data:text/html;charset=utf-8,<body/><script>const d=${mainshortcut};${ActionOutput}</script>") >> url
+encodeURL(url: "${URL.as(RichText)}") >> encodeURL
 setValue(key: "shortcut", value: "${mainshortcut.as(Dictionary)}", dictionary: URL Encoded Text) >> setValue
 var dict = Dictionary
 list(items: (
@@ -131,14 +131,14 @@ list(items: (
 )) >> list
 var menu = List
 if(dict == nil) {
-var 4F50DE2C-640F-4A4D-BB6A-E88B69EBE324 = """[To insert shortcuts in the middle, add comment actions.]
+var D8466E9A-92DF-4967-AB63-4357C925CB15 = """[To insert shortcuts in the middle, add comment actions.]
 """
-text("${4F50DE2C-640F-4A4D-BB6A-E88B69EBE324}")
+text("${D8466E9A-92DF-4967-AB63-4357C925CB15}")
 } >> IFResult 3
 dictionary({"0":"0","1":"1"})
 repeat(20) {
 	if(Number == nil) {
-		choose(list: menu, prompt: "${nocomment}${ActionOutput}🎯  Insert ${inserted}shortcut after:", mll: $3) >> choose
+		choose(list: menu, prompt: "${nocomment}${ActionOutput}🎯  Insert ${another}shortcut after:", mll: $3) >> choose
 		if(Chosen Item == "🏁  FINISH JOINING  🏁") {
 			number(value: 1) >> number
 		} else {
@@ -188,7 +188,7 @@ var menu = List
 			} >> IFResult 8
 			getFileOfType(input: Shortcut Result, type: "public.json") >> subshortcut
 			setValue(key: "name", value: "${subshortcut.get(Name)}") >> setValue 1
-var EDC15F42-3A01-4A18-8F15-154C4E428E8C = """let uuidgen = () => ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16).toUpperCase());
+var 0764A6AD-30F1-460A-8083-5E9A23E11DD2 = """let uuidgen = () => ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16).toUpperCase());
 (match = s.match(/"UUID":"[-0-9a-fA-F]{36,46}"/g)) && match.forEach(m => { s = s.split(m.slice(7)).join('"'+uuidgen()+'"') });
 (match = [...new Set(s.match(/"GroupingIdentifier":"[0-9a-fA-F-]{36,46}"/g))]) && match.forEach(m => { s = s.split(m.slice(21)).join('"'+uuidgen()+'"') });
 let actions = JSON.parse(s).WFWorkflowActions;
@@ -205,13 +205,13 @@ dict.q.forEach((a, i) => { if (a >= ￼) {
 	dict.shortcut.WFWorkflowImportQuestions[i].ActionIndex += n;
 }});
 document.body.textContent = encodeURIComponent(JSON.stringify(dict));"""
-text("${EDC15F42-3A01-4A18-8F15-154C4E428E8C}")
-			url(url: "data:text/html;charset=utf-8,<body/><script>let dict = ${dict}; let s = JSON.stringify(${Variable});${Text}</script>") >> url 1
-			decodeURL(url: "${URL.as(RichText)}") >> decodeURL 1
+text("${0764A6AD-30F1-460A-8083-5E9A23E11DD2}")
+			url(url: "data:text/html;charset=utf-8,<body/><script>let dict = ${subshortcut}; let s = JSON.stringify(${ActionOutput});${Text}</script>") >> url 1
+			encodeURL(url: "${URL.as(RichText)}") >> encodeURL 1
 var dict = URL Encoded Text
-var 81F02E09-9A5D-4012-A075-B93D879DB2BC = """🎉  ‘￼’ inserted.
+var 3980539C-A521-4E4A-BD10-E042472E0866 = """🎉  ‘￼’ inserted.
 """
-text("${81F02E09-9A5D-4012-A075-B93D879DB2BC}")
+text("${3980539C-A521-4E4A-BD10-E042472E0866}")
 			text(text: "another ") >> another
 			nothing()
 		} >> IFResult 9
