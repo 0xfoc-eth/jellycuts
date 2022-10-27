@@ -1,9 +1,9 @@
 import Shortcuts
-#Color: green, #Icon: microscope
+#Color: Red, #Icon: microscope
 
 /*
 View, save, convert, edit shortcut source in xml or json format. Restore shortcuts from source. Create web review.
-2022-08-09 	v3.3 	u/gluebyte
+2022-10-25	v3.5.2 	u/gluebyte
 https://routinehub.co/shortcut/5256
 */
 randomNumber(min: 1, max: 2) >> randomNumber
@@ -11,14 +11,15 @@ if(Random Number == 1) {
 	getIP() >> getIP
 	if(Current IP Address != nil) {
 		downloadURL(url: "https://updatecheck.gluebyte.workers.dev/?id=33C37587") >> downloadURL
-		if(Contents of URL .contains "2022-08-09") {
+		if(Contents of URL .contains "2022-10-25") {
 			menu(, [🌏  Go to RoutineHub, 👾  Download Update, ⮐  Not Now]) {
 			case("🌏  Go to RoutineHub"):
 				openURL(url: "https://routinehub.co/shortcut/5256/")
 				exit()
 			case("👾  Download Update"):
 				downloadURL(url: "https://routinehub.co/api/v1/shortcuts/5256/versions/latest") >> downloadURL 1
-				expandURL(url: "https://routinehub.co/download/${Contents of URL.as(Dictionary).key(id)}/") >> expandURL
+				matchText(text: "${Contents of URL}", regex: "(?<="id":\D?)\d+") >> matchText
+				expandURL(url: "https://routinehub.co/download/${Matches}/") >> expandURL
 				replaceText(input: "${Expanded URL}", find: "^.+icloud.com/", replace: "shortcuts://", isRegex: true) >> replaceText
 				openURL(url: Updated Text) >> openURL
 				exit()
@@ -37,7 +38,7 @@ case("📋  Clipboard (iCloud link or plist/json)"):
 		setName(input: Contents of URL, name: "${Contents of URL.as(Dictionary).key(fields.name.value)}.plist") >> setName
 	} >> IFResult 2
 case("📝  File"):
-	getFile() >> getFile
+	selectFile() >> selectFile
 case("💫  Shortcut"):
 	runShortcut(name: "Shortcut Source Helper") >> runShortcut
 	if(Shortcut Result == nil) {
@@ -52,7 +53,6 @@ if(Menu Result .beginsWith "{") {
 	setName(input: File of Type, name: "${Menu Result.get(Name)}.plist") >> setName 3
 } >> IFResult 3
 var file = If Result
-deviceDetails(detail: Device Model) >> deviceDetails
 menu(, [🧐  Quick Look Source, 📝  Save Source, 💻  Share Source, ✏️  Edit and Export to Shortcuts, 🔍  Create Web Review (trim large text), 🔍  Create Web Review]) {
 case("🧐  Quick Look Source"):
 	number(value: 1) >> number
@@ -75,65 +75,65 @@ if(Menu Result > 4) {
 	getFileOfType(input: file, type: "public.json") >> getFileOfType 1
 var src = File of Type
 	if(src .contains "{"__type__":"data","__value__":"YnBsaXN0") {
-		matchText(text: "${src}", regex: "([^"]+)":\{"__type__":"data","__value__":"(YnBsaXN0[^"]+)") >> matchText
+		matchText(text: "${src}", regex: "([^"]+)":\{"__type__":"data","__value__":"(YnBsaXN0[^"]+)") >> matchText 1
 		repeatEach(Matches) {
 			getMatchGroup(matches: Repeat Item) >> getMatchGroup
 			getMatchGroup(matches: Repeat Item, index: "2") >> b64
-			decode(input: b64) >> decode
+			encode(input: b64) >> encode
 			setName(input: Base64 Encoded, name: "a.plist") >> setName 4
 			nothing()
 			if(Text == "UserActivityData") {
-				valueFor(key: "$objects.5", dictionary: Renamed Item) >> valueFor
+				keysFrom(dictionary: Renamed Item) >> keysFrom
 			} >> IFResult 4
 			if(Text == "IntentData") {
-				valueFor(key: "$objects.13", dictionary: Renamed Item) >> valueFor 1
+				keysFrom(dictionary: Renamed Item) >> keysFrom 1
 			} >> IFResult 5
-			dictionary({"k":"${Renamed Item}${ActionOutput}"})
+			dictionary({"k":"${If Result}${ActionOutput}"})
 			replaceText(input: "${Dictionary}", find: "^\{"k":|\}$", isRegex: true) >> replaceText 3
 			replaceText(input: "${src}", find: "{"__type__":"data","__value__":"${b64}"}", replace: "${Updated Text}") >> replaceText 4
 var src = Updated Text
 			nothing()
 		} >> RepeatResult
 	} >> IFResult 6
-var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
+var 34BB38E0-3DB2-42A2-9041-C4206E04F24D = """const idDict = {
 "is.workflow.actions.conditional":[{
 	"name":"If $\ufffc0 $\ufffc1",
-	"group":"gLoop",
+	"group":"gGray",
 },{
 	"name":"Otherwise",
-	"group":"gLoop",
+	"group":"gGray",
 },{
 	"name":"End If",
-	"group":"gLoop",
+	"group":"gGray",
 }],
 "is.workflow.actions.repeat.count":[{
 	"name":"Repeat $\ufffc0 Times",
-	"group":"gLoop",
+	"group":"gGray",
 	"param":{
 		"WFRepeatCount":"$\ufffc0",
 		"$\ufffc0":"1",
 }},{},{
 	"name":"End Repeat Times",
-	"group":"gLoop",
+	"group":"gGray",
 }],
 "is.workflow.actions.repeat.each":[{
 	"name":"Repeat with Each in $\ufffc0",
-	"group":"gLoop",
+	"group":"gGray",
 },{},{
 	"name":"End Repeat with Each",
-	"group":"gLoop",
+	"group":"gGray",
 }],
 "is.workflow.actions.choosefrommenu":[{
 	"name":"Choose from Menu",
-	"group":"gLoop",
+	"group":"gGray",
 },{
 	"name":"Menu Item $\ufffc0",
-	"group":"gLoop",
+	"group":"gGray",
 	"param":{
 		"WFMenuItemTitle":"$\ufffc0",
 }},{
 	"name":"End Menu",
-	"group":"gLoop",
+	"group":"gGray",
 }],
 "is.workflow.actions.runworkflow":[{
 	"name":"Run Shortcut $\ufffc1",
@@ -142,57 +142,58 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.exit":[{
 	"name":"Stop This Shortcut",
-	"group":"gScripting",
+	"group":"gGray",
 }],
 "is.workflow.actions.output":[{
 	"name":"Stop and Output $\ufffc0",
-	"group":"gScripting",
+	"group":"gGray",
 	"param":{
 		"WFOutput":"$\ufffc0",
 }}],
 "is.workflow.actions.hide.app":[{
 	"name":"Hide $\ufffc0",
-	"group":"gScripting",
 	"param":{
 		"WFHideAppMode":"$\ufffc0",
 		"$\ufffc0":"App",
 }}],
 "is.workflow.actions.quit.app":[{
 	"name":"Quit $\ufffc0",
-	"group":"gScripting",
 	"param":{
 		"WFQuitAppMode":"$\ufffc0",
 		"$\ufffc0":"App",
 }}],
 "is.workflow.actions.waittoreturn":[{
 	"name":"Wait to Return",
+	"group":"gGray",
 }],
 "is.workflow.actions.nothing":[{
 	"name":"Nothing",
-	"group":"gScripting",
+	"group":"gGray",
 }],
 "is.workflow.actions.comment":[{
 	"name":"Comment",
-	"group":"gDocuments",
+	"group":"gYellow",
 	"param":{
 		"WFCommentActionText":"#",
 }}],
 "is.workflow.actions.detect.text":[{
 	"name":"Get Text from $\ufffc0",
-	"group":"gDocuments",
+	"group":"gYellow",
 }],
 "is.workflow.actions.detect.number":[{
 	"name":"Get Numbers from $\ufffc0",
 }],
 "is.workflow.actions.detect.images":[{
 	"name":"Get Images from $\ufffc0",
+	"group":"gBlue",
 }],
 "is.workflow.actions.detect.dictionary":[{
 	"name":"Get Dictionary from $\ufffc0",
-	"group":"gScripting",
+	"group":"gOrange",
 }],
 "is.workflow.actions.detect.link":[{
 	"name":"Get URLs from $\ufffc0",
+	"group":"gBlue",
 }],
 "is.workflow.actions.detect.date":[{
 	"name":"Get Dates from $\ufffc0",
@@ -202,39 +203,35 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }],
 "is.workflow.actions.getvariable":[{
 	"name":"Get Variable $\ufffc0",
-	"group":"gVariable",
+	"group":"gOrange",
 	"param":{
 		"WFVariable":"$\ufffc0",
 }}],
 "is.workflow.actions.setvariable":[{
 	"name":"Set Variable $\ufffc1 to $\ufffc0",
-	"group":"gVariable",
+	"group":"gOrange",
 	"param":{
 		"WFVariableName":"$\ufffc1",
 }}],
 "is.workflow.actions.appendvariable":[{
 	"name":"Add $\ufffc0 to Variable $\ufffc1",
-	"group":"gVariable",
+	"group":"gOrange",
 	"param":{
 		"WFVariableName":"$\ufffc1",
 }}],
 "is.workflow.actions.setitemname":[{
 	"name":"Set Name of $\ufffc0 to $\ufffc1",
-	"group":"gScripting",
 	"param":{
 		"WFName":"$\ufffc1",
 }}],
 "is.workflow.actions.getitemname":[{
 	"name":"Get Name of $\ufffc0",
-	"group":"gScripting",
 }],
 "is.workflow.actions.getitemtype":[{
 	"name":"Get Type of $\ufffc0",
-	"group":"gScripting",
 }],
 "is.workflow.actions.ask":[{
 	"name":"Ask for $\ufffc0 Input",
-	"group":"gScripting",
 	"param":{
 		"WFInputType":"$\ufffc0",
 		"$\ufffc0":"Text",
@@ -244,39 +241,42 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }],
 "is.workflow.actions.alert":[{
 	"name":"Show Alert",
-	"group":"gScripting",
+	"group":"gYellow",
 }],
 "is.workflow.actions.showresult":[{
 	"name":"Show Result",
-	"group":"gDocuments",
+	"group":"gYellow",
 	"param":{
 		"Text":"#",
 }}],
 "is.workflow.actions.notification":[{
 	"name":"Show Notification",
+	"group":"gRed",
 	"param":{
 		"WFNotificationActionTitle":"Title",
 		"WFInput":"Attachment",
 }}],
 "is.workflow.actions.previewdocument":[{
 	"name":"Quick Look $\ufffc0",
-	"group":"gDocuments",
+	"group":"gYellow",
 }],
 "is.workflow.actions.speaktext":[{
 	"name":"Speak Text",
+	"group":"gRed",
 }],
 "is.workflow.actions.makespokenaudiofromtext":[{
 	"name":"Make Spoken Audio from $\ufffc0",
+	"group":"gRed",
 }],
 "is.workflow.actions.gettext":[{
 	"name":"Text",
-	"group":"gDocuments",
+	"group":"gYellow",
 	"param":{
 		"WFTextActionText":"#",
 }}],
 "is.workflow.actions.text.split":[{
 	"name":"Split Text $\ufffc0 by $\ufffc1",
-	"group":"gDocuments",
+	"group":"gYellow",
 	"param":{
 		"text":"$\ufffc0",
 		"WFTextSeparator":"$\ufffc1",
@@ -284,7 +284,7 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.text.combine":[{
 	"name":"Combine Text $\ufffc0 with $\ufffc1",
-	"group":"gDocuments",
+	"group":"gYellow",
 	"param":{
 		"text":"$\ufffc0",
 		"WFTextSeparator":"$\ufffc1",
@@ -292,46 +292,49 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.text.replace":[{
 	"name":"Replace Text $\ufffc1 with $\ufffc2 in $\ufffc0",
-	"group":"gDocuments",
+	"group":"gYellow",
 	"param":{
 		"WFReplaceTextFind":"$\ufffc1",
 		"WFReplaceTextReplace":"$\ufffc2",
 }}],
 "is.workflow.actions.text.match":[{
 	"name":"Match Text $\ufffc0 in $\ufffc1",
-	"group":"gDocuments",
+	"group":"gYellow",
 	"param":{
 		"WFMatchTextPattern":"$\ufffc0",
 		"text":"$\ufffc1",
 		"$\ufffc1":"[0-9a-zA-Z]",
 }}],
 "is.workflow.actions.text.match.getgroup":[{
-	"name":"Get Matches $\ufffc0 in $\ufffc1",
-	"group":"gDocuments",
+	"name":"Get Match $\ufffc0 $\ufffc1 in $\ufffc2",
+	"group":"gYellow",
 	"param":{
 		"WFGetGroupType":"$\ufffc0",
-		"matches":"$\ufffc1",
-		"$\ufffc0":"Group At Index 1",
+		"WFGroupIndex":"$\ufffc1",
+		"matches":"$\ufffc2",
+		"$\ufffc0":"Group At Index",
+		"$\ufffc1":"1",
 }}],
 "is.workflow.actions.base64encode":[{
 	"name":"Base64 $\ufffc1 $\ufffc0",
-	"group":"gScripting",
 	"param":{
 		"WFEncodeMode":"$\ufffc1",
 		"$\ufffc1":"Encode",
 }}],
 "is.workflow.actions.urlencode":[{
 	"name":"URL $\ufffc1 $\ufffc0",
-	"group":"gScripting",
+	"group":"gBlue",
 	"param":{
 		"WFEncodeMode":"$\ufffc1",
 		"$\ufffc1":"Encode",
 }}],
 "is.workflow.actions.setclipboard":[{
 	"name":"Copy $\ufffc0 to Clipboard",
+	"group":"gBlue",
 }],
 "is.workflow.actions.getclipboard":[{
 	"name":"Get Clipboard",
+	"group":"gBlue",
 }],
 "is.workflow.actions.number":[{
 	"name":"Number $\ufffc0",
@@ -366,19 +369,19 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.dictionary":[{
 	"name":"Dictionary",
-	"group":"gScripting",
+	"group":"gOrange",
 	"param":{
 		"WFItems":"#",
 }}],
 "is.workflow.actions.getvalueforkey":[{
 	"name":"Get Dictionary $\ufffc1 in $\ufffc0",
-	"group":"gScripting",
+	"group":"gOrange",
 	"param":{
 		"WFGetDictionaryValueType":"$\ufffc1",
 }}],
 "is.workflow.actions.setvalueforkey":[{
 	"name":"Set Dictionary Value for $\ufffc0 to $\ufffc1 in $\ufffc2",
-	"group":"gScripting",
+	"group":"gOrange",
 	"param":{
 		"WFDictionaryKey":"$\ufffc0",
 		"WFDictionaryValue":"$\ufffc1",
@@ -386,45 +389,52 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.list":[{
 	"name":"List",
-	"group":"gScripting",
+	"group":"gOrange",
 	"param":{
 		"WFItems":"#",
 }}],
 "is.workflow.actions.getitemfromlist":[{
 	"name":"Get List $\ufffc1 from $\ufffc0",
-	"group":"gScripting",
+	"group":"gOrange",
 	"param":{
 		"WFItemSpecifier":"$\ufffc1",
 		"$\ufffc1":"First Item",
 }}],
 "is.workflow.actions.choosefromlist":[{
 	"name":"Choose from List $\ufffc0",
-	"group":"gScripting",
+	"group":"gOrange",
 }],
 "is.workflow.actions.getrichtextfrommarkdown":[{
 	"name":"Make Rich Text from Markdown $\ufffc0",
+	"group":"gBlue",
 }],
 "is.workflow.actions.getrichtextfromhtml":[{
 	"name":"Make Rich Text from HTML $\ufffc0",
+	"group":"gBlue",
 	"param":{
 		"WFHTML":"$\ufffc0",
 }}],
 "is.workflow.actions.getmarkdownfromrichtext":[{
 	"name":"Make Markdown from Rich Text $\ufffc0",
+	"group":"gBlue",
 }],
 "is.workflow.actions.gethtmlfromrichtext":[{
 	"name":"Make HTML from Rich Text $\ufffc0",
+	"group":"gBlue",
 }],
 "is.workflow.actions.documentpicker.save":[{
-	"name":"Save $\ufffc0 to File",
+	"name":"Save File $\ufffc0",
+	"group":"gBlue",
 }],
 "is.workflow.actions.documentpicker.open":[{
 	"name":"Get File $\ufffc0 from Folder",
+	"group":"gBlue",
 	"param":{
 		"WFGetFilePath":"$\ufffc0",
 }}],
 "is.workflow.actions.file.delete":[{
 	"name":"Delete Files $\ufffc0",
+	"group":"gBlue",
 	"WFDeleteFileConfirmDeletion":"Confirm Before Deleting",
 }],
 "is.workflow.actions.savetocameraroll":[{
@@ -445,19 +455,22 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.url":[{
 	"name":"URL $\ufffc0",
+	"group":"gBlue",
 	"param":{
 		"WFURLActionURL":"$\ufffc0",
 }}],
 "is.workflow.actions.openurl":[{
 	"name":"Open URL $\ufffc0",
+	"group":"gBlue",
 }],
 "is.workflow.actions.showwebpage":[{
-	"name":"Show Web Page at $\ufffc0",
+	"name":"Show Web View at $\ufffc0",
 	"param":{
 		"WFURL":"$\ufffc0",
 }}],
 "is.workflow.actions.downloadurl":[{
 	"name":"Get Contents of URL $\ufffc0",
+	"group":"gGreen",
 	"param":{
 		"WFURL":"$\ufffc0",
 }}],
@@ -489,17 +502,20 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }],
 "is.workflow.actions.date":[{
 	"name":"Date $\ufffc0",
+	"group":"gRed",
 	"param":{
 		"WFDateActionMode":"$\ufffc0",
 		"$\ufffc0":"Current Date",
 }}],
 "is.workflow.actions.format.date":[{
 	"name":"Format Date $\ufffc0",
+	"group":"gRed",
 	"param":{
 		"WFDate":"$\ufffc0",
 }}],
 "is.workflow.actions.adjustdate":[{
 	"name":"Adjust $\ufffc0 Date $\ufffc1",
+	"group":"gRed",
 	"param":{
 		"WFDate":"$\ufffc1",
 		"WFAdjustOperation":"$\ufffc0",
@@ -507,6 +523,7 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.gettimebetweendates":[{
 	"name":"Get Time Between $\ufffc1 and $\ufffc0 in $\ufffc2",
+	"group":"gRed",
 	"param":{
 		"WFTimeUntilFromDate":"$\ufffc1",
 		"WFTimeUntilUnit":"$\ufffc2",
@@ -514,6 +531,7 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.converttimezone":[{
 	"name":"Convert Time Zone of $\ufffc0",
+	"group":"gRed",
 	"param":{
 		"Date":"$\ufffc0",
 }}],
@@ -563,18 +581,100 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 "com.apple.mobiletimer-framework.MobileTimerIntents.MTGetAlarmsIntent":[{
 	"name":"Get All Alarms",
 }],
+"com.apple.mobiletimer.OpenTab":[{ // 16
+	"name":"Open Clock Tab $\ufffc0",
+	"param":{
+		"tab":"$\ufffc0",
+}}],
 "is.workflow.actions.appendnote":[{
 	"name":"Append $\ufffc0 to Note $\ufffc1",
+	"group":"gYellow",
 	"param":{
 		"WFNote":"$\ufffc1",
 }}],
 "is.workflow.actions.shownote":[{
 	"name":"Show Note $\ufffc0",
+	"group":"gYellow",
 }],
 "com.apple.mobilenotes.SharingExtension":[{
 	"name":"Create Note with $\ufffc0",
+	"group":"gYellow",
 	"param":{
 		"WFCreateNoteInput":"$\ufffc0",
+}}],
+"com.apple.mobilenotes.DeleteNotesLinkAction":[{ // 16
+	"name":"Delete Notes",
+	"group":"gYellow",
+}],
+"com.apple.mobilenotes.PinNotesLinkAction":[{ // 16
+	"name":"$\ufffc0 to/from Pinned Notes",
+	"group":"gYellow",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Add",
+}}],
+"com.apple.mobilenotes.OpenAccountLinkAction":[{ // 16
+	"name":"Open Notes Account",
+	"group":"gYellow",
+}],
+"com.apple.mobilenotes.ChangeSettingLinkAction":[{ // 16
+	"name":"$\ufffc0 Notes Setting $\ufffc1",
+	"group":"gYellow",
+	"param":{
+		"changeOperation":"$\ufffc0",
+		"$\ufffc0":"Enable",
+		"setting":"$\ufffc1",
+}}],
+"com.apple.mobilenotes.OpenAppLocationLinkAction":[{ // 16
+	"name":"Open Notes View $\ufffc0",
+	"group":"gYellow",
+	"param":{
+		"target":"$\ufffc0",
+}}],
+"com.apple.mobilenotes.CreateFolderLinkAction":[{ // 16
+	"name":"Create Notes Folder $\ufffc0",
+	"group":"gYellow",
+	"param":{
+		"name":"$\ufffc0",
+}}],
+"com.apple.mobilenotes.DeleteFoldersLinkAction":[{ // 16
+	"name":"Delete Notes Folders",
+	"group":"gYellow",
+}],
+"com.apple.mobilenotes.MoveNotesToFolderLinkAction":[{ // 16
+	"name":"Move Notes to Folder",
+	"group":"gYellow",
+}],
+"com.apple.mobilenotes.ICNotesFolderIntent":[{ // 16
+	"name":"Open Notes Folder",
+	"group":"gYellow",
+}],
+"com.apple.mobilenotes.AddTagsToNotesLinkAction":[{ // 16
+	"name":"Add Tags to Notes",
+	"group":"gYellow",
+}],
+"com.apple.mobilenotes.CreateTagLinkAction":[{ // 16
+	"name":"Create Notes Tag $\ufffc0",
+	"group":"gYellow",
+	"param":{
+		"name":"$\ufffc0",
+}}],
+"com.apple.mobilenotes.DeleteTagsLinkAction":[{ // 16
+	"name":"Delete Notes Tags",
+	"group":"gYellow",
+}],
+"com.apple.mobilenotes.OpenTagLinkAction":[{ // 16
+	"name":"Open Notes Tag",
+	"group":"gYellow",
+}],
+"com.apple.mobilenotes.RemoveTagsFromNotesLinkAction":[{ // 16
+	"name":"Remove Tags from Notes",
+	"group":"gYellow",
+}],
+"is.workflow.actions.showincalendar":[{
+	"name":"Open $\ufffc0 in Calendar",
+	"param":{
+		"WFEvent":"$\ufffc0",
 }}],
 "is.workflow.actions.addnewreminder":[{
 	"name":"Add New Reminder $\ufffc0 to $\ufffc1 with $\ufffc2",
@@ -598,10 +698,60 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 		"$\ufffc0":"1",
 		"$\ufffc1":"All Lists",
 }}],
-"is.workflow.actions.showincalendar":[{
-	"name":"Show $\ufffc0 in Calendar",
+"com.apple.reminders.TTRCreateListAppIntent":[{ // 16
+	"name":"Create Reminders List $\ufffc0",
 	"param":{
-		"WFEvent":"$\ufffc0",
+		"name":"$\ufffc0",
+}}],
+"com.apple.reminders.TTRSearchRemindersAppIntent":[{ // 16
+	"name":"Search $\ufffc0 in Reminders",
+	"param":{
+		"searchPhrase":"$\ufffc0",
+}}],
+"com.apple.VoiceMemos.SearchRecordings":[{ // 16
+	"name":"Search $\ufffc0 in Voice Memos",
+	"param":{
+		"searchPhrase":"$\ufffc0",
+}}],
+"com.apple.VoiceMemos.CreateFolder":[{ // 16
+	"name":"Create Voice Memos Folder $\ufffc0",
+	"param":{
+		"name":"$\ufffc0",
+}}],
+"com.apple.VoiceMemos.DeleteFolder":[{ // 16
+	"name":"Delete Voice Memos Folders",
+}],
+"com.apple.VoiceMemos.OpenFolder":[{ // 16
+	"name":"Open Voice Memos Folder",
+}],
+"com.apple.VoiceMemos.CreateRecording":[{ // 16
+	"name":"Create Voice Recording $\ufffc0",
+	"param":{
+		"name":"$\ufffc0",
+}}],
+"com.apple.VoiceMemos.DeleteRecording":[{ // 16
+	"name":"Delete Voice Recordings",
+}],
+"com.apple.VoiceMemos.PlayRecording":[{ // 16
+	"name":"Play Voice Recording",
+}],
+"com.apple.VoiceMemos.SelectRecording":[{ // 16
+	"name":"Open Voice Recording",
+}],
+"com.apple.VoiceMemos.ChangeRecordingPlaybackSetting":[{ // 16
+	"name":"$\ufffc0 Voice Memo Playback Setting $\ufffc1",
+	"param":{
+		"changeOperation":"$\ufffc0",
+		"setting":"$\ufffc1",
+		"$\ufffc0":"Enable",
+}}],
+"com.apple.mobilemail.OpenMailboxEntityAction":[{ // 16
+	"name":"Open Mailbox",
+}],
+"com.apple.mobilemail.SearchMessagesAction":[{ // 16
+	"name":"Search $\ufffc0 in Mail",
+	"param":{
+		"searchPhrase":"$\ufffc0",
 }}],
 "is.workflow.actions.takephoto":[{
 	"name":"Take $\ufffc0 Photos with $\ufffc1 Camera",
@@ -624,7 +774,8 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 		"$\ufffc1":"Lock Screen, Home Screen",
 }}],
 "is.workflow.actions.getonscreencontent":[{
-	"name":"Get What's On Screen",
+	"name":"Get What’s On Screen",
+	"group":"gRed",
 }],
 "is.workflow.actions.timer.start":[{
 	"name":"Start Timer for $\ufffc0",
@@ -633,15 +784,19 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.detect.phonenumber":[{
 	"name":"Get Phone Numbers from $\ufffc0",
+	"group":"gGreen",
 }],
 "is.workflow.actions.phonenumber":[{
 	"name":"Phone Number",
+	"group":"gGreen",
 }],
 "is.workflow.actions.selectphone":[{
 	"name":"Select Phone Number",
+	"group":"gGreen",
 }],
 "com.apple.facetime.facetime":[{
 	"name":"$\ufffc0 Call $\ufffc1",
+	"group":"gGreen",
 	"param":{
 		"WFFaceTimeType":"$\ufffc0",
 		"WFFaceTimeContact":"$\ufffc1",
@@ -649,11 +804,13 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "com.apple.mobilephone.call":[{
 	"name":"Call $\ufffc0",
+	"group":"gGreen",
 	"param":{
 		"WFCallContact":"$\ufffc0",
 }}],
 "is.workflow.actions.sendmessage":[{
 	"name":"Send Message $\ufffc0",
+	"group":"gGreen",
 	"param":{
 		"WFSendMessageContent":"$\ufffc0",
 }}],
@@ -674,27 +831,34 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }],
 "is.workflow.actions.detect.address":[{
 	"name":"Get Addresses from $\ufffc0",
+	"group":"gGreen",
 }],
 "is.workflow.actions.getdistance":[{
 	"name":"Get Distance",
+	"group":"gGreen",
 }],
 "is.workflow.actions.gethalfwaypoint":[{
 	"name":"Get Halfway Point",
+	"group":"gGreen",
 }],
 "is.workflow.actions.getmapslink":[{
 	"name":"Get Maps URL from $\ufffc0",
+	"group":"gGreen",
 }],
 "is.workflow.actions.gettraveltime":[{
 	"name":"Get $\ufffc0 Time",
+	"group":"gGreen",
 	"param":{
 		"WFGetDirectionsActionMode":"$\ufffc0",
 		"$\ufffc0":"Driving",
 }}],
 "is.workflow.actions.searchlocalbusinesses":[{
-	"name":"Search Local Businesses",
+	"name":"Find Places",
+	"group":"gGreen",
 }],
 "is.workflow.actions.getdirections":[{
-	"name":"Show $\ufffc0 Directions using $\ufffc1",
+	"name":"Open $\ufffc0 Directions using $\ufffc1",
+	"group":"gGreen",
 	"param":{
 		"WFGetDirectionsActionMode":"$\ufffc0",
 		"WFGetDirectionsActionApp":"$\ufffc1",
@@ -702,48 +866,69 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 		"$\ufffc1":"Maps",
 }}],
 "is.workflow.actions.searchmaps":[{
-	"name":"Show in Maps",
+	"name":"Open in Maps",
+	"group":"gGreen",
 }],
 "is.workflow.actions.address":[{
 	"name":"Street Address",
+	"group":"gGreen",
 }],
 "is.workflow.actions.addtoplaylist":[{
 	"name":"Add Music $\ufffc0 to Playlist $\ufffc1",
+	"group":"gRed",
 	"param":{
 		"WFPlaylistName":"$\ufffc1",
 		"$\ufffc1":"My Music Library",
 }}],
 "is.workflow.actions.addmusictoupnext":[{
-	"name":"Add Music $\ufffc0 to $\ufffc1 of Up Next",
+	"name":"Add Music $\ufffc0 to $\ufffc1 of Playing Next",
+	"group":"gRed",
 	"param":{
 		"WFMusic":"$\ufffc0",
 		"WFWhenToPlay":"$\ufffc1",
 		"$\ufffc1":"Next",
 }}],
 "is.workflow.actions.clearupnext":[{
-	"name":"Clear Up Next",
+	"name":"Clear Playing Next",
+	"group":"gRed",
 }],
 "is.workflow.actions.createplaylist":[{
 	"name":"Create Playlist $\ufffc0 with $\ufffc1",
+	"group":"gRed",
 	"param":{
 		"WFPlaylistName":"$\ufffc0",
 		"WFPlaylistItems":"$\ufffc1",
 }}],
 "is.workflow.actions.getcurrentsong":[{
-	"name":"Get Current Song",
-}],
+	"name":"Get $\ufffc0",
+	"group":"gRed",
+	"param":{
+		"Subject":"$\ufffc0",
+		"$\ufffc0":"Current Song",
+}}],
 "is.workflow.actions.get.playlist":[{
 	"name":"Get Songs in Playlist $\ufffc0",
+	"group":"gRed",
 	"param":{
 		"WFPlaylistName":"$\ufffc0",
 }}],
 "is.workflow.actions.playmusic":[{
 	"name":"Play Music $\ufffc0",
+	"group":"gRed",
 	"param":{
 		"WFMediaItems":"$\ufffc0",
 }}],
+"is.workflow.actions.seek":[{
+	"name":"Seek $\ufffc0 $\ufffc1",
+	"group":"gRed",
+	"param":{
+		"WFSeekBehavior":"$\ufffc0",
+		"WFTimeInterval":"$\ufffc1",
+		"$\ufffc0":"To Time",
+}}],
 "is.workflow.actions.exportsong":[{
 	"name":"Select Music",
+	"group":"gRed",
 }],
 "is.workflow.actions.importaudiofiles":[{
 	"name":"Import Audio $\ufffc0 into Music",
@@ -793,13 +978,13 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 		"WFPodcastShow":"$\ufffc0",
 }}],
 "is.workflow.actions.searchpodcasts":[{
-	"name":"Search Podcasts",
+	"name":"Find Podcasts",
 }],
 "is.workflow.actions.podcasts.subscribe":[{
-	"name":"Subscribe to Podcast $\ufffc0",
+	"name":"Follow Podcast $\ufffc0",
 }],
 "is.workflow.actions.reminders.showlist":[{
-	"name":"Show Reminders List $\ufffc0",
+	"name":"Open Reminders List $\ufffc0",
 	"param":{
 		"WFList":"$\ufffc0",
 		"$\ufffc0":"Reminders",
@@ -821,21 +1006,72 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 		"$\ufffc1":"Google",
 		"WFInputText":"$\ufffc0",
 }}],
+"com.apple.mobilesafari.OpenBookmark":[{ // 16
+	"name":"Open Safari Bookmark",
+}],
+"com.apple.mobilesafari.OpenReadingListItem":[{ // 16
+	"name":"Open Reading List Item",
+}],
+"com.apple.mobilesafari.OpenView":[{ // 16
+	"name":"Open Safari View",
+}],
+"com.apple.mobilesafari.ChangeReaderModeState":[{ // 16
+	"name":"$\ufffc0 Safari Reader",
+	"param":{
+		"changeOperation":"$\ufffc0",
+		"$\ufffc0":"Enable",
+}}],
+"com.apple.mobilesafari.CreateNewTabGroup":[{ // 16
+	"name":"Create Tab Group $\ufffc0",
+	"param":{
+		"name":"$\ufffc0",
+}}],
+"com.apple.mobilesafari.OpenTabGroup":[{ // 16
+	"name":"Open Tab Group",
+}],
+"com.apple.mobilesafari.CloseTab":[{ // 16
+	"name":"Close Tab",
+}],
+"com.apple.mobilesafari.CreateNewPrivateTab":[{ // 16
+	"name":"Create New Private Tab",
+}],
+"com.apple.mobilesafari.CreateNewTab":[{ // 16
+	"name":"Create New Tab",
+}],
+"com.apple.mobilesafari.OpenTab":[{ // 16
+	"name":"Open Tab",
+}],
 "com.apple.AccessibilityUtilities.AXSettingsShortcuts.AXStartMagnifierIntent":[{
 	"name":"Open Magnifier",
 }],
 "is.workflow.actions.getmyworkflows":[{
 	"name":"Get My Shortcuts",
 }],
+"com.apple.shortcuts.OpenNavigationDestinationAction":[{ // 16
+	"name":"Open Shortcuts Folder",
+}],
+"com.apple.shortcuts.CreateWorkflowAction":[{ // 16
+	"name":"Create Shortcut $\ufffc0",
+	"param":{
+		"name":"$\ufffc0",
+}}],
+"com.apple.shortcuts.DeleteWorkflowAction":[{ // 16
+	"name":"Delete Shortcuts",
+}],
 "is.workflow.actions.weather.currentconditions":[{
 	"name":"Get Current Weather",
+	"group":"gBlue",
 }],
 "is.workflow.actions.weather.forecast":[{
 	"name":"Get $\ufffc0 Weather Forecast",
+	"group":"gBlue",
 	"param":{
 		"WFWeatherForecastType":"$\ufffc0",
 		"$\ufffc0":"Daily",
 }}],
+"com.apple.weather.WeatherIntent":[{ // 16
+	"name":"Show Weather",
+}],
 "is.workflow.actions.openapp":[{
 	"name":"Open App $\ufffc0",
 	"param":{
@@ -843,15 +1079,18 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.handoff":[{
 	"name":"Continue in Shortcuts app",
+	"group":"gGray",
 }],
 "is.workflow.actions.dismisssiri":[{
 	"name":"Dismiss Siri and Continue",
+	"group":"gGray",
 }],
 "is.workflow.actions.returntohomescreen":[{
 	"name":"Return to Home Screen",
 }],
 "is.workflow.actions.delay":[{
 	"name":"Wait $\ufffc0 seconds",
+	"group":"gGray",
 	"param":{
 		"WFDelayTime":"$\ufffc0",
 		"$\ufffc0":"1",
@@ -864,6 +1103,7 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.viewresult":[{
 	"name":"View Content Graph of $\ufffc0",
+	"group":"gYellow",
 }],
 "is.workflow.actions.round":[{
 	"name":"Round Number $\ufffc0 to $\ufffc1",
@@ -887,6 +1127,7 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.format.filesize":[{
 	"name":"Format File Size $\ufffc0 into $\ufffc1",
+	"group":"gBlue",
 	"param":{
 		"WFFileSize":"$\ufffc0",
 		"WFFileSizeFormat":"$\ufffc1",
@@ -907,20 +1148,32 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.openxcallbackurl":[{
 	"name":"Open X-Callback URL $\ufffc0",
+	"group":"gBlue",
 	"param":{
 		"WFXCallbackURL":"$\ufffc0",
 }}],
 "is.workflow.actions.getcurrentlocation":[{
 	"name":"Get Current Location",
+	"group":"gBlue",
 }],
 "is.workflow.actions.location":[{
 	"name":"Location",
+	"group":"gGreen",
+}],
+"is.workflow.actions.getparkedcarlocation":[{ // 16
+	"name":"Get Parked Car Location",
+	"group":"gGreen",
+}],
+"is.workflow.actions.setparkedcar":[{ // 16
+	"name":"Set Parked Car Location",
+	"group":"gGreen",
 }],
 "is.workflow.actions.airdropdocument":[{
 	"name":"AirDrop",
 }],
 "is.workflow.actions.share":[{
 	"name":"Share $\ufffc0",
+	"group":"gBlue",
 }],
 "is.workflow.actions.runextension":[{
 	"name":"Share $\ufffc0 with App $\ufffc1",
@@ -929,6 +1182,7 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.recordaudio":[{
 	"name":"Record Audio",
+	"group":"gRed",
 }],
 "is.workflow.actions.addframetogif":[{
 	"name":"Add Frame $\ufffc0 to GIF $\ufffc1",
@@ -951,37 +1205,44 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.image.combine":[{
 	"name":"Combine Images $\ufffc0 $\ufffc1",
+	"group":"gBlue",
 	"param":{
 		"WFImageCombineMode":"$\ufffc1",
 		"$\ufffc1":"Horizontally",
 }}],
 "is.workflow.actions.image.crop":[{
 	"name":"Crop Image $\ufffc0",
+	"group":"gBlue",
 }],
 "is.workflow.actions.image.flip":[{
 	"name":"Flip Image $\ufffc0 $\ufffc1",
+	"group":"gBlue",
 	"param":{
 		"WFImageFlipDirection":"$\ufffc1",
 		"$\ufffc1":"Horizontally",
 }}],
 "is.workflow.actions.avairyeditphoto":[{
 	"name":"Markup $\ufffc0",
+	"group":"gBlue",
 	"param":{
 		"WFDocument":"$\ufffc0",
 }}],
 "is.workflow.actions.image.mask":[{
 	"name":"Mask Image $\ufffc0 with $\ufffc1",
+	"group":"gBlue",
 	"param":{
 		"WFMaskType":"$\ufffc1",
 		"$\ufffc1":"Rounded Rectangle",
 }}],
 "is.workflow.actions.overlayimageonimage":[{
 	"name":"Overlay Image $\ufffc1 with $\ufffc0",
+	"group":"gBlue",
 	"param":{
 		"WFImage":"$\ufffc1",
 }}],
 "is.workflow.actions.overlaytext":[{
 	"name":"Overlay Text $\ufffc0 on $\ufffc1 at $\ufffc2",
+	"group":"gBlue",
 	"param":{
 		"WFText":"$\ufffc0",
 		"WFImage":"$\ufffc1",
@@ -990,6 +1251,7 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.image.resize":[{
 	"name":"Resize Image $\ufffc0 to $\ufffc1",
+	"group":"gBlue",
 	"param":{
 		"WFImage":"$\ufffc0",
 		"WFImageResizeKey":"$\ufffc1",
@@ -997,6 +1259,7 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.image.rotate":[{
 	"name":"Rotate Image/Video $\ufffc0 by $\ufffc1 degrees",
+	"group":"gBlue",
 	"param":{
 		"WFImage":"$\ufffc0",
 		"WFImageRotateAmount":"$\ufffc1",
@@ -1004,103 +1267,129 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.image.convert":[{
 	"name":"Convert Image $\ufffc0 to $\ufffc1",
+	"group":"gBlue",
 	"param":{
 		"WFImageFormat":"$\ufffc1",
 		"$\ufffc1":"JPEG",
 }}],
+"is.workflow.actions.image.removebackground":[{ // 16
+	"name":"Remove Image Background from $\ufffc0",
+	"group":"gBlue",
+}],
 "is.workflow.actions.pausemusic":[{
 	"name":"Play/Pause $\ufffc0",
+	"group":"gRed",
 	"param":{
 		"WFPlayPauseBehavior":"$\ufffc0",
 		"$\ufffc0":"Play/Pause",
 }}],
-"is.workflow.actions.listeningmode.set":[{
-	"name":"Set Noise Control Mode",
-}],
+"is.workflow.actions.listeningmode.set":[{ // 16
+	"name":"Set Noise Control Mode to $\ufffc0",
+	"group":"gRed",
+	"param":{
+		"WFListeningMode":"$\ufffc0",
+}}],
 "is.workflow.actions.skipback":[{
 	"name":"Skip Back to the $\ufffc0",
+	"group":"gRed",
 	"param":{
 		"WFSkipBackBehavior":"$\ufffc0",
 		"$\ufffc0":"Beginning",
 }}],
 "is.workflow.actions.skipforward":[{
 	"name":"Skip Forward",
+	"group":"gRed",
 }],
 "is.workflow.actions.encodemedia":[{
 	"name":"Encode Media $\ufffc0",
+	"group":"gBlue",
 	"param":{
 		"WFMedia":"$\ufffc0",
 }}],
 "is.workflow.actions.trimvideo":[{
 	"name":"Trim Media $\ufffc0",
+	"group":"gBlue",
 	"param":{
 		"WFInputMedia":"$\ufffc0",
 }}],
 "is.workflow.actions.unzip":[{
 	"name":"Extract Archive $\ufffc0",
+	"group":"gBlue",
 	"param":{
 		"WFArchive":"$\ufffc0",
 }}],
 "is.workflow.actions.makezip":[{
 	"name":"Make $\ufffc1 Archive from $\ufffc0",
+	"group":"gBlue",
 	"param":{
 		"WFArchiveFormat":"$\ufffc1",
 		"$\ufffc1":".zip",
 }}],
 "is.workflow.actions.file.append":[{
 	"name":"$\ufffc1 $\ufffc0 to Text File",
+	"group":"gBlue",
 	"param":{
 		"WFAppendFileWriteMode":"$\ufffc1",
 		"$\ufffc1":"Append",
 }}],
 "is.workflow.actions.file.createfolder":[{
 	"name":"Create Folder",
+	"group":"gBlue",
 }],
 "is.workflow.actions.file.getlink":[{
 	"name":"Get Link to File $\ufffc0",
+	"group":"gBlue",
 	"param":{
 		"WFFile":"$\ufffc0",
 }}],
 "is.workflow.actions.file":[{
 	"name":"File",
+	"group":"gBlue",
 }],
 "is.workflow.actions.folder":[{
 	"name":"Folder",
+	"group":"gBlue",
 }],
 "is.workflow.actions.file.getfoldercontents":[{
-	"name":"Get Contents of Folder $\ufffc0",
-	"param":{
-		"WFFolder":"$\ufffc0",
-}}],
+	"name":"Get Contents of Folder",
+	"group":"gBlue",
+}],
 "is.workflow.actions.getparentdirectory":[{
 	"name":"Get Parent Directory of $\ufffc0",
+	"group":"gBlue",
 }],
 "is.workflow.actions.finder.getselectedfiles":[{
 	"name":"Get Selected Files in Finder",
+	"group":"gBlue",
 }],
 "is.workflow.actions.file.reveal":[{
 	"name":"Reveal Files $\ufffc0 in Finder",
+	"group":"gBlue",
 	"param":{
 		"WFFile":"$\ufffc0",
 }}],
 "is.workflow.actions.file.move":[{
 	"name":"Move File $\ufffc0",
+	"group":"gBlue",
 	"param":{
 		"WFFile":"$\ufffc0",
 }}],
 "is.workflow.actions.file.rename":[{
 	"name":"Rename File $\ufffc0 to $\ufffc1",
+	"group":"gBlue",
 	"param":{
 		"WFFile":"$\ufffc0",
 		"WFNewFilename":"$\ufffc1",
 }}],
 "is.workflow.actions.file.label":[{
 	"name":"Label Files $\ufffc0 with $\ufffc1",
+	"group":"gBlue",
 	"param":{
 		"WFLabelColorNumber":"$\ufffc1",
 }}],
 "is.workflow.actions.file.select":[{
 	"name":"Select File",
+	"group":"gBlue",
 }],
 "is.workflow.actions.dropbox.open":[{
 	"name":"Get Dropbox File",
@@ -1125,23 +1414,30 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.makepdf":[{
 	"name":"Make PDF from $\ufffc0",
+	"group":"gBlue",
 }],
 "is.workflow.actions.splitpdf":[{
 	"name":"Split PDF $\ufffc0",
+	"group":"gBlue",
 }],
 "is.workflow.actions.gettextfrompdf":[{
 	"name":"Get $\ufffc1 from PDF $\ufffc0",
-	"group":"gDocuments",
+	"group":"gYellow",
 	"param":{
 		"WFGetTextFromPDFTextType":"$\ufffc1",
 		"$\ufffc1":"Text",
 }}],
 "is.workflow.actions.makeimagefrompdfpage":[{
 	"name":"Make $\ufffc1 from PDF $\ufffc0",
+	"group":"gBlue",
 	"param":{
 		"WFMakeImageFromPDFPageImageFormat":"$\ufffc1",
 		"$\ufffc1":"PNG image",
 }}],
+"is.workflow.actions.compresspdf":[{ // 16
+	"name":"Optimize File Size of PDF $\ufffc0",
+	"group":"gBlue",
+}],
 "is.workflow.actions.print":[{
 	"name":"Print $\ufffc0",
 }],
@@ -1151,23 +1447,24 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 		"WFText":"$\ufffc0",
 }}],
 "is.workflow.actions.scanbarcode":[{
-	"name":"Scan QR or Bar Code",
+	"name":"Scan QR or Barcode",
 }],
 "is.workflow.actions.dictatetext":[{
 	"name":"Dictate Text",
 }],
 "is.workflow.actions.getnameofemoji":[{
 	"name":"Get Name of Emoji in $\ufffc0",
-	"group":"gDocuments",
+	"group":"gYellow",
 }],
 "is.workflow.actions.showdefinition":[{
 	"name":"Show Definition of $\ufffc0",
+	"group":"gRed",
 	"param":{
 		"Word":"$\ufffc0",
 }}],
 "is.workflow.actions.text.changecase":[{
 	"name":"Change $\ufffc0 to $\ufffc1",
-	"group":"gDocuments",
+	"group":"gYellow",
 	"param":{
 		"text":"$\ufffc0",
 		"WFCaseType":"$\ufffc1",
@@ -1175,7 +1472,7 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.correctspelling":[{
 	"name":"Correct Spelling of $\ufffc0",
-	"group":"gDocuments",
+	"group":"gYellow",
 	"param":{
 		"text":"$\ufffc0",
 }}],
@@ -1193,29 +1490,34 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }],
 "is.workflow.actions.extracttextfromimage":[{
 	"name":"Extract Text from Image $\ufffc0",
+	"group":"gBlue",
 	"param":{
 		"WFImage":"$\ufffc0",
 }}],
 "is.workflow.actions.rss":[{
 	"name":"Get $\ufffc0 Items from RSS Feed $\ufffc1",
+	"group":"gOrange",
 	"param":{
 		"WFRSSItemQuantity":"$\ufffc0",
-		"WFURLs":"$\ufffc1",
+		"WFRSSFeedURL":"$\ufffc1",
 		"$\ufffc0":"10",
 		"$\ufffc1":"https://www.apple.com/newsroom/rss-feed.rss",
 }}],
 "is.workflow.actions.rss.extract":[{
 	"name":"Get RSS Feeds from Page $\ufffc0",
+	"group":"gOrange",
 	"param":{
 		"WFURLs":"$\ufffc0",
 }}],
 "is.workflow.actions.url.expand":[{
 	"name":"Expand URL $\ufffc0",
+	"group":"gBlue",
 	"param":{
 		"URL":"$\ufffc0",
 }}],
 "is.workflow.actions.geturlcomponent":[{
 	"name":"Get $\ufffc0 of URL $\ufffc1",
+	"group":"gBlue",
 	"param":{
 		"WFURLComponent":"$\ufffc0",
 		"WFURL":"$\ufffc1",
@@ -1223,6 +1525,7 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.url.getheaders":[{
 	"name":"Get Headers of URL $\ufffc0",
+	"group":"gGreen",
 }],
 "is.workflow.actions.runsshscript":[{
 	"name":"Run Script Over SSH",
@@ -1258,6 +1561,7 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.filter.notes":[{
 	"name":"Find Notes",
+	"group":"gYellow",
 	"param":{
 		"WFContentItemInputParameter":"$\ufffc0",
 		"$\ufffc0":"All Notes",
@@ -1275,6 +1579,7 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.filter.music":[{
 	"name":"Find Music $\ufffc0",
+	"group":"gRed",
 	"param":{
 		"WFContentItemInputParameter":"$\ufffc0",
 		"$\ufffc0":"All Music",
@@ -1286,11 +1591,13 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.filter.locations":[{
 	"name":"Filter Locations $\ufffc0",
+	"group":"gGreen",
 	"param":{
 		"WFContentItemInputParameter":"$\ufffc0",
 }}],
 "is.workflow.actions.filter.images":[{
 	"name":"Filter Images $\ufffc0",
+	"group":"gBlue",
 	"param":{
 		"WFContentItemInputParameter":"$\ufffc0",
 }}],
@@ -1306,107 +1613,142 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 		"WFContentItemInputParameter":"$\ufffc0",
 		"$\ufffc0":"All Windows",
 }}],
+"com.apple.mobilesafari.BookmarkEntity":[{ // 16
+	"name":"Find Safari Bookmarks $\ufffc0",
+	"param":{
+		"WFContentItemInputParameter":"$\ufffc0",
+		"$\ufffc0":"All Bookmarks",
+}}],
+"com.apple.mobilesafari.ReadingListItemEntity":[{ // 16
+	"name":"Find Reading List Items $\ufffc0",
+	"param":{
+		"WFContentItemInputParameter":"$\ufffc0",
+		"$\ufffc0":"All Lists",
+}}],
+"com.apple.mobilesafari.TabGroupEntity":[{ // 16
+	"name":"Find Tab Groups $\ufffc0",
+	"param":{
+		"WFContentItemInputParameter":"$\ufffc0",
+		"$\ufffc0":"All Tab Groups",
+}}],
+"com.apple.mobilesafari.TabEntity":[{ // 16
+	"name":"Find Tabs $\ufffc0",
+	"param":{
+		"WFContentItemInputParameter":"$\ufffc0",
+		"$\ufffc0":"All Tabs",
+}}],
 "is.workflow.actions.properties.calendarevents":[{
-	"name":"Get Details $\ufffc1 of Calendar Events $\ufffc0",
+	"name":"Get $\ufffc1 of Calendar Events $\ufffc0",
 	"param":{
 		"WFContentItemPropertyName":"$\ufffc1",
 		"$\ufffc1":"Start Date",
 }}],
 "is.workflow.actions.properties.reminders":[{
-	"name":"Get Details $\ufffc1 of Reminders $\ufffc0",
+	"name":"Get $\ufffc1 of Reminders $\ufffc0",
 	"param":{
 		"WFContentItemPropertyName":"$\ufffc1",
 		"$\ufffc1":"List",
 }}],
 "is.workflow.actions.properties.eventattendees":[{
-	"name":"Get Details $\ufffc1 of Event Attendees $\ufffc0",
+	"name":"Get $\ufffc1 of Event Attendees $\ufffc0",
 	"param":{
 		"WFContentItemPropertyName":"$\ufffc1",
 		"$\ufffc1":"Status",
 }}],
 "is.workflow.actions.properties.contacts":[{
-	"name":"Get Details $\ufffc1 of Contacts $\ufffc0",
+	"name":"Get $\ufffc1 of Contacts $\ufffc0",
 	"param":{
 		"WFContentItemPropertyName":"$\ufffc1",
 		"$\ufffc1":"Group",
 }}],
 "is.workflow.actions.properties.itunesartist":[{
-	"name":"Get Details $\ufffc1 of iTunes Artist $\ufffc0",
+	"name":"Get $\ufffc1 of iTunes Artist $\ufffc0",
 	"param":{
 		"WFContentItemPropertyName":"$\ufffc1",
 		"$\ufffc1":"Genre",
 }}],
 "is.workflow.actions.properties.itunesstore":[{
-	"name":"Get Details $\ufffc1 of iTunes Product $\ufffc0",
+	"name":"Get $\ufffc1 of iTunes Product $\ufffc0",
 	"param":{
 		"WFContentItemPropertyName":"$\ufffc1",
 		"$\ufffc1":"Artist",
 }}],
 "is.workflow.actions.properties.music":[{
-	"name":"Get Details $\ufffc1 of Music $\ufffc0",
+	"name":"Get $\ufffc1 of Music $\ufffc0",
+	"group":"gRed",
 	"param":{
 		"WFContentItemPropertyName":"$\ufffc1",
 		"$\ufffc1":"Artist",
 }}],
 "is.workflow.actions.properties.appstore":[{
-	"name":"Get Details $\ufffc1 of App Store App $\ufffc0",
+	"name":"Get $\ufffc1 of App Store App $\ufffc0",
 	"param":{
 		"WFContentItemPropertyName":"$\ufffc1",
 		"$\ufffc1":"Artist",
 }}],
 "is.workflow.actions.properties.podcastshow":[{
-	"name":"Get Details $\ufffc1 of Podcast from $\ufffc0",
+	"name":"Get $\ufffc1 of Podcast from $\ufffc0",
 	"param":{
 		"WFContentItemPropertyName":"$\ufffc1",
 		"$\ufffc1":"Feed URL",
 }}],
 "is.workflow.actions.properties.podcast":[{
-	"name":"Get Details $\ufffc1 of Podcast Episode $\ufffc0",
+	"name":"Get $\ufffc1 of Podcast Episode $\ufffc0",
 	"param":{
 		"WFContentItemPropertyName":"$\ufffc1",
 		"$\ufffc1":"Store ID",
 }}],
 "is.workflow.actions.properties.articles":[{
-	"name":"Get Details $\ufffc1 of Article $\ufffc0",
+	"name":"Get $\ufffc1 of Article $\ufffc0",
 	"param":{
 		"WFContentItemPropertyName":"$\ufffc1",
 		"$\ufffc1":"Title",
 }}],
 "is.workflow.actions.properties.safariwebpage":[{
-	"name":"Get Details $\ufffc1 of Safari Webpage $\ufffc0",
+	"name":"Get $\ufffc1 of Safari Webpage $\ufffc0",
 	"param":{
 		"WFContentItemPropertyName":"$\ufffc1",
 		"$\ufffc1":"Page Contents",
 }}],
 "is.workflow.actions.properties.weather.conditions":[{
-	"name":"Get Details $\ufffc1 of Weather Conditions $\ufffc0",
+	"name":"Get $\ufffc1 of Weather Conditions $\ufffc0",
+	"group":"gBlue",
 	"param":{
 		"WFContentItemPropertyName":"$\ufffc1",
 		"$\ufffc1":"Date",
 }}],
 "is.workflow.actions.properties.locations":[{
-	"name":"Get Details $\ufffc1 of Locations $\ufffc0",
+	"name":"Get $\ufffc1 of Locations $\ufffc0",
+	"group":"gGreen",
 	"param":{
 		"WFContentItemPropertyName":"$\ufffc1",
 		"$\ufffc1":"Latitude",
 }}],
 "is.workflow.actions.properties.images":[{
-	"name":"Get Details $\ufffc1 of Images $\ufffc0",
+	"name":"Get $\ufffc1 of Images $\ufffc0",
+	"group":"gBlue",
 	"param":{
 		"WFContentItemPropertyName":"$\ufffc1",
 		"$\ufffc1":"Album",
 }}],
 "is.workflow.actions.properties.files":[{
-	"name":"Get Details $\ufffc1 of Files $\ufffc0",
+	"name":"Get $\ufffc1 of Files $\ufffc0",
+	"group":"gBlue",
 	"param":{
 		"WFContentItemPropertyName":"$\ufffc1",
 		"$\ufffc1":"File Size",
 }}],
 "is.workflow.actions.properties.health.quantity":[{
-	"name":"Get Details $\ufffc1 of Health Sample $\ufffc0",
+	"name":"Get $\ufffc1 of Health Sample $\ufffc0",
 	"param":{
 		"WFContentItemPropertyName":"$\ufffc1",
 		"$\ufffc1":"Type",
+}}],
+"is.workflow.actions.properties.parkedcar":[{ // 16
+	"name":"Get $\ufffc1 from Parked Car $\ufffc0",
+	"group":"gGreen",
+	"param":{
+		"WFContentItemPropertyName":"$\ufffc1",
 }}],
 "is.workflow.actions.getclassaction":[{
 	"name":"Get Object of Class $\ufffc0 from $\ufffc0",
@@ -1426,15 +1768,17 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }],
 "is.workflow.actions.setplaybackdestination":[{
 	"name":"$\ufffc0 Playback Destination",
+	"group":"gRed",
 	"param":{
 		"WFMediaRouteOperation":"$\ufffc0",
 		"$\ufffc0":"Set",
 }}],
 "is.workflow.actions.handoffplayback":[{
 	"name":"Hand Off Playback",
+	"group":"gRed",
 }],
 "is.workflow.actions.searchitunes":[{
-	"name":"Search iTunes Store for $\ufffc0",
+	"name":"Find iTunes Store Items for $\ufffc0",
 	"param":{
 		"WFSearchTerm":"$\ufffc0",
 }}],
@@ -1444,21 +1788,24 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 		"WFProduct":"$\ufffc0",
 }}],
 "is.workflow.actions.searchappstore":[{
-	"name":"Search App Store for $\ufffc0",
+	"name":"Find App Store Apps for $\ufffc0",
 	"param":{
 		"WFSearchTerm":"$\ufffc0",
 }}],
 "is.workflow.actions.getdevicedetails":[{
 	"name":"Get Device Details $\ufffc0",
+	"group":"gBlue",
 	"param":{
 		"WFDeviceDetail":"$\ufffc0",
 		"$\ufffc0":"Device Name",
 }}],
 "is.workflow.actions.getbatterylevel":[{
 	"name":"Get Battery Level",
+	"group":"gGreen",
 }],
 "is.workflow.actions.setvolume":[{
 	"name":"Set Volume to $\ufffc0",
+	"group":"gRed",
 	"param":{
 		"WFVolume":"$\ufffc0",
 		"$\ufffc0":"0.5",
@@ -1471,9 +1818,11 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.playsound":[{
 	"name":"Play Sound $\ufffc0",
+	"group":"gRed",
 }],
 "is.workflow.actions.vibrate":[{
 	"name":"Vibrate Device",
+	"group":"gRed",
 }],
 "is.workflow.actions.takescreenshot":[{
 	"name":"Take Screenshot",
@@ -1791,6 +2140,7 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.flashlight":[{
 	"name":"$\ufffc0 Flashlight $\ufffc9",
+	"group":"gBlue",
 	"param":{
 		"operation":"$\ufffc0",
 		"$\ufffc0":"Turn",
@@ -1798,6 +2148,7 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.airplanemode.set":[{
 	"name":"$\ufffc0 Airplane Mode $\ufffc9",
+	"group":"gOrange",
 	"param":{
 		"operation":"$\ufffc0",
 		"$\ufffc0":"Turn",
@@ -1806,6 +2157,7 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.bluetooth.set":[{
 	"name":"$\ufffc0 Bluetooth $\ufffc9",
+	"group":"gBlue",
 	"param":{
 		"operation":"$\ufffc0",
 		"$\ufffc0":"Turn",
@@ -1814,6 +2166,7 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.cellulardata.set":[{
 	"name":"$\ufffc0 Cellular Data $\ufffc9",
+	"group":"gGreen",
 	"param":{
 		"operation":"$\ufffc0",
 		"$\ufffc0":"Turn",
@@ -1822,6 +2175,7 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.lowpowermode.set":[{
 	"name":"$\ufffc0 Low Power Mode $\ufffc9",
+	"group":"gOrange",
 	"param":{
 		"operation":"$\ufffc0",
 		"$\ufffc0":"Turn",
@@ -1830,6 +2184,7 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.orientationlock.set":[{
 	"name":"$\ufffc0 Orientation Lock $\ufffc9",
+	"group":"gRed",
 	"param":{
 		"operation":"$\ufffc0",
 		"$\ufffc0":"Turn",
@@ -1838,6 +2193,7 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.appearance":[{
 	"name":"$\ufffc0 Appearance $\ufffc9",
+	"group":"gBlue",
 	"param":{
 		"operation":"$\ufffc0",
 		"$\ufffc0":"Turn",
@@ -1846,15 +2202,129 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }}],
 "is.workflow.actions.wifi.set":[{
 	"name":"Turn Wi-Fi $\ufffc9",
+	"group":"gBlue",
 	"param":{
 		"OnValue":"$\ufffc9",
 		"$\ufffc9":{"key":"OnValue"},
 }}],
+"is.workflow.actions.dnd.getfocus":[{
+	"name":"Get Current Focus",
+}],
 "is.workflow.actions.dnd.set":[{
 	"name":"Turn Focus $\ufffc9",
 	"param":{
 		"Enabled":"$\ufffc9",
 		"$\ufffc9":{"key":"Enabled","default":0},
+}}],
+"com.apple.mobilecal.SetCalendarFocusConfiguration":[{ // 16
+	"name":"$\ufffc0 Calendar Focus Filter",
+	"param":{
+		"Mode":"$\ufffc0",
+		"$\ufffc0":"Set",
+}}],
+"com.apple.mobilemail.MailFocusConfigurationAction":[{ // 16
+	"name":"$\ufffc0 Mail Focus Filter",
+	"param":{
+		"Mode":"$\ufffc0",
+		"$\ufffc0":"Set",
+}}],
+"com.apple.MobileSMS.ConversationListFocusFilterAction":[{ // 16
+	"name":"$\ufffc0 Messages Focus Filter",
+	"param":{
+		"Mode":"$\ufffc0",
+		"$\ufffc0":"Set",
+}}],
+"com.apple.mobilesafari.OpenTabGroupForFocus":[{ // 16
+	"name":"$\ufffc0 Safari Focus Filter",
+	"param":{
+		"Mode":"$\ufffc0",
+		"$\ufffc0":"Set",
+}}],
+"is.workflow.actions.personalhotspot.set":[{ // 16
+	"name":"$\ufffc0 Personal Hotspot $\ufffc9",
+	"group":"gGreen",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"OnValue":"$\ufffc9",
+		"$\ufffc9":{"key":"OnValue"},
+}}],
+"com.apple.AccessibilityUtilities.AXSettingsShortcuts.AXToggleColorFiltersIntent":[{ // 16
+	"name":"$\ufffc0 Color Filters $\ufffc9",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"state":"$\ufffc9",
+}}],
+"com.apple.AccessibilityUtilities.AXSettingsShortcuts.AXToggleLiveCaptionsIntent":[{ // 16
+	"name":"$\ufffc0 Live Captions $\ufffc9",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"state":"$\ufffc9",
+}}],
+"com.apple.NanoSettings.NPRFSetAlwaysOnIntent":[{ // 16
+	"name":"$\ufffc0 Apple Watch Always On $\ufffc9",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"state":"$\ufffc9",
+}}],
+"com.apple.NanoSettings.NPRFSetAutoLaunchAudioAppsIntent":[{ // 16
+	"name":"$\ufffc0 Apple Watch Auto-Launch Audio Clips $\ufffc9",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"state":"$\ufffc9",
+}}],
+"com.apple.NanoSettings.NPRFSetFlashLightIntent":[{ // 16
+	"name":"$\ufffc0 Apple Watch Flashlight $\ufffc9",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"state":"$\ufffc9",
+}}],
+"com.apple.NanoSettings.NPRFSetSchoolTimeIntent":[{ // 16
+	"name":"$\ufffc0 Apple Watch Schooltime $\ufffc9",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"state":"$\ufffc9",
+}}],
+"com.apple.NanoSettings.NPRFSetSilentModeIntent":[{ // 16
+	"name":"$\ufffc0 Apple Watch Silent Mode $\ufffc9",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"state":"$\ufffc9",
+}}],
+"com.apple.NanoSettings.NPRFSetTheaterModeIntent":[{ // 16
+	"name":"$\ufffc0 Apple Watch Theater Mode $\ufffc9",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"state":"$\ufffc9",
+}}],
+"com.apple.NanoSettings.NPRFSetWakeOnWristRaiseIntent":[{ // 16
+	"name":"$\ufffc0 Apple Watch Wake on Wrist Raise $\ufffc9",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"state":"$\ufffc9",
+}}],
+"com.apple.NanoSettings.NPRFSetWaterLockIntent":[{ // 16
+	"name":"$\ufffc0 Apple Watch Water Lock $\ufffc9",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"state":"$\ufffc9",
+}}],
+"is.workflow.actions.cellular.rat.set":[{
+	"name":"Set Voice & Data Mode to $\ufffc0 on $\ufffc1",
+	"group":"gGreen",
+	"param":{
+		"ratMode":"$\ufffc0",
+		"sim":"$\ufffc1",
 }}],
 "is.workflow.actions.connecttoservers":[{
 	"name":"Connect to Servers $\ufffc0",
@@ -1893,9 +2363,11 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 }],
 "is.workflow.actions.getipaddress":[{
 	"name":"Get Current IP Address",
+	"group":"gBlue",
 }],
 "is.workflow.actions.getwifi":[{
 	"name":"Get Network Details of $\ufffc0",
+	"group":"gBlue",
 	"param":{
 		"WFNetworkDetailsNetwork":"$\ufffc0",
 		"$\ufffc0":"Wi-Fi",
@@ -1918,8 +2390,26 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 "com.apple.TVRemoteUIService.WakeAppleTVIntent":[{
 	"name":"Wake Apple TV",
 }],
+"com.apple.AccessibilityUtilities.AXSettingsShortcuts.AXStartRemoteWatchScreenIntent":[{ // 16
+	"name":"Start Apple Watch Remote Screen",
+}],
+"com.apple.PBBridgeSupport.BridgeIntents.COSGetCurrentGizmoFaceIntent":[{ // 16
+	"name":"Get Currently Active Watch Face",
+}],
+"com.apple.PBBridgeSupport.BridgeIntents.COSListGizmoFacesIntent":[{ // 16
+	"name":"Get List of Watch Faces",
+}],
+"com.apple.PBBridgeSupport.BridgeIntents.COSSetGizmoFaceIntent":[{ // 16
+	"name":"Set Acive Watch Face",
+}],
+"com.apple.NanoSettings.NPRFPingMyPhoneIntent":[{ // 16
+	"name":"Ping My iPhone with Lights $\ufffc0",
+	"param":{
+		"state":"$\ufffc0",
+		"$\ufffc0":"Off",
+}}],
 "is.workflow.actions.giphy":[{
-	"name":"Search Giphy",
+	"name":"Search Giphy GIFs",
 }],
 "is.workflow.actions.cloudapp.upload":[{
 	"name":"Upload to CloudApp",
@@ -1973,7 +2463,7 @@ var A6AE00E8-D0D7-42BD-945F-00042E3DB27D = """const idDict = {
 	"name":"Get Details of Trello Item",
 }],
 "is.workflow.actions.showinblindsquare":[{
-	"name":"Show in BlindSquare",
+	"name":"Open in BlindSquare",
 }],
 "is.workflow.actions.todoist.add":[{
 	"name":"Add Todoist Item",
@@ -2035,23 +2525,10 @@ const filterDict = {
 "Source":{"type":"Enumeration"},
 "Status":{"type":"Enumeration","default":"Accepted"},
 "Type":{"type":"Enumeration","default":"Step"},
-"Altitude":{"type":"Number"},
-"Disc Number":{"type":"Number"},
 "Duration":{"type":"Number","unit":"Unit"},
 "File Size":{"type":"Number","unit":"ByteCountUnit"},
-"Frame Rate":{"type":"Number"},
-"Height":{"type":"Number"},
-"Latitude":{"type":"Number"},
-"Longitude":{"type":"Number"},
-"Play Count":{"type":"Number"},
-"Rating":{"type":"Number"},
-"Skip Count":{"type":"Number"},
-"Track Number":{"type":"Number"},
-"Width":{"type":"Number"},
 "Phone Number":{"type":"Phone"},
 "Phone Numbers":{"type":"Phone"},
-"X Position":{"type":"Number"},
-"Y Position":{"type":"Number"},
 };
 
 const unitDict = {
@@ -2076,13 +2553,15 @@ const unitDict = {
 
 function mapNullUndef(a, b) { return (a == null || a == undefined) ? b : a; }
 
-const ignore = ['UUID','GroupingIdentifier','WFControlFlowMode'];
+const ignore = ['UUID','GroupingIdentifier','WFControlFlowMode', 'AppIntentDescriptor'];
 let udict = {};
 let indent = 0;
 let loopindex = [];
-let islong = d.WFWorkflowActions.length > 300;
+var gVarDict = {};
+var gIndex;
 d.WFWorkflowActions.forEach((a,i) => { udict[a.WFWorkflowActionParameters.UUID] = i; });
 let output = d.WFWorkflowActions.map((a,i) => {
+	gIndex = i;
 	let out = [];
 	let param = mapNullUndef(a.WFWorkflowActionParameters, {});
 	let name = a.WFWorkflowActionIdentifier;
@@ -2103,7 +2582,7 @@ let output = d.WFWorkflowActions.map((a,i) => {
 		}
 		adict = id[flow];
 		name = adict.name;
-		if (loop && flow && (l0 = loopindex[0])<i-10) { name += ` <span class="magic" onclick="magictap(${l0})">${l0}</span>`; }
+		if (loop && flow && (l0 = loopindex[0])<i-10) { name += `&#12288;▵<span class="magic" onclick="magictap(${l0})">${l0}</span>`; }
 		if (a.WFWorkflowActionIdentifier === 'is.workflow.actions.conditional' && Number.isInteger(param.WFCondition)) {
 			let cond = param.WFCondition.toString();
 			delete param.WFCondition;
@@ -2183,7 +2662,7 @@ let output = d.WFWorkflowActions.map((a,i) => {
 				default:
 					switch (pstr) {
 					 	case 'CustomOutputName':
-							name += ` <b>&nbsp; ➔ ${v}</b>`;
+							name += ` <b>&#12288;➔ ${v}</b>`;
 							break;
 						default:
 							pstr = k.replace(/^WF/,'');
@@ -2195,7 +2674,7 @@ let output = d.WFWorkflowActions.map((a,i) => {
 		}
 	}
 	name = name.replace('$\ufffc9', m => {
-		let d = {'key':'state', 'default':1, 'dict':{'0':'Off', '1':'On', 'false':'Off', 'true':'On'}, ...adict.param[m]};
+		let d = {'key':'state', 'default':1, 'dict':{'0':'Off', '1':'On', 'false':'Off', 'true':'On', 'off':'Off', 'on':'On'}, ...adict.param[m]};
 		let k = param[d.key];
 		if (name.substring(0,5) === 'Turn ' || ['turn','set',undefined].includes(param.operation)) {
 			if (k == undefined) { return d.dict[d.default]; }
@@ -2215,8 +2694,8 @@ let output = d.WFWorkflowActions.map((a,i) => {
 		}
 	}
 	if (p.length || loop && flow != 2) {
-		out.push(`\n<button class="button ${id ? mapNullUndef(adict.group, '') : 'gUnknown'}${loop?' nonbottom'+(flow>0?' nontop':''):''}${indent?' inside':''}${(isbig||loop&&islong&&!indent)?' closed':''}" id="m${i}">\n${i} ${name}</button>
-	<div class="content${loop?' contentloop'+(indent&1?' dashed':''):''}${indent?' inside':''}${a.WFWorkflowActionIdentifier==='is.workflow.actions.comment'?' commentcontent':''}"${(isbig||loop&&islong&&!indent)?' style="display:none"':''}>`);
+		out.push(`\n<button class="button ${id ? mapNullUndef(adict.group, '') : 'gUnknown'}${loop?' nonbottom'+(flow>0?' nontop':''):''}${indent?' inside':''}${isbig?' closed':''}" id="m${i}">\n${i} ${name}</button>
+	<div class="content${loop?' contentloop'+(indent&1?' dashed':''):''}${indent?' inside':''}${a.WFWorkflowActionIdentifier==='is.workflow.actions.comment'?' commentcontent':''}"${isbig?' style="display:none"':''}>`);
 		out = out.concat(p);
 		if (!loop || flow == 2) {
 			out.push('</div>');
@@ -2230,14 +2709,32 @@ let output = d.WFWorkflowActions.map((a,i) => {
 		if (flow == 1) { loopindex[0] = i; } else { loopindex.shift(); }
 	}
 	return out.join('').replaceAll(`"magic" onclick="magictap(${i-1})"`, '"var"');
-}).join('').replace(/(<button class=")button (gLoop nonbottom(?: nontop)?)(?: closed)?((?:(?!<button).)+?)<div class="content contentloop[^>]+><\/div>/gs,'$1$2$3');
+}).map((t,i) => {
+	if (gVarDict[i]) {
+		let d = [...new Set(gVarDict[i])];
+		if (d.length == 1 && d[0] == i+1) {
+			return t.replace('</button>', `&#12288;&#187;</button>`);
+		} else {
+			let l = d.map(a => (a == i+1) ? `<i>${a}</i>` : `<span class="magic" onclick="magictap(${a})">${a}</span>`).join(' ');
+			return t.replace('</button>', `&#12288;&#187; ${l}</button>`);
+		}
+	}
+	return t;
+}).join('').replace(/(<button class=")button (gGray nonbottom(?: nontop)?)(?: closed)?((?:(?!<button).)+?)<div class="content contentloop[^>]+><\/div>/gs,'$1$2$3');
 
+let actionCount = d.WFWorkflowActions.length;
 delete d.WFWorkflowActions;
 let paramstr = JSON.stringify(Object.keys(d).sort().reduce((o,k)=>(o[k]=d[k],o),{}),null,3).replace(/^\{\n|^\}$|^   /gm, '');
 paramstr = paramstr.replace(/"ActionIndex": (\d+)/g, '"ActionIndex": <span class="magic" onclick="magictap($1)"><b>$1</b></span>');
+/*
 let params = `<button class="button gParams closed">${shortcutname}</button>
 <div class="content" style="display:none"><div class="col2">${paramstr}</div></div>
 `;
+*/
+let params = `<button class="button gParams"><b>${shortcutname}</b> (${actionCount > 29 ? '<span class="magic" onclick="magictap('+(actionCount-1)+')">'+actionCount+'</span>' : actionCount} actions, ${fileSize})</button>
+<div class="content"><div class="col2">${paramstr}</div></div>
+`;
+
 document.write(encodeURIComponent(params+output));
 
 function gettext(i) {
@@ -2280,10 +2777,8 @@ function gettext(i) {
 						return JSON.stringify(i,null,3).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\\n/g,'\n').replace(/\\t/g,'\t').replace(/(  +|^)\{\n +/g,'$1{  ').replace(/( *)(\{.*)\n\1\}/g,'$1$2 }');
 				}
 			}
-		case 'string':
-			return i.replace(/&/g,'&amp;').replace(/</g,'&lt;');
-		default:
-			return i
+		case 'string': return i.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+		default: return i;
 	}
 }
 
@@ -2369,13 +2864,13 @@ function filtertext(f, d) {
 			return out + (mapNullUndef(v.Enumeration ? gettext(v.Enumeration.Value) : v.Enumeration, mapNullUndef(d.default, '(default)')));
 		case 'Date':
 			if (f.Operator == 1002) { return out; }
-			if (f.Operator == 1003) { return out + gettext(mapNullUndef(v.Date, 'now')) + ' and ' + gettext(mapNullUndef(v.AnotherDate, 'now')); }
+			if (f.Operator == 1003) { return out + gettext(mapNullUndef(v.Date, '(now)')) + ' and ' + gettext(mapNullUndef(v.AnotherDate, '(now)')); }
 			if (f.Operator > 999) {
 				t = 'Number';
 				d = {'unit':'Unit'};
-			}
+			} else if ([null, undefined].includes(v.Date)) { v.Date = '(now)'; }
 		default:
-			out += gettext(mapNullUndef(v[t], '(anything)'));
+			out += gettext(mapNullUndef(v[t], mapNullUndef(v.Number, JSON.stringify(v))));
 			if (u=d.unit) {
 				let unitv = mapNullUndef(v[u], ((p === 'Duration') ? 32 : 4));
 				return out + ' ' + unitDict[u][unitv.toString()];
@@ -2392,6 +2887,11 @@ function variablename(v) {
 			return '<span class="var"><b>['+v.VariableName + aggr(v);
 		case 'ActionOutput':
 			if ((u = v.OutputUUID) && Number.isInteger(i=udict[u])) {
+				if (gVarDict[i]) {
+					gVarDict[i].push(gIndex);
+				} else {
+					gVarDict[i] = [gIndex];
+				}
 				return `<span class="magic" onclick="magictap(${i})"><b>[${i} ` + v.OutputName + aggr(v);
 			}
 			return '<span class="var"><b>[' + v.OutputName + aggr(v);
@@ -2446,14 +2946,14 @@ function getdict(dict) {
 function getvalue(d) {
 	if (typeof d !== 'object') { return d.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
 	if (d.WFValue == null) return null;
+	let v = d.WFValue.Value;
 	switch (d.WFItemType) {
-		case 0: return stringify(d.WFValue.Value);
-		case 1: return getdict(d.WFValue.Value.Value);
-		case 2: return d.WFValue.Value.map(getvalue);
-		case 3: let v = d.WFValue.Value;
-			return v.attachmentsByRange ? stringify(v) : Number(v.string);
-		case 4: return d.WFValue.Value;
-		case 5: return variablename(d.WFValue.Value.Value);
+		case 0: return stringify(v);
+		case 1: return getdict(v.Value);
+		case 2: return v.map(getvalue);
+		case 3: return v.attachmentsByRange ? stringify(v) + '<i> as Number</i>': Number(v.string);
+		case 4: return v.Value ? variablename(v.Value) + '<i> as Boolean</i>' : v;
+		case 5: return variablename(v.Value);
 	}
 }
 
@@ -2465,17 +2965,17 @@ function stringifyMap(o) {
 	}
 	return JSON.stringify({a:o}).slice(5,-1);
 }"""
-text("${A6AE00E8-D0D7-42BD-945F-00042E3DB27D}")
-	url(url: "data:text/html;charset=utf-8,<script>const mobile=${Dictionary}==5;const shortcutname=${ActionOutput}.name;const d=${Menu Result};${ActionOutput}</script>") >> url
-	getFileOfType(input: URL, type: "com.apple.webarchive") >> getFileOfType 2
-	decodeURL(url: "${File of Type}") >> decodeURL
-var 5302B24B-798B-4926-B129-BB046C5A12B5 = """<!DOCTYPE html><html><head><meta charset="utf-8">
+text("${34BB38E0-3DB2-42A2-9041-C4206E04F24D}")
+	url(url: "data:text/html;charset=utf-8,<body/><script>const mobile=${Text}==5;const shortcutname=${ActionOutput}.name;const d=${Dictionary};const fileSize='${ActionOutput}';${Menu Result}</script>") >> url
+	decodeURL(url: "${URL.as(RichText)}") >> decodeURL
+var A955CD06-AB78-47C6-B88F-4F23095DE264 = """<!DOCTYPE html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
 <meta name="format-detection" content="telephone=no,date=no">
 <title>￼</title>
 <style>
 body {
 	font-family: system-ui;
+	font-size: 0.95em;
 	margin-top: 1rem;
 	margin-bottom: calc(1rem + env(safe-area-inset-bottom));
 	word-break: break-word;
@@ -2489,8 +2989,8 @@ button {
 	font-weight: normal;
 	line-height: 1.8;
 	text-align: left;
-	padding: 3px 10px;
-	margin: 5px 0;
+	margin: 3px 0;
+	padding: 1px 8px;
 	border: 1px #aaa;
 	border-style: solid;
 	border-radius: 8px;
@@ -2513,7 +3013,7 @@ button {
 }
 
 .closed {
-	margin-bottom: 5px;
+	margin-bottom: 3px;
 	border-bottom-style: solid;
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
@@ -2532,10 +3032,12 @@ button {
 	border-top-right-radius: 0;
 }
 
-.gLoop { background-color: #e0e0e0; }
-.gScripting { background-color: #ddffdd; }
-.gDocuments { background-color: #ffeebb; }
-.gVariable { background-color: #ffddcc; }
+.gGray { background-color: #e0e0e0; }
+.gGreen { background-color: #ddffdd; }
+.gYellow { background-color: #ffeebb; }
+.gOrange { background-color: #ffddcc; }
+.gRed { background-color: #ffccdd; }
+.gBlue { background-color: #aaccff; }
 .gUnknown { background-color: #bbffff; }
 .gParams {
 	text-align: center;
@@ -2544,8 +3046,8 @@ button {
 
 .content {
 	overflow: hidden;
-	padding: 5px 0 5px 10px;
-	margin-bottom: 5px;
+	margin-bottom: 3px;
+	padding: 3px 0 3px 8px;
 	border: 1px #aaa;
 	border-style: none solid solid solid;
 	border-bottom-left-radius: 8px;
@@ -2553,8 +3055,8 @@ button {
 }
 
 .contentloop {
-	padding-top: 5px;
 	margin-bottom: 0;
+	padding-top: 3px;
 	border-bottom-style: none;
 	border-bottom-left-radius: 0;
 	border-bottom-right-radius: 0;
@@ -2568,22 +3070,25 @@ button {
 	border-bottom-right-radius: 0;
 }
 
-.commentcontent { background-color: #fff8dd; }
+.commentcontent { background-color: #ffeebb; }
 
-.row { display: flex; }
+.row {
+	display: flex;
+	padding: 0 2px;
+}
 
 .col1 {
-	padding-right: 5px;
-	margin-right: 5px;
+	margin-right: 3px;
+	padding-right: 4px;
 	border-right-style: double;
 }
 .col2 { white-space: pre-wrap; }
 
 span.box {
 	display: inline;
-	padding: 3px 5px;
 	margin: 0 2px;
-	border-radius: 8px;
+	padding: 2px 4px;
+	border-radius: 6px;
 	background-color: #fff;
 }
 span.var { font-style: italic; }
@@ -2595,14 +3100,16 @@ span.magic {
 
 @media (prefers-color-scheme: dark) {
 	body { background: #000; color: #eee; }
-	button { background: #404060; color: #eee; }
-	.gLoop { background-color: #404040; }
-	.gScripting { background-color: #305030; }
-	.gDocuments { background-color: #505020; }
-	.gVariable { background-color: #503030; }
-	.gUnknown { background-color: #205050; }
+	button { background: #514c72; color: #eee; }
+	.gGray { background-color: #555555; }
+	.gGreen { background-color: #3a6441; }
+	.gYellow { background-color: #716d33; }
+	.gOrange { background-color: #76523f; }
+	.gRed { background-color: #674044; }
+	.gBlue { background-color: #384c67; }
+	.gUnknown { background-color: #377172; }
 	.gParams { background-color: #181818; }
-	.commentcontent { background-color: #505020; }
+	.commentcontent { background-color: #716d33; }
 	span.box { background-color: #000; }
 }
 </style></head><body>
@@ -2626,7 +3133,7 @@ function magictap(id) {
 	setTimeout(function(){ e.scrollIntoView({block:'nearest',behavior:'smooth'}); }, 10);
 }
 </script></body></html>"""
-text("${5302B24B-798B-4926-B129-BB046C5A12B5}")
+text("${A955CD06-AB78-47C6-B88F-4F23095DE264}")
 	setName(input: Text, name: "${file.get(Name)}.html") >> setName 5
 	menu(, [💻  Share, 📝  Save to Files, 🧭  Open in Browser]) {
 	case("💻  Share"):
@@ -2634,7 +3141,7 @@ text("${5302B24B-798B-4926-B129-BB046C5A12B5}")
 	case("📝  Save to Files"):
 		saveFile(input: Renamed Item) >> saveFile
 	case("🧭  Open in Browser"):
-		if(Device Model == "Mac") {
+		if(DeviceDetails == "Mac") {
 			openIn(input: Renamed Item, ask: false)
 			wait()
 		} else {
@@ -2652,12 +3159,11 @@ if(file .beginsWith "{") {
 choose(list: If Result) >> choose
 //Unable to get shortcuts action is.workflow.actions.getvariable
 if(Chosen Item != "Skip") {
-	getFileOfType(input: file, type: "${Chosen Item.as(Text)}") >> getFileOfType 3
+	getFileOfType(input: file, type: "${Chosen Item.as(Text)}") >> getFileOfType 2
 } >> IFResult 10
 if(If Result .beginsWith "{") {
-	url(url: "data:text/html;charset=utf-8,<script>document.write(encodeURIComponent(JSON.stringify(${If Result},null,3).replaceAll('\ufffc','\\uFFFC')));</script>") >> url 2
-	getFileOfType(input: URL, type: "com.apple.webarchive") >> getFileOfType 4
-	decodeURL(url: "${File of Type}") >> decodeURL 1
+	url(url: "data:text/html;charset=utf-8,<body/><script>document.body.textContent=encodeURIComponent(JSON.stringify(${If Result},null,3).replaceAll('\ufffc','\\uFFFC'))</script>") >> url 2
+	decodeURL(url: "${URL.as(RichText)}") >> decodeURL 1
 } else {
 	replaceText(input: "${If Result}", find: "\x{fffc}", replace: "&#xFFFC;", isRegex: true) >> replaceText 5
 } >> IFResult 11
@@ -2673,10 +3179,10 @@ if(Menu Result == 3) {
 	share(file: file) >> share
 } >> IFResult 13
 if(Menu Result == 4) {
-	text(text: "${file}${Variable}") >> text
+	text(text: "${Ask}${file}") >> text
 	if(Text .beginsWith "{") {
 		setName(input: Text, name: "a.json") >> setName 7
-		getFileOfType(input: Renamed Item, type: "com.apple.plist") >> getFileOfType 5
+		getFileOfType(input: Renamed Item, type: "com.apple.plist") >> getFileOfType 3
 	} >> IFResult 14
 	askForInput(prompt: "New Shortcut Name:", default: "${file.get(Name)}") >> askForInput
 	setName(input: If Result, name: "${Provided Input}.plist") >> setName 8
