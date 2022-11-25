@@ -3,15 +3,15 @@ import Shortcuts
 
 /*
 View, save, convert, edit shortcut source in xml or json format. Restore shortcuts from source. Create web review.
-2022-10-25	v3.5.2 	u/gluebyte
-https://routinehub.co/shortcut/5256
+2022-11-16 	v3.5.3 	u/gluebyte
+https://routinehub.co/shortcut/5256  16.2, edit event/reminder
 */
 randomNumber(min: 1, max: 2) >> randomNumber
 if(Random Number == 1) {
 	getIP() >> getIP
 	if(Current IP Address != nil) {
 		downloadURL(url: "https://updatecheck.gluebyte.workers.dev/?id=33C37587") >> downloadURL
-		if(Contents of URL .contains "2022-10-25") {
+		if(Contents of URL .contains "2022-11-16") {
 			menu(, [🌏  Go to RoutineHub, 👾  Download Update, ⮐  Not Now]) {
 			case("🌏  Go to RoutineHub"):
 				openURL(url: "https://routinehub.co/shortcut/5256/")
@@ -83,10 +83,10 @@ var src = File of Type
 			setName(input: Base64 Encoded, name: "a.plist") >> setName 4
 			nothing()
 			if(Text == "UserActivityData") {
-				keysFrom(dictionary: Renamed Item) >> keysFrom
+				valueFor(key: "$objects.5", dictionary: Renamed Item) >> valueFor
 			} >> IFResult 4
 			if(Text == "IntentData") {
-				keysFrom(dictionary: Renamed Item) >> keysFrom 1
+				valueFor(key: "$objects.13", dictionary: Renamed Item) >> valueFor 1
 			} >> IFResult 5
 			dictionary({"k":"${If Result}${ActionOutput}"})
 			replaceText(input: "${Dictionary}", find: "^\{"k":|\}$", isRegex: true) >> replaceText 3
@@ -95,7 +95,7 @@ var src = Updated Text
 			nothing()
 		} >> RepeatResult
 	} >> IFResult 6
-var 34BB38E0-3DB2-42A2-9041-C4206E04F24D = """const idDict = {
+var 0D2756B9-2D4A-4E8A-B3F6-69E5524AF7FE = """const idDict = {
 "is.workflow.actions.conditional":[{
 	"name":"If $\ufffc0 $\ufffc1",
 	"group":"gGray",
@@ -453,6 +453,16 @@ var 34BB38E0-3DB2-42A2-9041-C4206E04F24D = """const idDict = {
 	"param":{
 		"AlbumName":"$\ufffc1",
 }}],
+"is.workflow.actions.removefromalbum":[{
+	"name":"Remove $\ufffc0 from Photo Album $\ufffc1",
+	"param":{
+		"WFRemoveAlbumSelectedGroup":"$\ufffc1",
+}}],
+"com.apple.mobileslideshow.StreamShareService":[{
+	"name":"Post $\ufffc0 to Shared Album",
+	"param":{
+		"ImageInput":"$\ufffc0",
+}}],
 "is.workflow.actions.url":[{
 	"name":"URL $\ufffc0",
 	"group":"gBlue",
@@ -560,17 +570,38 @@ var 34BB38E0-3DB2-42A2-9041-C4206E04F24D = """const idDict = {
 	"param":{
 		"CalendarName":"$\ufffc0",
 }}],
+"is.workflow.actions.addnewcontact":[{
+	"name":"Add New Contact $\ufffc0 $\ufffc1",
+	"param":{
+		"WFContactFirstName":"$\ufffc0",
+		"WFContactLastName":"$\ufffc1",
+}}],
 "is.workflow.actions.contacts":[{
 	"name":"Contacts",
 }],
 "is.workflow.actions.selectcontacts":[{
 	"name":"Select Contact",
 }],
-"is.workflow.actions.setters.contacts":[{
-	"name":"$\ufffc1 to/from Contact $\ufffc0",
+"is.workflow.actions.setters.calendarevents":[{
+	"name":"$\ufffc1 $\ufffc2 of Calendar Event $\ufffc0",
 	"param":{
 		"Mode":"$\ufffc1",
 		"$\ufffc1":"Set",
+		"WFContentItemPropertyName":"$\ufffc2",
+}}],
+"is.workflow.actions.setters.contacts":[{
+	"name":"$\ufffc1 $\ufffc2 of Contact $\ufffc0",
+	"param":{
+		"Mode":"$\ufffc1",
+		"$\ufffc1":"Set",
+		"WFContentItemPropertyName":"$\ufffc2",
+}}],
+"is.workflow.actions.setters.reminders":[{
+	"name":"$\ufffc1 $\ufffc2 of Reminder $\ufffc0",
+	"param":{
+		"Mode":"$\ufffc1",
+		"$\ufffc1":"Set",
+		"WFContentItemPropertyName":"$\ufffc2",
 }}],
 "com.apple.mobiletimer-framework.MobileTimerIntents.MTCreateAlarmIntent":[{
 	"name":"Create Alarm for $\ufffc0 called $\ufffc1",
@@ -767,6 +798,17 @@ var 34BB38E0-3DB2-42A2-9041-C4206E04F24D = """const idDict = {
 		"WFCameraCaptureDevice":"$\ufffc0",
 		"$\ufffc0":"Back",
 }}],
+"is.workflow.actions.posters.get":[{ // 16.2
+	"name":"Get $\ufffc0 Wallpaper",
+	"param":{
+		"WFPosterType":"$\ufffc0",
+		"$\ufffc0":"All",
+}}],
+"is.workflow.actions.posters.switch":[{ // 16.2
+	"name":"Switch Wallpaper to $\ufffc0",
+	"param":{
+		"WFPoster":"$\ufffc0",
+}}],
 "is.workflow.actions.wallpaper.set":[{
 	"name":"Set $\ufffc1 Wallpaper to $\ufffc0",
 	"param":{
@@ -867,6 +909,10 @@ var 34BB38E0-3DB2-42A2-9041-C4206E04F24D = """const idDict = {
 }}],
 "is.workflow.actions.searchmaps":[{
 	"name":"Open in Maps",
+	"group":"gGreen",
+}],
+"is.workflow.actions.ride.requestride":[{
+	"name":"Request Ride",
 	"group":"gGreen",
 }],
 "is.workflow.actions.address":[{
@@ -1054,6 +1100,11 @@ var 34BB38E0-3DB2-42A2-9041-C4206E04F24D = """const idDict = {
 	"name":"Create Shortcut $\ufffc0",
 	"param":{
 		"name":"$\ufffc0",
+}}],
+"is.workflow.actions.openworkflow":[{
+	"name":"Open Shortcut $\ufffc0",
+	"param":{
+		"WFWorkflow":"$\ufffc0",
 }}],
 "com.apple.shortcuts.DeleteWorkflowAction":[{ // 16
 	"name":"Delete Shortcuts",
@@ -1800,9 +1851,12 @@ var 34BB38E0-3DB2-42A2-9041-C4206E04F24D = """const idDict = {
 		"$\ufffc0":"Device Name",
 }}],
 "is.workflow.actions.getbatterylevel":[{
-	"name":"Get Battery Level",
+	"name":"Get Battery Status $\ufffc0",
 	"group":"gGreen",
-}],
+	"param":{
+		"Subject":"$\ufffc0",
+		"$\ufffc0":"Battery Level",
+}}],
 "is.workflow.actions.setvolume":[{
 	"name":"Set Volume to $\ufffc0",
 	"group":"gRed",
@@ -2207,7 +2261,7 @@ var 34BB38E0-3DB2-42A2-9041-C4206E04F24D = """const idDict = {
 		"OnValue":"$\ufffc9",
 		"$\ufffc9":{"key":"OnValue"},
 }}],
-"is.workflow.actions.dnd.getfocus":[{
+"is.workflow.actions.dnd.getfocus":[{ // 16
 	"name":"Get Current Focus",
 }],
 "is.workflow.actions.dnd.set":[{
@@ -2735,7 +2789,7 @@ let params = `<button class="button gParams"><b>${shortcutname}</b> (${actionCou
 <div class="content"><div class="col2">${paramstr}</div></div>
 `;
 
-document.write(encodeURIComponent(params+output));
+document.body.textContent = encodeURIComponent(params+output);
 
 function gettext(i) {
 	switch (typeof(i)) {
@@ -2894,7 +2948,7 @@ function variablename(v) {
 				}
 				return `<span class="magic" onclick="magictap(${i})"><b>[${i} ` + v.OutputName + aggr(v);
 			}
-			return '<span class="var"><b>[' + v.OutputName + aggr(v);
+			return '<span class="var"><b>[' + (v.OutputUUID ? "?? " : "") + v.OutputName + aggr(v);
 		default:
 			return '<span class="var"><b>[' + t.replace('ExtensionInput', 'Shortcut Input') + aggr(v);
 	}
@@ -2965,10 +3019,10 @@ function stringifyMap(o) {
 	}
 	return JSON.stringify({a:o}).slice(5,-1);
 }"""
-text("${34BB38E0-3DB2-42A2-9041-C4206E04F24D}")
-	url(url: "data:text/html;charset=utf-8,<body/><script>const mobile=${Text}==5;const shortcutname=${ActionOutput}.name;const d=${Dictionary};const fileSize='${ActionOutput}';${Menu Result}</script>") >> url
+text("${0D2756B9-2D4A-4E8A-B3F6-69E5524AF7FE}")
+	url(url: "data:text/html;charset=utf-8,<body/><script>const mobile=${Dictionary}==5;const shortcutname=${ActionOutput}.name;const d=${file.get(File Size)};const fileSize='${Variable.get(File Size)}';${src}</script>") >> url
 	decodeURL(url: "${URL.as(RichText)}") >> decodeURL
-var A955CD06-AB78-47C6-B88F-4F23095DE264 = """<!DOCTYPE html><html><head><meta charset="utf-8">
+var 31D5272C-9FD6-4DEF-9A2F-BC413244CD66 = """<!DOCTYPE html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
 <meta name="format-detection" content="telephone=no,date=no">
 <title>￼</title>
@@ -3133,7 +3187,7 @@ function magictap(id) {
 	setTimeout(function(){ e.scrollIntoView({block:'nearest',behavior:'smooth'}); }, 10);
 }
 </script></body></html>"""
-text("${A955CD06-AB78-47C6-B88F-4F23095DE264}")
+text("${31D5272C-9FD6-4DEF-9A2F-BC413244CD66}")
 	setName(input: Text, name: "${file.get(Name)}.html") >> setName 5
 	menu(, [💻  Share, 📝  Save to Files, 🧭  Open in Browser]) {
 	case("💻  Share"):
@@ -3179,7 +3233,7 @@ if(Menu Result == 3) {
 	share(file: file) >> share
 } >> IFResult 13
 if(Menu Result == 4) {
-	text(text: "${Ask}${file}") >> text
+	text(text: "${file}${Variable}") >> text
 	if(Text .beginsWith "{") {
 		setName(input: Text, name: "a.json") >> setName 7
 		getFileOfType(input: Renamed Item, type: "com.apple.plist") >> getFileOfType 3
