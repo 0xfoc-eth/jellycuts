@@ -4,6 +4,14 @@ import Shortcuts
 /*
 A shortcut to backup a RoutineHub account — @atnbueno (2012-12-09)
 
+v1.0.4 (2022-12-14)
+- Fixed issue with characters in titles that are invalid in filenames
+- Fixed issue with HTML entities in titles
+
+v1.0.3 (2022-12-13)
+- Replaces the original QR by an embedded QR to the iCloud link
+- Fixed a reversion in the page cleaning
+
 v1.0.2 (2022-12-12)
 - Shortcuts that already have a backup are not backed up
 - Ignore pinned shortcut
@@ -23,7 +31,7 @@ v1.0.0 (2012-12-09)
 
 RoutineHubUpdate
 
-Current Version: "1.0.2"
+Current Version: "1.0.3"
 RoutineHub ID: "13583"
 
 RoutineHubUpdate
@@ -110,7 +118,9 @@ repeatEach(Indexes) { >> RepeatResult 3
 	repeatEach(Shortcut paths) {
 		matchText(text: "${Source code}", regex: "">\n<a href="${Repeat Item 2}"\X+?<strong>(.+?)</strong>") >> matchText 4
 		getMatchGroup(matches: Matches) >> getMatchGroup
-		replaceText(input: "${Texto}", find: "/", replace: "-") >> Shortcut name
+		replaceText(input: "${Texto}", find: "&amp;", replace: "&", isRegex: false) >> replaceText
+		replaceText(input: "${Texto actualizado}", find: "&#x27;|’", replace: "'", isRegex: true) >> replaceText 1
+		replaceText(input: "${Texto actualizado}", find: "[\\/:*?"<>|]", replace: "_", isRegex: true) >> Shortcut name
 		if(Repeat Item .contains "/favorites") {
 			setValue(key: "${Shortcut name} ⭐️", value: "${Repeat Item 2}", dictionary: Shortcuts)
 		} else {
@@ -131,7 +141,7 @@ Discard shortcuts already backed up
 */
 getFolderContents(folder: User folder) >> getFolderContents
 matchText(text: "${Contents of Folder.get(File Path)}", regex: "(?m)(?<=${Username}/).+(?=/description|/changelog)") >> matchText 5
-replaceText(input: "${Matches.as()}", find: "favorites/(.+)", replace: "$1 ⭐️", isRegex: true, caseSensitive: $4) >> replaceText
+replaceText(input: "${Matches.as()}", find: "favorites/(.+)", replace: "$1 ⭐️", isRegex: true, caseSensitive: $4) >> replaceText 2
 text(text: "${Updated Text}") >> text
 repeatEach(Chosen Item) { >> RepeatResult 5
 	if(Text .contains ""
@@ -148,48 +158,50 @@ Get the information about each shortcut to backup
 count(input: Repeat Results) >> Number of shortcuts
 if(Number of shortcuts == 0) {
 	sendNotification(body: "Nothing new to backup!", sound: false, attachment: Number of shortcuts) >> sendNotification
-	prependFile(path: "log.txt") >> prependFile
+	appendFile(path: "log.txt") >> appendFile
 }
 repeatEach(Repeat Results) { >> RepeatResult 7
-	keysFrom(dictionary: Shortcuts) >> Path
+	valuesFrom(dictionary: Shortcuts) >> Path
 	matchText(text: "${Path}", regex: "\d+") >> Shortcut ID
 	downloadURL(url: "https://routinehub.co/shortcut/${Shortcut ID}/", headers: ) >> Description
-	sendNotification(body: "Backing up “${Number of shortcuts}”... (${ActionOutput}/${Repeat Item})", sound: false) >> sendNotification 1
+	sendNotification(body: "Backing up “${Repeat Item}”... (${Variable}/${Repeat Index})", sound: false) >> sendNotification 1
 // Modify HTML source of the shortcut page
 	setName(input: Description, name: "HTML.txt") >> setName 2
 var Description = Renamed Item
-	matchText(text: "${Description}", regex: "(?<=href=")/download/\d+/") >> matchText 6
-	expandURL(url: "https://routinehub.co${Matches}") >> expandURL
-	dictionary({"<i class="fas fa-heart fa-lg"></i>":"♥️","<p class="has-text-centered"><a href="/login/" style="text-decoration: underline;">Log in</a> or <a href="/register/" style="text-decoration: underline;">sign up</a> to heart</p>":"","<p><a href="/login/" style="text-decoration: underline;">Log in</a> or <a href="/register/" style="text-decoration: underline;">sign up</a> to leave feedback.</p>":"","${Matches}":"${Expanded URL}","href="/shortcut/${Shortcut ID}/changelog":"href="changelog.html"})
+	matchText(text: "${Description}", regex: "(?<=href=")/download/\d+/") >> Download link
+	expandURL(url: "https://routinehub.co${Download link}") >> iCloud link
+	downloadURL(url: "https://api.qrserver.com/v1/create-qr-code/?data=${iCloud link}") >> QR code
+	encode(input: QR code) >> Base64-encoded QR code
+	dictionary({"<i class="fas fa-heart fa-lg"></i>":"♥️","<p class="has-text-centered"><a href="/login/" style="text-decoration: underline;">Log in</a> or <a href="/register/" style="text-decoration: underline;">sign up</a> to heart</p>":"","<p><a href="/login/" style="text-decoration: underline;">Log in</a> or <a href="/register/" style="text-decoration: underline;">sign up</a> to leave feedback.</p>":"","https://api.qrserver.com/v1/create-qr-code/?data=https://routinehub.co${Download link}":"${Base64-encoded QR code}","${Download link}":"${iCloud link}","href="/shortcut/${Shortcut ID}/changelog":"href="changelog.html","<a class="reply-feedback">Reply</a> · ":""})
 	repeatEach(Dictionary) { >> RepeatResult 8
-		keysFrom(dictionary: Dictionary) >> keysFrom
-		replaceText(input: "${Description}", find: "${Repeat Item 2}", replace: "${Dictionary Value}") >> replaceText 1
+		valuesFrom(dictionary: Dictionary) >> valuesFrom
+		replaceText(input: "${Description}", find: "${Repeat Item 2}", replace: "${Dictionary Value}") >> replaceText 3
 var Description = Updated Text
 		nothing()
 	} >> RepeatResult 9
-	replaceText(input: "${Description}", find: "(?m)(?:\?|&amp;)X-Amz-\w+=[\w%-]+|<(footer|script|nav|section)(?! (class="level|id="content))\X+?</\1>\v*|<link rel="(apple|icon).+?>\v*|<meta name="m?s?application.+?>\v*|<div class="reply-container">\n<form [\w\W]+?</form>\n</div>|<div class="search[\w\W]+?(?=<section)|^\v+", replace: "", isRegex: true) >> replaceText 2
-	replaceText(input: "${Updated Text}", find: "href="/(category|user)/", replace: "href="https://routinehub.co/$1/", isRegex: true) >> replaceText 3
+	replaceText(input: "${Description}", find: "(?m)(?:\?|&amp;)X-Amz-\w+=[\w%-]+|<(footer|script|nav|section)(?! (class="level|id="content))\X+?</\1>\v*|<link rel="(apple|icon).+?>\v*|<meta name="m?s?application.+?>\v*|<div class="reply-container">\n<form [\w\W]+?</form>\n</div>|<div class="search[\w\W]+?(?=<section)|^\v+", replace: "", isRegex: true) >> replaceText 4
+	replaceText(input: "${Updated Text}", find: "href="/(category|user)/", replace: "href="https://routinehub.co/$1/", isRegex: true) >> replaceText 5
 	setName(input: Updated Text, name: "description.html") >> setName 3
 var Description = Renamed Item
 // Modify HTML source of the version history page
 	downloadURL(url: "https://routinehub.co/shortcut/${Shortcut ID}/changelog", headers: ) >> Version history
 	setName(input: Version history, name: "HTML.txt") >> setName 4
 var Versionhistory = Renamed Item
-	matchText(text: "${Version history}", regex: "(?<=href=")/download/\d+/") >> matchText 7
+	matchText(text: "${Version history}", regex: "(?<=href=")/download/\d+/") >> matchText 6
 // Replace URLs in downloads buttons by the corresponding iCloud links
 	repeatEach(Matches) { >> RepeatResult 10
-		expandURL(url: "https://routinehub.co${Repeat Item 2}") >> expandURL 1
-		replaceText(input: "${Version history}", find: "${Repeat Item 2}", replace: "${Expanded URL}", isRegex: false) >> replaceText 4
+		expandURL(url: "https://routinehub.co${Repeat Item 2}") >> expandURL
+		replaceText(input: "${Version history}", find: "${Repeat Item 2}", replace: "${Expanded URL}", isRegex: false) >> replaceText 6
 var Versionhistory = Updated Text
 		nothing()
 	} >> RepeatResult 11
-	replaceText(input: "${Version history}", find: "(?m)(?:\?|&amp;)X-Amz-\w+=[\w%-]+|<(footer|script|nav|section)(?! (class="level|id="content))\X+?</\1>\v*|<link rel="(apple|icon).+?>\v*|<meta name="m?s?application.+?>\v*|<div class="search[\w\W]+?(?=<section)|^\v+", isRegex: true) >> replaceText 5
-	replaceText(input: "${Updated Text}", find: "href="/shortcut/${Shortcut ID}/", replace: "href="description.html", isRegex: false) >> replaceText 6
+	replaceText(input: "${Version history}", find: "(?m)(?:\?|&amp;)X-Amz-\w+=[\w%-]+|<(footer|script|nav|section)(?! (class="level|id="content))\X+?</\1>\v*|<link rel="(apple|icon).+?>\v*|<meta name="m?s?application.+?>\v*|<div class="search[\w\W]+?(?=<section)|^\v+", isRegex: true) >> replaceText 7
+	replaceText(input: "${Updated Text}", find: "href="/shortcut/${Shortcut ID}/", replace: "href="description.html", isRegex: false) >> replaceText 8
 	setName(input: Updated Text, name: "changelog.html") >> setName 5
 var Versionhistory = Renamed Item
 // Save files
 	if(Repeat Item .endsWith " ⭐️") {
-		replaceText(input: "${Repeat Item}", find: " ⭐️$", rsRegex: true, caseSensitive: $4) >> replaceText 7
+		replaceText(input: "${Repeat Item}", find: " ⭐️$", rsRegex: true, caseSensitive: $4) >> replaceText 9
 		createFolder(path: "favorites/${Texto actualizado}") >> createFolder 1
 	} else {
 		createFolder(path: "${Repeat Item}") >> createFolder 2
@@ -197,8 +209,9 @@ var Versionhistory = Renamed Item
 	saveFile(input: Description, ask: false, path: "description.html", overwrite: true) >> saveFile
 	saveFile(input: Version history, ask: false, path: "changelog.html", overwrite: true) >> saveFile 1
 // Keep also a log for each user
-	text(text: "${CurrentDate}	https://routinehub.co${Path}	${ActionOutput}") >> text 1
-	prependFile(path: "log.txt") >> prependFile 1
+	text(text: "${iCloud link}	https://routinehub.co${ActionOutput}	${CurrentDate}	${Repeat Item}") >> text 1
+	appendFile(path: "log.txt") >> appendFile 1
 } >> RepeatResult 12
 getTimeBetween(first: "${CurrentDate}", second: "${Start time}", interval: Seconds) >> getTimeBetween
-prependFile(path: "log.txt") >> prependFile 2
+appendFile(path: "log.txt") >> appendFile 2
+matchText(text: "${Time Between Dates}")
