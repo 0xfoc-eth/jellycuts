@@ -1,0 +1,204 @@
+import Shortcuts
+#Color: lightBlue, #Icon: archive
+
+/*
+A shortcut to backup a RoutineHub account — @atnbueno (2012-12-09)
+
+v1.0.2 (2022-12-12)
+- Shortcuts that already have a backup are not backed up
+- Ignore pinned shortcut
+- Improved page cleaning
+
+v1.0.1 (2012-12-11)
+- Fixed a bug in the page cleaning
+- Exclusion menu alphabetically sorted
+
+v1.0.0 (2012-12-09)
+- It can backup any account
+- Optionally download the account’s favorites
+- Allows excluding shortcuts from backup
+- It also backups the full version history
+- Files are cleaned up versions of the original pages (see in macOS/Windows)
+- “Get Shortcut” and “Download” buttons relinked to the iCloud links
+
+RoutineHubUpdate
+
+Current Version: "1.0.2"
+RoutineHub ID: "13583"
+
+RoutineHubUpdate
+*/
+// - Before anything else: Check if routinehub.co is up, and stop the shortcut if not
+downloadURL(url: "https://routinehub.co/", headers: ) >> downloadURL
+getTextFrom(input: Contenido de URL) >> getTextFrom
+matchText(text: "${Texto}", regex: "gateway time\-out error|something went wrong| Cloudflare's Always Online") >> matchText
+if(Coincidencias != nil) { >> IFResult
+	alert(alert: "Unfortunately routinehub.co is currently offline
+
+Maybe try later?", title: "ERROR", cancel: false)
+	exit()
+} >> IFResult 1
+// Ask which user’s account to backup
+askForInput(prompt: "What username do you want to backup?", default: ) >> Username
+// Check if the account exists, and stop the shortcut if not
+url(url: "https://routinehub.co/user/${Username}") >> url
+var URL = URL
+downloadURL(url: "${URL}", headers: ) >> 1st authored page
+matchText(text: "${1st authored page.as(Text)}", regex: "Profile not found") >> matchText 1
+if(Coincidencias != nil) { >> IFResult 2
+	alert(alert: "User @${Username} not found", title: "ERROR", cancel: false)
+	exit()
+} >> IFResult 3
+createFolder(path: "RoutineHub Backup/${Username}/") >> createFolder
+var Userfolder = Created Folder
+// If the backed up user has favorites, ask if they should be backed up too
+setName(input: 1st authored page, name: "Source code.txt") >> Source code
+matchText(text: "${Source code}", regex: "href="/user/${Username}/favorites">") >> matchText 2
+if(Matches != nil) { >> IFResult 4
+	menu(, [Yes, No]) {
+	case("Yes"):
+		number(value: 2) >> number
+	case("No"):
+		number(value: 1) >> number 1
+	} >> MenuResult
+} else { >>  1
+	number(value: 1) >> number 2
+} >> IFResult 5
+var Numberofpasses = If Result
+/*
+Determine the shortcut indexes to process
+
+- First pass: authored shortcuts indexes
+- Second pass: (optional, see above) favorite shortcuts indexes
+*/
+setName(input: 1st authored page, name: "HTML.txt") >> setName
+var Sourcecode = Renamed Item
+repeat(Number of passes) { >> RepeatResult
+	matchText(text: "${Source code}", regex: "(?<=href="\?page=)\d+") >> matchText 3
+	getItemFromList(list: Matches, type: Last Item) >> getItemFromList
+	if(Item from List != nil) {
+		number(value: Item from List) >> number 3
+	} else {
+		number(value: 1) >> number 4
+	} >> Number of pages
+	repeat(Number of pages) {
+		url(url: "${URL}?page=${Variable}") >> url 1
+	} >> RepeatResult 1
+//Unable to get shortcuts action is.workflow.actions.appendvariable
+	if(URL .endsWith "/favorites") {
+		nothing()
+	} else {
+		url(url: "${URL}/favorites") >> url 2
+var URL = URL
+		downloadURL(url: "${URL}", headers: ) >> 1st favorites page
+		setName(input: 1st favorites page, name: "HTML.txt") >> setName 1
+var Sourcecode = Ítem renombrado
+	} >> IFResult 6
+} >> RepeatResult 2
+dictionary({})
+var Shortcuts = Dictionary
+/*
+Determines the shortcuts to backup
+
+- A dictionary with shortcut titles and paths is assembled for the exclusion menu
+- Names of favorites are marked with a ⭐️ to save them later in a different folder
+*/
+repeatEach(Indexes) { >> RepeatResult 3
+	downloadURL(url: "${Repeat Item}", headers: ) >> Index
+	setName(input: Index, name: "HTML.txt") >> Source code
+	matchText(text: "${Source code}", regex: "(?<=">\n<a href=")/shortcut/\d+/") >> Shortcut paths
+	repeatEach(Shortcut paths) {
+		matchText(text: "${Source code}", regex: "">\n<a href="${Repeat Item 2}"\X+?<strong>(.+?)</strong>") >> matchText 4
+		getMatchGroup(matches: Matches) >> getMatchGroup
+		replaceText(input: "${Texto}", find: "/", replace: "-") >> Shortcut name
+		if(Repeat Item .contains "/favorites") {
+			setValue(key: "${Shortcut name} ⭐️", value: "${Repeat Item 2}", dictionary: Shortcuts)
+		} else {
+			setValue(key: "${Shortcut name}", value: "${Repeat Item 2}", dictionary: Shortcuts)
+		} >> Updated dictionary
+var Shortcuts = Updated dictionary
+		nothing()
+	} >> Updated dictionary
+} >> RepeatResult 4
+// Show a menu to optionally exclude shortcuts from the backup
+filterFiles() >> filterFiles
+choose(list: Files, prompt: "Unselect any shortcuts you DON'T want to backup", multiple: true, all: true) >> choose
+date() >> Start time
+/*
+Discard shortcuts already backed up
+
+- “Repeat Item” contains the shortcut’s name
+*/
+getFolderContents(folder: User folder) >> getFolderContents
+matchText(text: "${Contents of Folder.get(File Path)}", regex: "(?m)(?<=${Username}/).+(?=/description|/changelog)") >> matchText 5
+replaceText(input: "${Matches.as()}", find: "favorites/(.+)", replace: "$1 ⭐️", isRegex: true, caseSensitive: $4) >> replaceText
+text(text: "${Updated Text}") >> text
+repeatEach(Chosen Item) { >> RepeatResult 5
+	if(Text .contains ""
+${Repeat Item}
+"") {
+		nothing()
+	}
+} >> RepeatResult 6
+/*
+Get the information about each shortcut to backup
+
+- As above, “Repeat Item” contains the shortcut’s name
+*/
+count(input: Repeat Results) >> Number of shortcuts
+if(Number of shortcuts == 0) {
+	sendNotification(body: "Nothing new to backup!", sound: false, attachment: Number of shortcuts) >> sendNotification
+	prependFile(path: "log.txt") >> prependFile
+}
+repeatEach(Repeat Results) { >> RepeatResult 7
+	keysFrom(dictionary: Shortcuts) >> Path
+	matchText(text: "${Path}", regex: "\d+") >> Shortcut ID
+	downloadURL(url: "https://routinehub.co/shortcut/${Shortcut ID}/", headers: ) >> Description
+	sendNotification(body: "Backing up “${Number of shortcuts}”... (${ActionOutput}/${Repeat Item})", sound: false) >> sendNotification 1
+// Modify HTML source of the shortcut page
+	setName(input: Description, name: "HTML.txt") >> setName 2
+var Description = Renamed Item
+	matchText(text: "${Description}", regex: "(?<=href=")/download/\d+/") >> matchText 6
+	expandURL(url: "https://routinehub.co${Matches}") >> expandURL
+	dictionary({"<i class="fas fa-heart fa-lg"></i>":"♥️","<p class="has-text-centered"><a href="/login/" style="text-decoration: underline;">Log in</a> or <a href="/register/" style="text-decoration: underline;">sign up</a> to heart</p>":"","<p><a href="/login/" style="text-decoration: underline;">Log in</a> or <a href="/register/" style="text-decoration: underline;">sign up</a> to leave feedback.</p>":"","${Matches}":"${Expanded URL}","href="/shortcut/${Shortcut ID}/changelog":"href="changelog.html"})
+	repeatEach(Dictionary) { >> RepeatResult 8
+		keysFrom(dictionary: Dictionary) >> keysFrom
+		replaceText(input: "${Description}", find: "${Repeat Item 2}", replace: "${Dictionary Value}") >> replaceText 1
+var Description = Updated Text
+		nothing()
+	} >> RepeatResult 9
+	replaceText(input: "${Description}", find: "(?m)(?:\?|&amp;)X-Amz-\w+=[\w%-]+|<(footer|script|nav|section)(?! (class="level|id="content))\X+?</\1>\v*|<link rel="(apple|icon).+?>\v*|<meta name="m?s?application.+?>\v*|<div class="reply-container">\n<form [\w\W]+?</form>\n</div>|<div class="search[\w\W]+?(?=<section)|^\v+", replace: "", isRegex: true) >> replaceText 2
+	replaceText(input: "${Updated Text}", find: "href="/(category|user)/", replace: "href="https://routinehub.co/$1/", isRegex: true) >> replaceText 3
+	setName(input: Updated Text, name: "description.html") >> setName 3
+var Description = Renamed Item
+// Modify HTML source of the version history page
+	downloadURL(url: "https://routinehub.co/shortcut/${Shortcut ID}/changelog", headers: ) >> Version history
+	setName(input: Version history, name: "HTML.txt") >> setName 4
+var Versionhistory = Renamed Item
+	matchText(text: "${Version history}", regex: "(?<=href=")/download/\d+/") >> matchText 7
+// Replace URLs in downloads buttons by the corresponding iCloud links
+	repeatEach(Matches) { >> RepeatResult 10
+		expandURL(url: "https://routinehub.co${Repeat Item 2}") >> expandURL 1
+		replaceText(input: "${Version history}", find: "${Repeat Item 2}", replace: "${Expanded URL}", isRegex: false) >> replaceText 4
+var Versionhistory = Updated Text
+		nothing()
+	} >> RepeatResult 11
+	replaceText(input: "${Version history}", find: "(?m)(?:\?|&amp;)X-Amz-\w+=[\w%-]+|<(footer|script|nav|section)(?! (class="level|id="content))\X+?</\1>\v*|<link rel="(apple|icon).+?>\v*|<meta name="m?s?application.+?>\v*|<div class="search[\w\W]+?(?=<section)|^\v+", isRegex: true) >> replaceText 5
+	replaceText(input: "${Updated Text}", find: "href="/shortcut/${Shortcut ID}/", replace: "href="description.html", isRegex: false) >> replaceText 6
+	setName(input: Updated Text, name: "changelog.html") >> setName 5
+var Versionhistory = Renamed Item
+// Save files
+	if(Repeat Item .endsWith " ⭐️") {
+		replaceText(input: "${Repeat Item}", find: " ⭐️$", rsRegex: true, caseSensitive: $4) >> replaceText 7
+		createFolder(path: "favorites/${Texto actualizado}") >> createFolder 1
+	} else {
+		createFolder(path: "${Repeat Item}") >> createFolder 2
+	} >> Created folder
+	saveFile(input: Description, ask: false, path: "description.html", overwrite: true) >> saveFile
+	saveFile(input: Version history, ask: false, path: "changelog.html", overwrite: true) >> saveFile 1
+// Keep also a log for each user
+	text(text: "${CurrentDate}	https://routinehub.co${Path}	${ActionOutput}") >> text 1
+	prependFile(path: "log.txt") >> prependFile 1
+} >> RepeatResult 12
+getTimeBetween(first: "${CurrentDate}", second: "${Start time}", interval: Seconds) >> getTimeBetween
+prependFile(path: "log.txt") >> prependFile 2

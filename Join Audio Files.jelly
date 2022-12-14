@@ -1,6 +1,4 @@
-import Shortcuts
-import aShell
-import aShellMini
+ import Shortcuts
 #Color: green, #Icon: filmstrip
 
 /*
@@ -32,7 +30,7 @@ Usage notes
 - Enjoy! :D
 
 
-2022-10-09 	v1.2.0
+2022-11-26 	v1.2.1
 u/fremenmuaddib
 https://routinehub.co/shortcut/11899/
 */
@@ -51,7 +49,7 @@ if(Conteggio false 2) {
 	getItemFromList(list: File) >> getItemFromList
 	text(text: "${Elemento dell'elenco.get(File Extension)}") >> text
 var filesextension = Testo
-	formatDate(date: "${Elemento dell'elenco}", dStyle: Custom, custom: "yyyyMMddHHmm.ss") >> formatDate
+	formatDate(date: "${Elemento dell'elenco.get(Creation Date)}", dStyle: Custom, custom: "yyyyMMddHHmm.ss") >> formatDate
 	if(filesextension != "wav") {
 		menu(Do you want to add a cover image? (Note: this may not work for all audio formats), [Yes, No]) {
 		case("Yes"):
@@ -88,65 +86,65 @@ var addcover = Testo
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.PutFileIntent
 		text(text: "echo file ${Repeat Item.get(File Extension)}.${Variable.get(File Extension)} >> files.txt") >> text 4
 	} >> RepeatResult
-var D2EAA50F-DD3A-4658-9163-8D42A503EA90 = """hideKeyboard
+var 6B285B24-620C-425B-AE0A-60F3BC2D2B8F = """hideKeyboard
 rm -f files.txt
 ￼
 open "shortcuts:"
 """
-text("${D2EAA50F-DD3A-4658-9163-8D42A503EA90}")
+text("${6B285B24-620C-425B-AE0A-60F3BC2D2B8F}")
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.ExecuteCommandIntent
 	waitToReturn()
-var 77E08A39-DC60-4C73-8466-60585C8B49F6 = """hideKeyboard
+var 223CDEF9-9CD1-4B2B-88AB-143C4E4320AC = """hideKeyboard
 ffmpeg -y -v error -stats -f concat -safe 0 -i files.txt -acodec copy o.￼
 ffmpeg -y -i "1.￼" -i "o.￼" -map 1 -c copy -map_metadata 0 -map_metadata:s:a 0:s:a -map_metadata:s:a 0:s:a "audiooutput.￼"
 open "shortcuts:"
 """
-text("${77E08A39-DC60-4C73-8466-60585C8B49F6}")
+text("${223CDEF9-9CD1-4B2B-88AB-143C4E4320AC}")
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.ExecuteCommandIntent
 	waitToReturn()
 	text(text: "audiooutput") >> text 5
 var mp3file = Testo
-	text(text: "${filesextension}.${Variable}") >> text 6
+	text(text: "${mp3file.as(Text)}.${Variable.as(Text)}") >> text 6
 var outputfilename = Testo
 	if(addcover == 2) {
 		matchText(text: "${filesextension}", regex: "mka|mkv", caseSensitive: false) >> matchText
 		if(Risultati != nil "m4b") {
-var 4D500707-B0FA-4D52-8009-0DA0B63F2DF4 = """ffmpeg -y -i "￼.￼"  -i "￼.￼" -attach "￼.￼" -metadata:s:t "mimetype=image/jpeg" -c copy "￼_cover.￼"
+var 75CE5547-9C96-4483-A269-B3FB1671DE2C = """ffmpeg -y -i "￼.￼"  -i "￼.￼" -attach "￼.￼" -metadata:s:t "mimetype=image/jpeg" -c copy "￼_cover.￼"
 """
-text("${4D500707-B0FA-4D52-8009-0DA0B63F2DF4}")
+text("${75CE5547-9C96-4483-A269-B3FB1671DE2C}")
 var ffmpeg_command = Testo
 		} >> IFResult 4
 		matchText(text: "${filesextension}", regex: "mov", caseSensitive: false) >> matchText 1
 		if(Risultati != nil "m4a") {
-var 8F703399-1B3A-4A08-83E7-8BBE2B23C49F = """ffmpeg -y -vn -i "￼.￼" -i "￼.￼"  -map 0 -map 1 -c copy -id3v2_version 3 -write_id3v1 1  -metadata:s:v "title=Album cover" -metadata:s:v "comment=Cover (front)"  -disposition:v:1 attached_pic "￼_cover.￼"
+var 7D8F9083-98D4-4842-8C24-81AABE3DDB6B = """ffmpeg -y -vn -i "￼.￼" -i "￼.￼"  -map 0 -map 1 -c copy -id3v2_version 3 -write_id3v1 1  -metadata:s:v "title=Album cover" -metadata:s:v "comment=Cover (front)"  -disposition:v:1 attached_pic "￼_cover.￼"
 """
-text("${8F703399-1B3A-4A08-83E7-8BBE2B23C49F}")
+text("${7D8F9083-98D4-4842-8C24-81AABE3DDB6B}")
 var ffmpeg_command = Testo
 		} >> IFResult 5
 		matchText(text: "${filesextension}", regex: "mp4|m4a|m4b", caseSensitive: false) >> matchText 2
 		if(Risultati != nil "m4a") {
-var 89EB04AC-9A2B-4E41-B6D4-5689B1BB10E2 = """ffmpeg -y -vn -i "￼.￼" -i "￼.￼" -disposition:v attached_pic -c:a copy -c:v mjpeg -id3v2_version 3 -write_id3v1 1  -metadata:s:v "title=Album cover" -metadata:s:v "comment=Cover (front)" "￼_cover.￼"
+var 32BF29FF-CBA1-4A8C-AAE4-19AD9309957B = """ffmpeg -y -vn -i "￼.￼" -i "￼.￼" -disposition:v attached_pic -c:a copy -c:v mjpeg -id3v2_version 3 -write_id3v1 1  -metadata:s:v "title=Album cover" -metadata:s:v "comment=Cover (front)" "￼_cover.￼"
 """
-text("${89EB04AC-9A2B-4E41-B6D4-5689B1BB10E2}")
+text("${32BF29FF-CBA1-4A8C-AAE4-19AD9309957B}")
 var ffmpeg_command = Testo
 		} >> IFResult 6
 		matchText(text: "${filesextension}", regex: "flac", caseSensitive: false) >> matchText 3
 		if(Risultati != nil "m4a") {
-var 4A2B61FA-43C1-40F0-AC6C-26CBB15BE899 = """ffmpeg -y -i "￼.￼" -i "￼.￼" -map 0:a -map 1 -codec copy -disposition:v attached_pic  -metadata:s:v "title=Album cover" -metadata:s:v "comment=Cover (front)" "￼_cover.￼"
+var FF7AB251-14F0-43EE-8F18-794BC98BFA17 = """ffmpeg -y -i "￼.￼" -i "￼.￼" -map 0:a -map 1 -codec copy -disposition:v attached_pic  -metadata:s:v "title=Album cover" -metadata:s:v "comment=Cover (front)" "￼_cover.￼"
 """
-text("${4A2B61FA-43C1-40F0-AC6C-26CBB15BE899}")
+text("${FF7AB251-14F0-43EE-8F18-794BC98BFA17}")
 var ffmpeg_command = Testo
 		} >> IFResult 7
 		matchText(text: "${filesextension}", regex: "mp3", caseSensitive: false) >> matchText 4
 		if(Risultati != nil) {
-var DD3A028D-343D-4DEC-909D-007006A74C0A = """ffmpeg -y -i "￼.￼" -i "￼.￼" -disposition:v:1 attached_pic -map 0 -map 1 -c copy -id3v2_version 3 -write_id3v1 1  -metadata:s:v "title=Album cover" -metadata:s:v "comment=Cover (front)" "￼_cover.￼"
+var 7E1FB154-FD77-4F2B-A2A5-1FEEA40F091A = """ffmpeg -y -i "￼.￼" -i "￼.￼" -disposition:v:1 attached_pic -map 0 -map 1 -c copy -id3v2_version 3 -write_id3v1 1  -metadata:s:v "title=Album cover" -metadata:s:v "comment=Cover (front)" "￼_cover.￼"
 """
-text("${DD3A028D-343D-4DEC-909D-007006A74C0A}")
+text("${7E1FB154-FD77-4F2B-A2A5-1FEEA40F091A}")
 var ffmpeg_command = Testo
 		} >> IFResult 8
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.ExecuteCommandIntent
 		waitToReturn()
-		text(text: "${filesextension}_cover.${Variable}") >> text 7
+		text(text: "${mp3file.as(Text)}_cover.${Variable.as(Text)}") >> text 7
 var outputfilename = Testo
 	} >> IFResult 9
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.GetFileIntent
