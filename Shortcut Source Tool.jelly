@@ -3,15 +3,15 @@ import Shortcuts
 
 /*
 View, save, convert, edit shortcut source in xml or json format. Restore shortcuts from source. Create web review.
-2022-11-16 	v3.5.3 	u/gluebyte
-https://routinehub.co/shortcut/5256  16.2, edit event/reminder
+2023-01-05 	v3.7 	u/gluebyte
+https://routinehub.co/shortcut/5256
 */
 randomNumber(min: 1, max: 2) >> randomNumber
 if(Random Number == 1) {
 	getIP() >> getIP
 	if(Current IP Address != nil) {
 		downloadURL(url: "https://updatecheck.gluebyte.workers.dev/?id=33C37587") >> downloadURL
-		if(Contents of URL .contains "2022-11-16") {
+		if(Contents of URL .contains "2023-01-05") {
 			menu(, [🌏  Go to RoutineHub, 👾  Download Update, ⮐  Not Now]) {
 			case("🌏  Go to RoutineHub"):
 				openURL(url: "https://routinehub.co/shortcut/5256/")
@@ -28,7 +28,9 @@ if(Random Number == 1) {
 		}
 	} >> IFResult
 } >> IFResult 1
-menu(Get Source from, [📋  Clipboard (iCloud link or plist/json), 📝  File, 💫  Shortcut]) {
+menu(
+Get Source from:
+, [📋  Clipboard (iCloud link or plist/json), 📝  File, 💫  Shortcut]) {
 case("📋  Clipboard (iCloud link or plist/json)"):
 	getClipboard() >> getClipboard
 	if(Clipboard .beginsWith "https://www.icloud.com/shortcuts/") {
@@ -53,26 +55,83 @@ if(Menu Result .beginsWith "{") {
 	setName(input: File of Type, name: "${Menu Result.get(Name)}.plist") >> setName 3
 } >> IFResult 3
 var file = If Result
-menu(, [🧐  Quick Look Source, 📝  Save Source, 💻  Share Source, ✏️  Edit and Export to Shortcuts, 🔍  Create Web Review (trim large text), 🔍  Create Web Review]) {
-case("🧐  Quick Look Source"):
-	number(value: 1) >> number
-case("📝  Save Source"):
-	number(value: 2) >> number 1
-case("💻  Share Source"):
-	number(value: 3) >> number 2
-case("✏️  Edit and Export to Shortcuts"):
-	number(value: 4) >> number 3
-case("🔍  Create Web Review (trim large text)"):
-	number(value: 5) >> number 4
-case("🔍  Create Web Review"):
-	number(value: 6) >> number 5
-} >> MenuResult 2
-if(Menu Result > 4) {
+list(items: (
+    "\Ud83e\Uddd0  Quick Look Source",
+    "\Ud83d\Udcdd  Save Source",
+    "\Ud83d\Udcbb  Share Source",
+    "\U270f\Ufe0f  Edit Source",
+    "\U2702\Ufe0f  Trim Actions",
+    "\U2753  Replace \U2018++\U2019 with new lines in Import Questions",
+    "\Ud83d\Udd0d  Create Web Review (trim large text)",
+    "\Ud83d\Udd0d  Create Web Review"
+)) >> list
+choose(list: List, prompt: "${file.get(Name)}.${Variable.get(Name)} (${file.get(File Size)})") >> command
+if(command .beginsWith "❓") { >> IFResult 4
+	getFileOfType(input: file, type: "public.json") >> getFileOfType 1
+var D5788899-6990-4707-BB60-9BBF9709A910 = """count = 0;
+d.WFWorkflowImportQuestions.forEach(q => { q.Text = q.Text.replace(/\+\+/g, s => { count++; return '\n' }) });
+if (count) { d.count = count }
+document.body.textContent = encodeURIComponent(JSON.stringify(d,null,2));"""
+text("${D5788899-6990-4707-BB60-9BBF9709A910}")
+	url(url: "data:text/html;charset=utf-8,<body/><script>const d=${File of Type};${ActionOutput}</script>") >> url
+	decodeURL(url: "${URL.as(RichText)}") >> decodeURL
+	if(URL Encoded Text == nil) {
+		alert(alert: "‘++’ not found in Import Questions", cancel: false)
+	} else {
+		alert(alert: "
+Replaced ${URL Encoded Text.as(Dictionary).key(count)} new lines.
+Please remove the first ’Stop and Output‘ action and close the editor when using Remote Sign.
+")
+		setName(input: URL Encoded Text, name: "a.json") >> setName 4
+		getFileOfType(input: Renamed Item, type: "com.apple.plist") >> getFileOfType 2
+		setName(input: File of Type, name: "${file.get(Name)}.plist") >> setName 5
+		runShortcut(name: "Shortcut Source Helper", input: Renamed Item) >> runShortcut 1
+	}
+	exit()
+}
+if(command .beginsWith "✂️") { >> IFResult 5
+	count(input: file) >> count
+	math(input: Count, operation: -, operand: "1") >> math
+var 3907684F-89FC-4D51-A28B-CDEC71472E9B = """Enter start index (0 - ￼)
+Index is based on action numbers in Web Review.
+To open Web Review, enter nothing."""
+text("${3907684F-89FC-4D51-A28B-CDEC71472E9B}")
+	askForInput(prompt: "${Text}", type: Number, allowDecimal: false, allowNegative: false) >> start
+	if(start >= 0) {
+		repeat(3) {
+			if(Number == nil) {
+				askForInput(prompt: "Enter end index:${Text}", type: Number, allowDecimal: false, allowNegative: false) >> end
+				if(end .between start...Calculation Result) {
+					number(value: 1) >> number
+				} else {
+var 5D9E98A2-B1CD-4A0D-B38C-D324EB6C6CB1 = """
+🛑 End index should be between ￼ and ￼."""
+text("${5D9E98A2-B1CD-4A0D-B38C-D324EB6C6CB1}")
+				} >> IFResult 6
+			} >> IFResult 7
+		} >> RepeatResult
+		getFileOfType(input: file, type: "public.json") >> getFileOfType 3
+var 27E2F078-A5D2-4A16-B377-8AC0629D216A = """d.WFWorkflowActions = d.WFWorkflowActions.slice(start, end+1);
+d.WFWorkflowImportQuestions = d.WFWorkflowImportQuestions.filter(q => { q.ActionIndex -= start; return q.ActionIndex >= 0 && q.ActionIndex <= end-start } );
+document.body.textContent = encodeURIComponent(JSON.stringify(d,null,2));"""
+text("${27E2F078-A5D2-4A16-B377-8AC0629D216A}")
+		url(url: "data:text/html;charset=utf-8,<body/><script>const start=${end},end=${ActionOutput},d=${Text};${ActionOutput}</script>") >> url 1
+		decodeURL(url: "${URL.as(RichText)}") >> decodeURL 1
+		setName(input: URL Encoded Text, name: "a.json") >> setName 6
+		getFileOfType(input: Renamed Item, type: "com.apple.plist") >> getFileOfType 4
+		setName(input: File of Type, name: "✂️${file.get(Name)}.plist", dontIncludeExtension: $2) >> setName 7
+		runShortcut(name: "Shortcut Source Helper", input: Renamed Item) >> runShortcut 2
+		exit()
+	} else {
+		text(text: "🔍") >> text
+	}
+} >> IFResult 8
+if(If Result .beginsWith "🔍") { >> IFResult 9
 	replaceText(input: "${file.get(Name)}", find: "&", replace: "&amp;") >> replaceText 2
 	replaceText(input: "${Updated Text}", find: "<", replace: "&lt;") >> shortcutname
 	dictionary({})
 	setValue(key: "name", value: "${shortcutname}", dictionary: Dictionary) >> setValue
-	getFileOfType(input: file, type: "public.json") >> getFileOfType 1
+	getFileOfType(input: file, type: "public.json") >> getFileOfType 5
 var src = File of Type
 	if(src .contains "{"__type__":"data","__value__":"YnBsaXN0") {
 		matchText(text: "${src}", regex: "([^"]+)":\{"__type__":"data","__value__":"(YnBsaXN0[^"]+)") >> matchText 1
@@ -80,22 +139,22 @@ var src = File of Type
 			getMatchGroup(matches: Repeat Item) >> getMatchGroup
 			getMatchGroup(matches: Repeat Item, index: "2") >> b64
 			encode(input: b64) >> encode
-			setName(input: Base64 Encoded, name: "a.plist") >> setName 4
+			setName(input: Base64 Encoded, name: "a.plist") >> setName 8
 			nothing()
 			if(Text == "UserActivityData") {
-				valueFor(key: "$objects.5", dictionary: Renamed Item) >> valueFor
-			} >> IFResult 4
+				keysFrom(dictionary: Renamed Item) >> keysFrom
+			} >> IFResult 10
 			if(Text == "IntentData") {
-				valueFor(key: "$objects.13", dictionary: Renamed Item) >> valueFor 1
-			} >> IFResult 5
+				keysFrom(dictionary: Renamed Item) >> keysFrom 1
+			} >> IFResult 11
 			dictionary({"k":"${If Result}${ActionOutput}"})
 			replaceText(input: "${Dictionary}", find: "^\{"k":|\}$", isRegex: true) >> replaceText 3
 			replaceText(input: "${src}", find: "{"__type__":"data","__value__":"${b64}"}", replace: "${Updated Text}") >> replaceText 4
 var src = Updated Text
 			nothing()
-		} >> RepeatResult
-	} >> IFResult 6
-var 0D2756B9-2D4A-4E8A-B3F6-69E5524AF7FE = """const idDict = {
+		} >> RepeatResult 1
+	} >> IFResult 12
+var ED34F404-A5E4-4E87-9A77-7B1FCF9D3107 = """const idDict = {
 "is.workflow.actions.conditional":[{
 	"name":"If $\ufffc0 $\ufffc1",
 	"group":"gGray",
@@ -739,6 +798,11 @@ var 0D2756B9-2D4A-4E8A-B3F6-69E5524AF7FE = """const idDict = {
 	"param":{
 		"searchPhrase":"$\ufffc0",
 }}],
+"com.apple.reminders.TTROpenSmartListAppIntent":[{ // 16.1
+	"name":"Open Smart Reminder List $\ufffc0",
+	"param":{
+		"target":"$\ufffc0",
+}}],
 "com.apple.VoiceMemos.SearchRecordings":[{ // 16
 	"name":"Search $\ufffc0 in Voice Memos",
 	"param":{
@@ -810,7 +874,7 @@ var 0D2756B9-2D4A-4E8A-B3F6-69E5524AF7FE = """const idDict = {
 		"WFPoster":"$\ufffc0",
 }}],
 "is.workflow.actions.wallpaper.set":[{
-	"name":"Set $\ufffc1 Wallpaper to $\ufffc0",
+	"name":"Set $\ufffc1 Wallpaper Photo to $\ufffc0",
 	"param":{
 		"WFWallpaperLocation":"$\ufffc1",
 		"$\ufffc1":"Lock Screen, Home Screen",
@@ -1087,6 +1151,64 @@ var 0D2756B9-2D4A-4E8A-B3F6-69E5524AF7FE = """const idDict = {
 "com.apple.mobilesafari.OpenTab":[{ // 16
 	"name":"Open Tab",
 }],
+"com.apple.iBooks.openin":[{ // 16.2
+	"name":"Open PDF $\ufffc0 in Books",
+	"group":"gOrange",
+	"param":{
+		"BooksInput":"$\ufffc0",
+}}],
+"com.apple.iBooks.BookReaderChangeThemeIntent":[{ // 16.2
+	"name":"$\ufffc0 Book Appearance $\ufffc1",
+	"group":"gOrange",
+	"param":{
+		"changeOperation":"$\ufffc0",
+		"$\ufffc0":"Enable",
+		"setting":"$\ufffc1",
+}}],
+"com.apple.iBooks.BookReaderChangePageNavigationIntent":[{ // 16.2
+	"name":"$\ufffc0 Book Page Navigation $\ufffc1",
+	"group":"gOrange",
+	"param":{
+		"changeOperation":"$\ufffc0",
+		"$\ufffc0":"Enable",
+		"setting":"$\ufffc1",
+}}],
+"com.apple.iBooks.OpenTabBarItemIntent":[{ // 16.2
+	"name":"Change View in Books",
+	"group":"gOrange",
+}],
+"com.apple.iBooks.OpenBookIntent":[{ // 16.2
+	"name":"Open Book",
+	"group":"gOrange",
+}],
+"com.apple.iBooks.OpenDefaultCollectionIntent":[{ // 16.2
+	"name":"Open Book Collection",
+	"group":"gOrange",
+}],
+"com.apple.iBooks.OpenRecentBookIntent":[{ // 16.2
+	"name":"Open Current Book",
+	"group":"gOrange",
+}],
+"com.apple.iBooks.PlayAudiobookIntent":[{ // 16.2
+	"name":"Play Audiobook",
+	"group":"gOrange",
+}],
+"com.apple.iBooks.PlayRecentAudiobookIntent":[{ // 16.2
+	"name":"Play Current Audiobook",
+	"group":"gOrange",
+}],
+"com.apple.iBooks.SearchBooksIntent":[{ // 16.2
+	"name":"Search $\ufffc0 in Books",
+	"group":"gOrange",
+	"param":{
+		"searchPhrase":"$\ufffc0",
+}}],
+"com.apple.iBooks.BookReaderNavigatePagesIntent":[{ // 16.2
+	"name":"Turn Book to $\ufffc0 Page",
+	"group":"gOrange",
+	"param":{
+		"direction":"$\ufffc0",
+}}],
 "com.apple.AccessibilityUtilities.AXSettingsShortcuts.AXStartMagnifierIntent":[{
 	"name":"Open Magnifier",
 }],
@@ -1109,6 +1231,11 @@ var 0D2756B9-2D4A-4E8A-B3F6-69E5524AF7FE = """const idDict = {
 "com.apple.shortcuts.DeleteWorkflowAction":[{ // 16
 	"name":"Delete Shortcuts",
 }],
+"com.apple.shortcuts.SearchShortcutsAction":[{ // 16.1
+	"name":"Search $\ufffc0 in Shortcuts",
+	"param":{
+		"searchPhrase":"$\ufffc0",
+}}],
 "is.workflow.actions.weather.currentconditions":[{
 	"name":"Get Current Weather",
 	"group":"gBlue",
@@ -2611,8 +2738,10 @@ const ignore = ['UUID','GroupingIdentifier','WFControlFlowMode', 'AppIntentDescr
 let udict = {};
 let indent = 0;
 let loopindex = [];
+let repeatlevel = 0;
 var gVarDict = {};
 var gIndex;
+var connected = false;
 d.WFWorkflowActions.forEach((a,i) => { udict[a.WFWorkflowActionParameters.UUID] = i; });
 let output = d.WFWorkflowActions.map((a,i) => {
 	gIndex = i;
@@ -2636,39 +2765,50 @@ let output = d.WFWorkflowActions.map((a,i) => {
 		}
 		adict = id[flow];
 		name = adict.name;
-		if (loop && flow && (l0 = loopindex[0])<i-10) { name += `&#12288;▵<span class="magic" onclick="magictap(${l0})">${l0}</span>`; }
-		if (a.WFWorkflowActionIdentifier === 'is.workflow.actions.conditional' && Number.isInteger(param.WFCondition)) {
-			let cond = param.WFCondition.toString();
-			delete param.WFCondition;
-			ignore.forEach(k => { delete param.k; });
-			let postfix = `<span class="box">${condDict[cond]}</span>`;
-			if (cond !== '100' && cond !== '101' && cond !== '1002') {
-				let paramk = Object.keys(param);
-				if (cond === '1003') {
-					let m = [['WFNumberValue','WFAnotherNumber'],['WFDate','WFAnotherDate'],['WFDuration','WFAnotherDuration'],['WFMeasurement','WFAnotherMeasurement']].filter(c => paramk.includes(c[0]) && paramk.includes(c[1]));
-					if (m.length == 1) {
-						postfix += ` <span class="box">${gettext(param[m[0][0]])}</span> and <span class="box">${gettext(param[m[0][1]])}</span>`;
-						delete param[m[0][0]];
-						delete param[m[0][1]];
-					}
+		if (loop) {
+			if (flow && (l0 = loopindex[0])<i-10) { name += `&#12288;▵<span class="magic" onclick="magictap(${l0})">${l0}</span>`; }
+			if (a.WFWorkflowActionIdentifier.startsWith('is.workflow.actions.repeat')) {
+				if (flow) {
+					if (repeatlevel > 1) { name = name.replace('Repeat', `Repeat[${repeatlevel}]`); }
+					repeatlevel--;
 				} else {
-					let isbool = cond === '4' && param.WFInput && param.WFInput.Variable && param.WFInput.Variable.Value && (b = param.WFInput.Variable.Value.Aggrandizements) &&
-						(b[0].CoercionItemClass === 'WFBooleanContentItem' ||
-				 		b.length > 1 && ['Is Me','Is a Screenshot','Is Hidden','Is Favorite','Is Explicit','Is Cloud Item','Has Album Artwork',
-						'Streamable','Is Universal','Supports Game Center','Has Photo'].includes(b[1].PropertyName));
-					if (isbool) {
-						postfix = 'is true';
-					} else {
-						let m = ['WFConditionalActionString','WFNumberValue','WFMeasurement','WFDuration','WFDate','WFEnumeration'].filter(c => paramk.includes(c));
+					repeatlevel++;
+					if (repeatlevel > 1) { name = name.replace('Repeat', `Repeat[${repeatlevel}]`); }
+				}
+			} else if (a.WFWorkflowActionIdentifier === 'is.workflow.actions.conditional' && Number.isInteger(param.WFCondition)) {
+				let cond = param.WFCondition.toString();
+				delete param.WFCondition;
+				ignore.forEach(k => { delete param.k; });
+				let postfix = `<span class="box">${condDict[cond]}</span>`;
+				if (cond !== '100' && cond !== '101' && cond !== '1002') {
+					let paramk = Object.keys(param);
+					if (cond === '1003') {
+						let m = [['WFNumberValue','WFAnotherNumber'],['WFDate','WFAnotherDate'],['WFDuration','WFAnotherDuration'],['WFMeasurement','WFAnotherMeasurement']].filter(c => paramk.includes(c[0]) && paramk.includes(c[1]));
 						if (m.length == 1) {
-							postfix += ` <span class="box">${gettext(param[m[0]])}</span>`;
-							delete param[m[0]];
+							postfix += ` <span class="box">${gettext(param[m[0][0]])}</span> and <span class="box">${gettext(param[m[0][1]])}</span>`;
+							delete param[m[0][0]];
+							delete param[m[0][1]];
+						}
+					} else {
+						let isbool = cond === '4' && param.WFInput && param.WFInput.Variable && param.WFInput.Variable.Value && (b = param.WFInput.Variable.Value.Aggrandizements) &&
+							(b[0].CoercionItemClass === 'WFBooleanContentItem' ||
+							b.length > 1 && ['Is Me','Is a Screenshot','Is Hidden','Is Favorite','Is Explicit','Is Cloud Item','Has Album Artwork',
+							'Streamable','Is Universal','Supports Game Center','Has Photo'].includes(b[1].PropertyName));
+						if (isbool) {
+							postfix = 'is true';
+						} else {
+							let m = ['WFConditionalActionString','WFNumberValue','WFMeasurement','WFDuration','WFDate','WFEnumeration'].filter(c => paramk.includes(c));
+							if (m.length == 1) {
+								postfix += ` <span class="box">${gettext(param[m[0]])}</span>`;
+								delete param[m[0]];
+							}
 						}
 					}
 				}
+				name = name.replace('$\ufffc1', postfix);
 			}
-			name = name.replace('$\ufffc1', postfix);
-		} else if (a.WFWorkflowActionIdentifier === 'is.workflow.actions.getvalueforkey' && ['Value',undefined].includes(param.WFGetDictionaryValueType)) {
+		}
+		if (a.WFWorkflowActionIdentifier === 'is.workflow.actions.getvalueforkey' && ['Value',undefined].includes(param.WFGetDictionaryValueType)) {
 			name = name.replace('$\ufffc1', `Value for <span class="box">${gettext(param.WFDictionaryKey)}</span>`);
 			delete param.WFDictionaryKey;
 		} else if (a.WFWorkflowActionIdentifier === 'is.workflow.actions.getitemfromlist' && (s = param.WFItemSpecifier)) {
@@ -2764,12 +2904,17 @@ let output = d.WFWorkflowActions.map((a,i) => {
 	}
 	return out.join('').replaceAll(`"magic" onclick="magictap(${i-1})"`, '"var"');
 }).map((t,i) => {
+	if (connected) {
+		t = t.replace('<button', '<hr><button');
+		connected = false;
+	}
 	if (gVarDict[i]) {
 		let d = [...new Set(gVarDict[i])];
 		if (d.length == 1 && d[0] == i+1) {
+			connected = true;
 			return t.replace('</button>', `&#12288;&#187;</button>`);
 		} else {
-			let l = d.map(a => (a == i+1) ? `<i>${a}</i>` : `<span class="magic" onclick="magictap(${a})">${a}</span>`).join(' ');
+			let l = d.map(a => (a == i+1) ? `<i>${(connected = true) ? a : a}</i>` : `<span class="magic" onclick="magictap(${a})">${a}</span>`).join(' ');
 			return t.replace('</button>', `&#12288;&#187; ${l}</button>`);
 		}
 	}
@@ -3019,10 +3164,10 @@ function stringifyMap(o) {
 	}
 	return JSON.stringify({a:o}).slice(5,-1);
 }"""
-text("${0D2756B9-2D4A-4E8A-B3F6-69E5524AF7FE}")
-	url(url: "data:text/html;charset=utf-8,<body/><script>const mobile=${Dictionary}==5;const shortcutname=${ActionOutput}.name;const d=${file.get(File Size)};const fileSize='${Variable.get(File Size)}';${src}</script>") >> url
-	decodeURL(url: "${URL.as(RichText)}") >> decodeURL
-var 31D5272C-9FD6-4DEF-9A2F-BC413244CD66 = """<!DOCTYPE html><html><head><meta charset="utf-8">
+text("${ED34F404-A5E4-4E87-9A77-7B1FCF9D3107}")
+	url(url: "data:text/html;charset=utf-8,<body/><script>const mobile='${Dictionary}'.endsWith(')'),shortcutname=${ActionOutput}.name,d=${file.get(File Size)},fileSize='${Variable.get(File Size)}';${Text}</script>") >> url 2
+	decodeURL(url: "${URL.as(RichText)}") >> decodeURL 2
+var AA80C049-1177-44C7-945E-E6F999DC75B3 = """<!DOCTYPE html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
 <meta name="format-detection" content="telephone=no,date=no">
 <title>￼</title>
@@ -3043,7 +3188,7 @@ button {
 	font-weight: normal;
 	line-height: 1.8;
 	text-align: left;
-	margin: 3px 0;
+	margin: 4px 0;
 	padding: 1px 8px;
 	border: 1px #aaa;
 	border-style: solid;
@@ -3067,7 +3212,7 @@ button {
 }
 
 .closed {
-	margin-bottom: 3px;
+	margin-bottom: 4px;
 	border-bottom-style: solid;
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
@@ -3100,7 +3245,7 @@ button {
 
 .content {
 	overflow: hidden;
-	margin-bottom: 3px;
+	margin-bottom: 4px;
 	padding: 3px 0 3px 8px;
 	border: 1px #aaa;
 	border-style: none solid solid solid;
@@ -3110,7 +3255,8 @@ button {
 
 .contentloop {
 	margin-bottom: 0;
-	padding-top: 3px;
+	padding-top: 4px;
+	padding-bottom: 4px;
 	border-bottom-style: none;
 	border-bottom-left-radius: 0;
 	border-bottom-right-radius: 0;
@@ -3128,12 +3274,12 @@ button {
 
 .row {
 	display: flex;
-	padding: 0 2px;
+	padding-right: 2px;
 }
 
 .col1 {
 	margin-right: 3px;
-	padding-right: 4px;
+	padding-right: 3px;
 	border-right-style: double;
 }
 .col2 { white-space: pre-wrap; }
@@ -3150,6 +3296,13 @@ span.magic {
 	cursor: pointer;
 	font-style: italic;
 	text-decoration: underline;
+}
+
+hr {
+	width: 0px;
+	height: 2px;
+	border: 1px solid #aaa;
+	margin: -4px auto;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -3187,8 +3340,8 @@ function magictap(id) {
 	setTimeout(function(){ e.scrollIntoView({block:'nearest',behavior:'smooth'}); }, 10);
 }
 </script></body></html>"""
-text("${31D5272C-9FD6-4DEF-9A2F-BC413244CD66}")
-	setName(input: Text, name: "${file.get(Name)}.html") >> setName 5
+text("${AA80C049-1177-44C7-945E-E6F999DC75B3}")
+	setName(input: Text, name: "${file.get(Name)}.html") >> setName 9
 	menu(, [💻  Share, 📝  Save to Files, 🧭  Open in Browser]) {
 	case("💻  Share"):
 		share(file: Renamed Item)
@@ -3199,46 +3352,46 @@ text("${31D5272C-9FD6-4DEF-9A2F-BC413244CD66}")
 			openIn(input: Renamed Item, ask: false)
 			wait()
 		} else {
-			url(url: "data:text/html,${Text}") >> url 1
+			url(url: "data:text/html,${Text}") >> url 3
 			openURL(url: URL)
-		} >> IFResult 7
-	} >> MenuResult 3
+		} >> IFResult 13
+	} >> MenuResult 2
 	exit()
-} >> IFResult 8
+} >> IFResult 14
 if(file .beginsWith "{") {
 	dictionary({"Convert to Property List":"com.apple.plist","Skip":"Skip"})
 } else {
 	dictionary({"Convert to JSON":"public.json","Skip":"Skip"})
-} >> IFResult 9
+} >> IFResult 15
 choose(list: If Result) >> choose
 //Unable to get shortcuts action is.workflow.actions.getvariable
 if(Chosen Item != "Skip") {
-	getFileOfType(input: file, type: "${Chosen Item.as(Text)}") >> getFileOfType 2
-} >> IFResult 10
+	getFileOfType(input: file, type: "${Chosen Item.as(Text)}") >> getFileOfType 6
+} >> IFResult 16
 if(If Result .beginsWith "{") {
-	url(url: "data:text/html;charset=utf-8,<body/><script>document.body.textContent=encodeURIComponent(JSON.stringify(${If Result},null,3).replaceAll('\ufffc','\\uFFFC'))</script>") >> url 2
-	decodeURL(url: "${URL.as(RichText)}") >> decodeURL 1
+	url(url: "data:text/html;charset=utf-8,<body/><script>document.body.textContent=encodeURIComponent(JSON.stringify(${If Result},null,3).replaceAll('\ufffc','\\uFFFC'))</script>") >> url 4
+	decodeURL(url: "${URL.as(RichText)}") >> decodeURL 3
 } else {
 	replaceText(input: "${If Result}", find: "\x{fffc}", replace: "&#xFFFC;", isRegex: true) >> replaceText 5
-} >> IFResult 11
-setName(input: If Result, name: "${file.get(Name)}.txt") >> setName 6
+} >> IFResult 17
+setName(input: If Result, name: "${file.get(Name)}.txt") >> setName 10
 var file = Renamed Item
-if(Menu Result == 1) {
+if(command .beginsWith "🧐") {
 	quicklook(input: file)
 }
-if(Menu Result == 2) {
+if(command .beginsWith "📝") {
 	saveFile(input: file) >> saveFile 1
-} >> IFResult 12
-if(Menu Result == 3) {
+}
+if(command .beginsWith "💻") {
 	share(file: file) >> share
-} >> IFResult 13
-if(Menu Result == 4) {
-	text(text: "${file}${Variable}") >> text
+}
+if(command .beginsWith "✏️") {
+	text(text: "${Ask}${file}") >> text 1
 	if(Text .beginsWith "{") {
-		setName(input: Text, name: "a.json") >> setName 7
-		getFileOfType(input: Renamed Item, type: "com.apple.plist") >> getFileOfType 3
-	} >> IFResult 14
+		setName(input: Text, name: "a.json") >> setName 11
+		getFileOfType(input: Renamed Item, type: "com.apple.plist") >> getFileOfType 7
+	} >> IFResult 18
 	askForInput(prompt: "New Shortcut Name:", default: "${file.get(Name)}") >> askForInput
-	setName(input: If Result, name: "${Provided Input}.plist") >> setName 8
-	runShortcut(name: "Shortcut Source Helper", input: Renamed Item) >> runShortcut 1
-} >> IFResult 15
+	setName(input: If Result, name: "${Provided Input}.plist") >> setName 12
+	runShortcut(name: "Shortcut Source Helper", input: Renamed Item) >> runShortcut 3
+} >> IFResult 19
