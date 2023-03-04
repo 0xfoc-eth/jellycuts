@@ -3,7 +3,7 @@ import Shortcuts
 
 /*
 View, save, convert, edit shortcut source in xml or json format. Restore shortcuts from source. Create web review.
-2023-02-15 	v3.7.1 	u/gluebyte
+2023-03-04 	v3.7.2 	u/gluebyte
 https://routinehub.co/shortcut/5256
 */
 randomNumber(min: 1, max: 2) >> randomNumber
@@ -11,7 +11,7 @@ if(Random Number == 1) {
 	getIP() >> getIP
 	if(Current IP Address != nil) {
 		downloadURL(url: "https://updatecheck.gluebyte.workers.dev/?id=33C37587") >> downloadURL
-		if(Contents of URL .contains "2023-02-15") {
+		if(Contents of URL .contains "2023-03-04") {
 			menu(, [🌏  Go to RoutineHub, 👾  Download Update, ⮐  Not Now]) {
 			case("🌏  Go to RoutineHub"):
 				openURL(url: "https://routinehub.co/shortcut/5256/")
@@ -59,22 +59,22 @@ list(items: (
     "\Ud83e\Uddd0  Quick Look Source",
     "\Ud83d\Udcdd  Save Source",
     "\Ud83d\Udcbb  Share Source",
-    "\U270f\Ufe0f  Edit Source",
+    "\U270f\Ufe0f  Edit/Restore Source",
     "\U2702\Ufe0f  Trim Actions",
     "\U2753  Replace \U2018++\U2019 with new lines in Import Questions",
     "\Ud83d\Udd0d  Create Web Review (trim large text)",
     "\Ud83d\Udd0d  Create Web Review (expand all)",
     "\Ud83d\Udd0d  Create Web Review"
 )) >> list
-choose(list: List, prompt: "${file.get(Name)}.${Variable.get(Name)} (${file.get(File Extension)})") >> command
+choose(list: List, prompt: "${file.get(File Extension)}.${Variable.get(File Extension)} (${file.get(Name)})") >> command
 if(command .beginsWith "❓") { >> IFResult 4
 	getFileOfType(input: file, type: "public.json") >> getFileOfType 1
-var 2D126147-E1AC-45AE-A675-37E077982CA6 = """count = 0;
+var E82B919D-AB5A-4C69-8E75-EC72F64AA1D7 = """count = 0;
 d.WFWorkflowImportQuestions.forEach(q => { q.Text = q.Text.replace(/\+\+/g, s => { count++; return '\n' }) });
 if (count) { d.count = count }
 document.body.textContent = encodeURIComponent(JSON.stringify(d,null,2));"""
-text("${2D126147-E1AC-45AE-A675-37E077982CA6}")
-	url(url: "data:text/html;charset=utf-8,<body/><script>const d=${File of Type};${ActionOutput}</script>") >> url
+text("${E82B919D-AB5A-4C69-8E75-EC72F64AA1D7}")
+	url(url: "data:text/html;charset=utf-8,<body/><script>const d=${Text};${ActionOutput}</script>") >> url
 	encodeURL(url: "${URL.as(RichText)}") >> encodeURL
 	if(URL Encoded Text == nil) {
 		alert(alert: "‘++’ not found in Import Questions", cancel: false)
@@ -93,10 +93,10 @@ Please remove the first ’Stop and Output‘ action and close the editor when u
 if(command .beginsWith "✂️") { >> IFResult 5
 	count(input: file) >> count
 	math(input: Count, operation: -, operand: "1") >> math
-var 81DA8DE3-9374-4AEA-99E5-BD56E9E58B79 = """Enter start index (0 - ￼)
+var F8E6D2FE-7CA3-4CF1-BBC8-3CF0398D36BD = """Enter start index (0 - ￼)
 Index is based on action numbers in Web Review.
 To open Web Review, enter nothing."""
-text("${81DA8DE3-9374-4AEA-99E5-BD56E9E58B79}")
+text("${F8E6D2FE-7CA3-4CF1-BBC8-3CF0398D36BD}")
 	askForInput(prompt: "${Text}", type: Number, allowDecimal: false, allowNegative: false) >> start
 	if(start >= 0) {
 		repeat(3) {
@@ -105,17 +105,17 @@ text("${81DA8DE3-9374-4AEA-99E5-BD56E9E58B79}")
 				if(end .between start...Calculation Result) {
 					number(value: 1) >> number
 				} else {
-var 8AD6FDA7-416D-4B21-BE5A-791C58740365 = """
+var 435B5633-0717-4001-BB93-4E221E0BAF30 = """
 🛑 End index should be between ￼ and ￼."""
-text("${8AD6FDA7-416D-4B21-BE5A-791C58740365}")
+text("${435B5633-0717-4001-BB93-4E221E0BAF30}")
 				} >> IFResult 6
 			} >> IFResult 7
 		} >> RepeatResult
 		getFileOfType(input: file, type: "public.json") >> getFileOfType 3
-var B6DEF5CC-208A-4585-8F44-C44CF77B3523 = """d.WFWorkflowActions = d.WFWorkflowActions.slice(start, end+1);
+var 2F1A02B2-4B9C-43EA-A6A0-F5C705DE6821 = """d.WFWorkflowActions = d.WFWorkflowActions.slice(start, end+1);
 d.WFWorkflowImportQuestions = d.WFWorkflowImportQuestions.filter(q => { q.ActionIndex -= start; return q.ActionIndex >= 0 && q.ActionIndex <= end-start } );
 document.body.textContent = encodeURIComponent(JSON.stringify(d,null,2));"""
-text("${B6DEF5CC-208A-4585-8F44-C44CF77B3523}")
+text("${2F1A02B2-4B9C-43EA-A6A0-F5C705DE6821}")
 		url(url: "data:text/html;charset=utf-8,<body/><script>const start=${start},end=${ActionOutput},d=${end};${ActionOutput}</script>") >> url 1
 		encodeURL(url: "${URL.as(RichText)}") >> encodeURL 1
 		setName(input: URL Encoded Text, name: "a.json") >> setName 6
@@ -139,14 +139,14 @@ var src = File of Type
 		repeatEach(Matches) {
 			getMatchGroup(matches: Repeat Item) >> getMatchGroup
 			getMatchGroup(matches: Repeat Item, index: "2") >> b64
-			decode(input: b64) >> decode
+			encode(input: b64) >> encode 2
 			setName(input: Base64 Encoded, name: "a.plist") >> setName 8
 			nothing()
 			if(Text == "UserActivityData") {
-				valueFor(key: "$objects.5", dictionary: Renamed Item) >> valueFor
+				valuesFrom(dictionary: Renamed Item) >> valuesFrom
 			} >> IFResult 10
 			if(Text == "IntentData") {
-				valueFor(key: "$objects.13", dictionary: Renamed Item) >> valueFor 1
+				valuesFrom(dictionary: Renamed Item) >> valuesFrom 1
 			} >> IFResult 11
 			dictionary({"k":"${Renamed Item}${ActionOutput}"})
 			replaceText(input: "${Dictionary}", find: "^\{"k":|\}$", isRegex: true) >> replaceText 3
@@ -155,7 +155,7 @@ var src = Updated Text
 			nothing()
 		} >> RepeatResult 1
 	} >> IFResult 12
-var E2AF2532-9849-45D5-8BE2-B61C6B150E60 = """const idDict = {
+var 311153CA-5CAF-4EAC-B7E6-0FDAA69AED07 = """const idDict = {
 "is.workflow.actions.conditional":[{
 	"name":"If $\ufffc0 $\ufffc1",
 	"group":"gGray",
@@ -1274,6 +1274,29 @@ var E2AF2532-9849-45D5-8BE2-B61C6B150E60 = """const idDict = {
 		"WFDelayTime":"$\ufffc0",
 		"$\ufffc0":"1",
 }}],
+"is.workflow.actions.reboot":[{ 	// 16.4
+	"name":"$\ufffc0 this Device",
+	"group":"gGray",
+	"param":{
+		"WFShutdownMode":"$\ufffc0",
+		"$\ufffc0":"Shut Down",
+}}],
+"is.workflow.actions.lockscreen":[{ 	// 16.4
+	"name":"Lock Screen",
+	"group":"gGreen",
+}],
+"is.workflow.actions.displaysleep":[{ 	// 16.4
+	"name":"Set Display to Sleep",
+	"group":"gGray",
+}],
+"is.workflow.actions.logout":[{ 	// 16.4
+	"name":"Log Out User",
+	"group":"gGray",
+}],
+"is.workflow.actions.sleep":[{ 	// 16.4
+	"name":"Put this Mac to Sleep",
+	"group":"gGray",
+}],
 "is.workflow.actions.hash":[{
 	"name":"Generate $\ufffc1 Hash of $\ufffc0",
 	"param":{
@@ -1347,6 +1370,16 @@ var E2AF2532-9849-45D5-8BE2-B61C6B150E60 = """const idDict = {
 	"name":"Set Parked Car Location",
 	"group":"gGreen",
 }],
+"is.workflow.actions.intercom":[{ 	// 16.4
+	"name":"Intercom $\ufffc0",
+	"group":"gOrange",
+}],
+"is.workflow.actions.setairdropreceiving":[{ 	// 16.4
+	"name":"Set AirDrop Receiving to $\ufffc0",
+	"param":{
+		"WFAirDropState":"$\ufffc0",
+		"$\ufffc0":"Everyone for 10 Minutes",
+}}],
 "is.workflow.actions.airdropdocument":[{
 	"name":"AirDrop",
 }],
@@ -1512,9 +1545,11 @@ var E2AF2532-9849-45D5-8BE2-B61C6B150E60 = """const idDict = {
 		"$\ufffc1":"Append",
 }}],
 "is.workflow.actions.file.createfolder":[{
-	"name":"Create Folder",
+	"name":"Create Folder $\ufffc0",
 	"group":"gBlue",
-}],
+	"param":{
+		"WFFilePath":"$\ufffc0",
+}}],
 "is.workflow.actions.file.getlink":[{
 	"name":"Get Link to File $\ufffc0",
 	"group":"gBlue",
@@ -1815,6 +1850,18 @@ var E2AF2532-9849-45D5-8BE2-B61C6B150E60 = """const idDict = {
 	"param":{
 		"WFContentItemInputParameter":"$\ufffc0",
 		"$\ufffc0":"All Tabs",
+}}],
+"is.workflow.actions.filter.apps":[{ 	// 16.4
+	"name":"Find Apps $\ufffc0",
+	"param":{
+		"WFContentItemInputParameter":"$\ufffc0",
+		"$\ufffc0":"All Apps",
+}}],
+"is.workflow.actions.filter.displays":[{ 	// 16.4
+	"name":"Find Displays $\ufffc0",
+	"param":{
+		"WFContentItemInputParameter":"$\ufffc0",
+		"$\ufffc0":"All Displays",
 }}],
 "is.workflow.actions.properties.calendarevents":[{
 	"name":"Get $\ufffc1 of Calendar Events $\ufffc0",
@@ -2398,6 +2445,13 @@ var E2AF2532-9849-45D5-8BE2-B61C6B150E60 = """const idDict = {
 		"Enabled":"$\ufffc9",
 		"$\ufffc9":{"key":"Enabled","default":0},
 }}],
+"is.workflow.actions.cellular.rat.set":[{
+	"name":"Set Voice & Data Mode to $\ufffc0 on $\ufffc1",
+	"group":"gGreen",
+	"param":{
+		"ratMode":"$\ufffc0",
+		"sim":"$\ufffc1",
+}}],
 "com.apple.mobilecal.SetCalendarFocusConfiguration":[{ // 16
 	"name":"$\ufffc0 Calendar Focus Filter",
 	"param":{
@@ -2501,12 +2555,64 @@ var E2AF2532-9849-45D5-8BE2-B61C6B150E60 = """const idDict = {
 		"$\ufffc0":"Turn",
 		"state":"$\ufffc9",
 }}],
-"is.workflow.actions.cellular.rat.set":[{
-	"name":"Set Voice & Data Mode to $\ufffc0 on $\ufffc1",
+"is.workflow.actions.display.always-on.set":[{ 	// 16.4
+	"name":"$\ufffc0 Always On Display $\ufffc9",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"OnValue":"$\ufffc9",
+		"$\ufffc9":{"key":"OnValue"},
+}}],
+"is.workflow.actions.nightshift.set":[{ 	// 16.4
+	"name":"$\ufffc0 Night Shift $\ufffc9",
+	"group":"gOrange",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"OnValue":"$\ufffc9",
+		"$\ufffc9":{"key":"OnValue"},
+}}],
+"is.workflow.actions.truetone.set":[{ 	// 16.4
+	"name":"$\ufffc0 True Tone $\ufffc9",
+	"group":"gBlue",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"OnValue":"$\ufffc9",
+		"$\ufffc9":{"key":"OnValue"},
+}}],
+"is.workflow.actions.announcenotifications.set":[{ 	// 16.4
+	"name":"$\ufffc0 Announce Notifications $\ufffc9",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"OnValue":"$\ufffc9",
+		"$\ufffc9":{"key":"OnValue"},
+}}],
+"is.workflow.actions.silenceunknowncallers.set":[{ 	// 16.4
+	"name":"$\ufffc0 Silence Unknown Calls $\ufffc9",
 	"group":"gGreen",
 	"param":{
-		"ratMode":"$\ufffc0",
-		"sim":"$\ufffc1",
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"OnValue":"$\ufffc9",
+		"$\ufffc9":{"key":"OnValue"},
+}}],
+"is.workflow.actions.stagemanager.set":[{ 	// 16.4
+	"name":"$\ufffc0 Stage Manager $\ufffc9",
+	"group":"gBlue",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"state":"$\ufffc9",
+}}],
+"com.apple.AccessibilityUtilities.AXSettingsShortcuts.AXToggleAutoAnswerCallsIntent":[{ 	// 16.4
+	"name":"$\ufffc0 Auto-Answer Calls $\ufffc9",
+	"group":"gGray",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"state":"$\ufffc9",
 }}],
 "is.workflow.actions.connecttoservers":[{
 	"name":"Connect to Servers $\ufffc0",
@@ -2553,6 +2659,13 @@ var E2AF2532-9849-45D5-8BE2-B61C6B150E60 = """const idDict = {
 	"param":{
 		"WFNetworkDetailsNetwork":"$\ufffc0",
 		"$\ufffc0":"Wi-Fi",
+}}],
+"is.workflow.actions.vpn.set":[{ 	// 16.4
+	"name":"$\ufffc0 VPN",
+	"group":"gBlue",
+	"param":{
+		"WFVPNOperation":"$\ufffc0",
+		"$\ufffc0":"Connect",
 }}],
 "is.workflow.actions.watchmedo":[{
 	"name":"Watch Me Do",
@@ -2903,7 +3016,7 @@ let output = d.WFWorkflowActions.map((a,i) => {
 	if (loop && flow) {
 		if (flow == 1) { loopindex[0] = i; } else { loopindex.shift(); }
 	}
-	return out.join('').replaceAll(`"magic" onclick="magictap(${i-1})"`, '"var"');
+	return out.join('').replace(new RegExp(`"magic" onclick="magictap\\(${i-1}\\)"`, 'g'), '"var"');
 }).map((t,i) => {
 	if (connected) {
 		t = t.replace('<button', '<hr><button');
@@ -2966,7 +3079,7 @@ function gettext(i) {
 					case 'WFContentPredicateTableTemplate':
 						return predicate(i.Value);
 					case 'WFINSpeakableStringSubstitutableState':
-						return i.Value ? i.Value.DisplayString.replace(/&/g,'&amp;').replace(/</g,'&lt;') : '';
+						return i.Value ? escapeStr(i.Value.DisplayString) : '';
 					case 'WFContactFieldValue':
 						return '[' + (mapNullUndef(i.Value.WFContactFieldValues, [])).map(a => JSON.stringify(a).replace(/\{"__type__":"data","__value__":"([^"]*)"/g, (m,p1) => '"'+(new TextDecoder().decode(base64DecToArr(p1))).replace(/\n/g,'\n   ')+'"')).join(',\n') + ']';
 					default:
@@ -2974,10 +3087,10 @@ function gettext(i) {
 						if (i['__type__'] === 'date') {
 							return new Date(1000*i['__value__']).toLocaleString();
 						}
-						return JSON.stringify(i,null,3).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\\n/g,'\n').replace(/\\t/g,'\t').replace(/(  +|^)\{\n +/g,'$1{  ').replace(/( *)(\{.*)\n\1\}/g,'$1$2 }');
+						return escapeStr(JSON.stringify(i,null,3)).replace(/\\n/g,'\n').replace(/\\t/g,'\t').replace(/(  +|^)\{\n +/g,'$1{  ').replace(/( *)(\{.*)\n\1\}/g,'$1$2 }');
 				}
 			}
-		case 'string': return i.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+		case 'string': return escapeStr(i);
 		default: return i;
 	}
 }
@@ -3080,7 +3193,7 @@ function filtertext(f, d) {
 }
 
 function variablename(v) {
-	if (typeof(v) !== 'object') { return JSON.stringify(v).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+	if (typeof(v) !== 'object') { return escapeStr(JSON.stringify(v)); }
 	let t = mapNullUndef(v.Type, '');
 	switch (t) {
 		case 'Variable':
@@ -3094,14 +3207,14 @@ function variablename(v) {
 				}
 				return `<span class="magic" onclick="magictap(${i})"><b>[${i} ` + v.OutputName + aggr(v);
 			}
-			return '<span class="var"><b>[' + (v.OutputUUID ? "?? " : "") + v.OutputName + aggr(v);
+			return '<span class="var" style="color:red"><b>[? ' + v.OutputName + aggr(v);
 		default:
 			return '<span class="var"><b>[' + t.replace('ExtensionInput', 'Shortcut Input') + aggr(v);
 	}
 }
 
 function stringify(o) {
-	let out = o.string.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+	let out = escapeStr(o.string);
 	if (o.attachmentsByRange) {
 		Object.entries(o.attachmentsByRange)
 			.sort((a,b) => parseInt(a[0].substring(1)) - parseInt(b[0].substring(1)))
@@ -3144,7 +3257,7 @@ function getdict(dict) {
 }
 
 function getvalue(d) {
-	if (typeof d !== 'object') { return d.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+	if (typeof d !== 'object') { return escapeStr(d); }
 	if (d.WFValue == null) return null;
 	let v = d.WFValue.Value;
 	switch (d.WFItemType) {
@@ -3164,11 +3277,16 @@ function stringifyMap(o) {
 		return (oo=Array.from(o.entries())).length ? '{\n' + px + oo.map(a=>stringifyMap(a[0])+': '+stringifyMap(a[1])).join(',\n').replace(/\n/g,'\n'+px) + '\n' + '}' : '{}';
 	}
 	return JSON.stringify({a:o}).slice(5,-1);
+}
+
+function escapeStr(s) {
+	return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')
+		.replace(/[\0-\x08\x0B-\x1F\x7F-\xA0\xAD\u2000-\u200B\u2028\u2029\u202F\u205F-\u2064\u3000]/g, c => '<b>\\u{'+c.charCodeAt(0).toString(16).toUpperCase()+'}</b>').replace(/[\x09\x20]+$/gm, s => '<b>'+s.replace(/\x09/g,'\\u{9}').replace(/\x20/g,'\\u{20}')+'</b>').replace(/\n$/, '\n\n');
 }"""
-text("${E2AF2532-9849-45D5-8BE2-B61C6B150E60}")
-	url(url: "data:text/html;charset=utf-8,<body/><script>const mobile='${command}'.includes('trim'),expand='${ActionOutput}'.includes('expand'),shortcutname=${command}.name,d=${ActionOutput},fileSize='${Dictionary}';${ActionOutput}</script>") >> url 2
+text("${311153CA-5CAF-4EAC-B7E6-0FDAA69AED07}")
+	url(url: "data:text/html;charset=utf-8,<body/><script>const mobile='${command}'.includes('trim'),expand='${ActionOutput}'.includes('expand'),shortcutname=${src}.name,d=${Variable},fileSize='${file.get(File Size)}';${Variable.get(File Size)}</script>") >> url 2
 	encodeURL(url: "${URL.as(RichText)}") >> encodeURL 2
-var E752011B-6A2D-459B-8E9E-9FAEA90D4EC6 = """<!DOCTYPE html><html><head><meta charset="utf-8">
+var 41EFDC30-70B1-4116-9AA6-55A324768633 = """<!DOCTYPE html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
 <meta name="format-detection" content="telephone=no,date=no">
 <title>￼</title>
@@ -3341,11 +3459,11 @@ function magictap(id) {
 	setTimeout(function(){ e.scrollIntoView({block:'nearest',behavior:'smooth'}); }, 10);
 }
 </script></body></html>"""
-text("${E752011B-6A2D-459B-8E9E-9FAEA90D4EC6}")
+text("${41EFDC30-70B1-4116-9AA6-55A324768633}")
 	setName(input: Text, name: "${file.get(Name)}.html") >> setName 9
 	menu(, [💻  Share, 📝  Save to Files, 🧭  Open in Browser]) {
 	case("💻  Share"):
-		share(file: Renamed Item)
+		share(file: Renamed Item) >> share
 		nothing()
 	case("📝  Save to Files"):
 		saveFile(input: Renamed Item, ask: true, overwrite: false) >> saveFile
@@ -3375,12 +3493,13 @@ if(Chosen Item != "Skip") {
 	getFileOfType(input: file, type: "${Chosen Item.as(Text)}") >> getFileOfType 6
 } >> IFResult 16
 if(If Result .beginsWith "{") {
-	url(url: "data:text/html;charset=utf-8,<body/><script>document.body.textContent=encodeURIComponent(JSON.stringify(${If Result},null,3).replaceAll('\ufffc','\\uFFFC'))</script>") >> url 4
-	encodeURL(url: "${URL.as(RichText)}") >> encodeURL 3
+	url(url: "data:text/html;charset=utf-8,<body/><script>document.body.textContent=encodeURIComponent(JSON.stringify(${If Result},null,3).replace(/[\0-\x08\x0B-\x1F\x7F-\xA0\xAD\u2000-\u200B\u2028\u2029\u202F\u205F-\u2064\u3000\uFFFC]/g, c => '\\u'+c.charCodeAt(0).toString(16).toUpperCase().padStart(4,'0')))</script>") >> url 4
 } else {
-	replaceText(input: "${If Result}", find: "\x{fffc}", replace: "&#xFFFC;", isRegex: true) >> replaceText 5
+	setValue(key: "x", value: "${If Result.as(Text)}") >> setValue 1
+	url(url: "data:text/html;charset=utf-8,<body/><script>document.body.textContent=encodeURIComponent(${Dictionary}.x.replace(/[\0-\x08\x0B-\x1F\x7F-\xA0\xAD\u2000-\u200B\u2028\u2029\u202F\u205F-\u2064\u3000\uFFFC]/g, c => '&#x'+c.charCodeAt(0).toString(16).toUpperCase()+';'))</script>") >> url 5
 } >> IFResult 17
-setName(input: If Result, name: "${file.get(Name)}.txt") >> setName 10
+encodeURL(url: "${If Result.as(RichText)}") >> encodeURL 3
+setName(input: URL Encoded Text, name: "${file.get(Name)}.txt") >> setName 10
 var file = Renamed Item
 if(command .beginsWith "🧐") {
 	quicklook(input: file)
@@ -3389,10 +3508,10 @@ if(command .beginsWith "📝") {
 	saveFile(input: file) >> saveFile 1
 }
 if(command .beginsWith "💻") {
-	share(file: file) >> share
+	share(file: file) >> share 1
 }
 if(command .beginsWith "✏️") {
-	text(text: "${Ask}${file}") >> text 1
+	text(text: "${file}${Variable}") >> text 1
 	if(Text .beginsWith "{") {
 		setName(input: Text, name: "a.json") >> setName 11
 		getFileOfType(input: Renamed Item, type: "com.apple.plist") >> getFileOfType 7
