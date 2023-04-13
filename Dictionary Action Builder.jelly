@@ -3,7 +3,7 @@ import Shortcuts
 
 /*
 JSON ←→ dictionary action conversion tool
-2022-10-13	v2.2.6 	u/gluebyte
+2023-04-13	v2.2.7 	u/gluebyte
 https://routinehub.co/shortcut/4626
 */
 randomNumber(min: 1, max: 2) >> randomNumber
@@ -11,41 +11,40 @@ if(Random Number == 1) {
 	getIP() >> getIP
 	if(Current IP Address != nil) {
 		downloadURL(url: "https://updatecheck.gluebyte.workers.dev/?id=5CC37B10") >> downloadURL
-		if(Contents of URL .contains "2022-10-13") {
+		if(Contents of URL .contains "2023-04-13") {
 			menu(, [🌏  Go to RoutineHub, 👾  Download Update, ⮐  Not Now]) {
 			case("🌏  Go to RoutineHub"):
-				openURL(url: "https://routinehub.co/shortcut/4626/")
+				openURL(url: "https://routinehub.co/shortcut/4626/") >> openURL
 				exit()
 			case("👾  Download Update"):
 				downloadURL(url: "https://routinehub.co/api/v1/shortcuts/4626/versions/latest") >> downloadURL 1
 				matchText(text: "${Contents of URL}", regex: "(?<="id":\D?)\d+") >> matchText
 				expandURL(url: "https://routinehub.co/download/${Matches}/") >> expandURL
 				replaceText(input: "${Expanded URL}", find: "^.+icloud.com/", replace: "shortcuts://", isRegex: true) >> replaceText
-				openURL(url: Updated Text)
+				openURL(url: Updated Text) >> openURL 1
 				exit()
 			case("⮐  Not Now"):
 			} >> MenuResult
 		} >> IFResult
 	} >> IFResult 1
 } >> IFResult 2
-menu(, [📋  Read JSON from Clipboard, 📝  Open JSON or Text File, ⌨️  Enter JSON Text, 🥢  Extract JSON from Shortcut, 🖇  Merge Dictionary Actions]) {
-case("📋  Read JSON from Clipboard"):
-	number(value: 1) >> number
-case("📝  Open JSON or Text File"):
-	number(value: 2) >> number 1
-case("⌨️  Enter JSON Text"):
-	number(value: 3) >> number 2
-case("🥢  Extract JSON from Shortcut"):
-	number(value: 4) >> number 3
-case("🖇  Merge Dictionary Actions"):
-	number(value: 5) >> number 4
-} >> MenuResult 1
-if(Menu Result > 3) {
+list(items: (
+    "\Ud83d\Udccb  Read JSON from Clipboard",
+    "\Ud83d\Udcdd  Open JSON or Text File",
+    "\U2328\Ufe0f  Enter JSON Text",
+    "\Ud83e\Udd62  Extract JSON from Shortcut",
+    "\Ud83d\Udd87  Merge Dictionary Actions"
+)) >> list
+choose(list: List, prompt: "
+	Dictionary Action Builder
+") >> choose
+replaceText(input: "${Chosen Item}", find: "^[🥢🖇].+", reRegex: true, caseSensitive: $4) >> replaceText 1
+if(Updated Text == nil) {
 	runShortcut(name: "Shortcut Source Helper") >> runShortcut
 	if(Shortcut Result == nil) {
 		exit()
 	} >> IFResult 3
-	if(Menu Result == 4) {
+	if(Chosen Item .beginsWith "🥢  Extract") {
 		getFileOfType(input: Shortcut Result, type: "public.json") >> getFileOfType
 		menu(Indentation Style:, [Standard (Tabs), Compact (2 Spaces)]) {
 		case("Standard (Tabs)"):
@@ -53,8 +52,8 @@ if(Menu Result > 3) {
 		case("Compact (2 Spaces)"):
 			text(text: ".replace(/(  +|^)\{\n +/g,'$1{  ').replace(/( *)(\{.*)\n\1\}/g,'$1$2 }')") >> compact
 			text(text: "'  '") >> text 1
-		} >> MenuResult 2
-var CFE02CDA-89AB-4E65-A8C7-06032A9AD3D9 = """const out = [];
+		} >> MenuResult 1
+var 64974CF1-138C-4E4D-B4C5-AA54858D3E88 = """const out = [];
 for (const a of actions) {
 	if (a.WFWorkflowActionIdentifier === 'is.workflow.actions.dictionary' && (items = a.WFWorkflowActionParameters.WFItems)) {
 		out.push(getdict(items.Value));
@@ -79,8 +78,8 @@ function getvalue(d) {
 		case 0: return getstr(v);
 		case 1: return getdict(v.Value);
 		case 2: return v.map(getvalue);
-		case 3: return v.attachmentsByRange ? `NUMBER(${getstr(v)})` : Number(v.string);
-		case 4: return v.Value ? `BOOLEAN(${varname(v.Value)})` : v;
+		case 3: return v.attachmentsByRange ? `NUMBER(${getstr(v)})` : Number(v.string.replace(/[\u0660-\u0669\u06f0-\u06f9]/g, d => d.charCodeAt(0) & 0xf).replace(/[,٫]/g, '.'));
+		case 4: return v.Value ? `BOOLEAN(❰${varname(v.Value)}❱)` : v;
 	}
 }
 
@@ -104,7 +103,7 @@ function stringify(o) {
 	}
 	return JSON.stringify({a:o}).slice(5,-1);
 }"""
-text("${CFE02CDA-89AB-4E65-A8C7-06032A9AD3D9}")
+text("${64974CF1-138C-4E4D-B4C5-AA54858D3E88}")
 		url(url: "data:text/html;charset=utf-8,<body/><script>const actions = ${Text}.WFWorkflowActions;${ActionOutput}</script>") >> url
 		decodeURL(url: "${URL.as(RichText)}") >> decodeURL
 		if(URL Encoded Text == ".") {
@@ -127,13 +126,13 @@ text("${CFE02CDA-89AB-4E65-A8C7-06032A9AD3D9}")
 			case("📝  Save"):
 				saveFile(input: Renamed Item) >> saveFile
 			case("📋  Copy to Clipboard"):
-				setClipboard(variable: Renamed Item)
+				setClipboard(variable: Renamed Item) >> setClipboard
 				getClipboard() >> getClipboard
-			} >> MenuResult 3
+			} >> MenuResult 2
 		} >> IFResult 6
 		exit()
 	} else {
-		replaceText(input: "${Shortcut Result}", find: "</array>\s*</dict>\s*<key>WFSerializationType</key>\s*<string>WFDictionaryFieldValue</string>\s*</dict>\s*(?:</dict>\s*</dict>\s*<dict>\s*<key>WFWorkflowActionIdentifier</key>\s*<string>is.workflow.actions.dictionary</string>\s*[\s\S]{120,300}|<key>WFSerializationType</key>\s*<string>WFDictionaryFieldValue</string>\s*</dict>\s*</dict>\s*</array>\s*</dict>\s*</dict>\s*<dict>\s*<key>WFWorkflowActionIdentifier</key>\s*<string>is.workflow.actions.list</string>[\s\S]{270,450})<key>WFDictionaryFieldValueItems</key>\s*<array>\s*", isRegex: true) >> replaceText 1
+		replaceText(input: "${Shortcut Result}", find: "</array>\s*</dict>\s*<key>WFSerializationType</key>\s*<string>WFDictionaryFieldValue</string>\s*</dict>\s*(?:</dict>\s*</dict>\s*<dict>\s*<key>WFWorkflowActionIdentifier</key>\s*<string>is.workflow.actions.dictionary</string>\s*[\s\S]{120,300}|<key>WFSerializationType</key>\s*<string>WFDictionaryFieldValue</string>\s*</dict>\s*</dict>\s*</array>\s*</dict>\s*</dict>\s*<dict>\s*<key>WFWorkflowActionIdentifier</key>\s*<string>is.workflow.actions.list</string>[\s\S]{270,450})<key>WFDictionaryFieldValueItems</key>\s*<array>\s*", isRegex: true) >> replaceText 2
 		if(Updated Text ==) {
 			alert(alert: "
 ❌  No Dictionary Actions to Merge
@@ -142,18 +141,18 @@ text("${CFE02CDA-89AB-4E65-A8C7-06032A9AD3D9}")
 		}
 	} >> IFResult 7
 } else {
-	if(Menu Result == 1) {
+	if(Chosen Item .beginsWith "📋  Read") {
 		getClipboard() >> getClipboard 1
 	} >> IFResult 8
-	if(Menu Result == 2) {
+	if(Chosen Item .beginsWith "📝  Open") {
 		selectFile() >> selectFile
 		setName(input: File, name: "${File.get(Name)}.txt") >> setName 1
 	} >> IFResult 9
-	if(Menu Result == 3) {
+	if(Chosen Item .beginsWith "⌨️  Enter") {
 		text(text: "${Ask}") >> text 2
 	} >> IFResult 10
 	setValue(key: "data", value: "${If Result}") >> setValue
-var 1063D887-F1E0-43B2-B5FF-40CF12830985 = """let mode = 0;
+var 7EAC01F2-5E2A-4D7C-8815-1611A564312A = """let mode = 0;
 let stack = [];
 let output = '{"WFWorkflowActions":[';
 let action = '';
@@ -232,8 +231,8 @@ while (buffer !== '') {
 					} else if (value === 'null') {
 						action += (mode == 1) ? '{"WFItemType":2,' + key + '"WFValue":{"Value":[],"WFSerializationType":"WFArrayParameterState"}},' : '';
 					} else {
-						let numStr = parseFloat(value).toString();
-						match = numStr.match(/(-?\d+)\.(\d+)/);
+						let numStr = value.replace(/[\u0660-\u0669\u06f0-\u06f9]/g, d => d.charCodeAt(0) & 0xf);
+						match = numStr.match(/(-?\d+)[.,٫](\d+)/);
 						value = match ? parseInt(match[1] + match[2]) + 'E-' + match[2].length : numStr;
 						action += '{"WFItemType":3,' + key + '"WFValue":{"Value":{"attachmentsByRange":{},"string":"' + value + '"},"WFSerializationType":"WFTextTokenString"}},';
 					}
@@ -243,7 +242,7 @@ while (buffer !== '') {
 }
 output += '],"WFWorkflowIcon":{"WFWorkflowIconStartColor":4292093695}}'
 document.body.textContent = actioncount ? encodeURIComponent(output.replace(/\n/g, '\\n')) : '';"""
-text("${1063D887-F1E0-43B2-B5FF-40CF12830985}")
+text("${7EAC01F2-5E2A-4D7C-8815-1611A564312A}")
 	url(url: "data:text/html;charset=utf-8,<body/><script>let buffer=${Text}.data;${ActionOutput}</script>") >> url 1
 	decodeURL(url: "${URL.as(RichText)}") >> decodeURL 1
 	if(URL Encoded Text == "") {
@@ -254,6 +253,6 @@ text("${1063D887-F1E0-43B2-B5FF-40CF12830985}")
 	} >> IFResult 11
 	getFileOfType(input: URL Encoded Text, type: "com.apple.plist") >> getFileOfType 1
 } >> IFResult 12
-askForInput(prompt: "New Shortcut Name:", default: "${Shortcut Result.get(Name)}${ActionOutput.get(Name)}") >> askForInput
+askForInput(prompt: "New Shortcut Name:", default: "${File.get(Name)}${ActionOutput.get(Name)}") >> askForInput
 setName(input: If Result, name: "${Provided Input}.plist") >> setName 2
 runShortcut(name: "Shortcut Source Helper", input: Renamed Item) >> runShortcut 1
