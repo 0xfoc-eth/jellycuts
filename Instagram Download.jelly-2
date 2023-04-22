@@ -3,11 +3,11 @@ import Shortcuts
 
 /*
 Downloads public or private photos and videos from posts, stories, highlights, IGTV, reels, etc.
-2023-04-21 	v3.2.1 	u/gluebyte
+2022-12-01 	v3.0.5 	u/gluebyte
 https://routinehub.co/shortcut/7823/
 */
-var 6C407C89-CD0B-44DA-8DC4-5A5584082B12 = """{
-"version": "2023-04-21",
+var 0B8E0A45-CBC9-4361-82AB-686C13EBDBE0 = """{
+"version": "2022-12-01",
 "id": "DF1910A2",
 "prefversion": "4",
 "filename": "Instagram Download.json",
@@ -66,6 +66,7 @@ var 6C407C89-CD0B-44DA-8DC4-5A5584082B12 = """{
 "recents": "Recents",
 "contacturl": "https://www.reddit.com/user/gluebyte",
 "web1": "https://routinehub.co/user/gluebyte",
+"useragent": {"User-Agent": "Mozilla/5.0 Instagram 231.0.0 (iPhone8,1; scale=2.00; 750x1334; 372089098)"},
 "dateoptions": [ "Always Date Posted", "Always Current Date", "Date Posted", "Current Date" ],
 "gridoptions": [ "Always Yes", "Always No", "Yes", "No" ],
 "reelsoptions": [ "Always Yes", "Always No", "Yes", "No" ],
@@ -78,7 +79,7 @@ var 6C407C89-CD0B-44DA-8DC4-5A5584082B12 = """{
 	"nologin2": "\n⛔️ No media has been downloaded. Please sign in on Scriptable’s browser in the next screen and try again.\n",
 	"oops": "\n⛔️ Oops, an error occurred. Please sign in on Scriptable’s browser in the next screen and try again.\n",
 	"accounterror": "\n🆘 Instagram responded with an error. If the problem persists, try logging out and logging in again in the Instagram app.\n",
-	"login": "\n\nScriptable will open Instagram web.\nPlease close browser when finished.\n\n",
+	"login": "\nYou can close app after logging in.\n ",
 	"ok": "OK",
 	"nomedia": "\n🚫 No media has been downloaded. If the problem persists, try deleting and reinstalling the Scriptable app.\n",
 	"ashellprompt0": "\nThis shortcut requires the free ‘a-Shell mini’ app:\n",
@@ -101,27 +102,24 @@ var 6C407C89-CD0B-44DA-8DC4-5A5584082B12 = """{
 	"noclipboard": "No Instagram link in clipboard.",
 }
 }"""
-text("${6C407C89-CD0B-44DA-8DC4-5A5584082B12}")
+text("${0B8E0A45-CBC9-4361-82AB-686C13EBDBE0}")
 getDictionaryFrom(input: Text) >> getDictionaryFrom
 var mainDict = Dictionary
-text(text: "0") >> text
-if(DeviceDetails != nil) {
-	text(text: "1") >> text 1
+replaceText(input: "${DeviceDetails.get(System Version)}", find: "\..+", isRegex: true) >> replaceText
+text(text: "1") >> text
+if(DeviceDetails !=) {
+	if(Updated Text false 15) {
+		text(text: "0") >> text 1
+	}
 } >> IFResult
 var OS = If Result
 if(ShortcutInput != nil) {
 //Unable to get shortcuts action dk.simonbs.Scriptable.RunScriptInlineIntent
 	if(Output != nil) {
 		openApp(id: "dk.simonbs.Scriptable")
-		openApp(id: "com.burbn.instagram") >> openApp
-		runShortcut(name: "Instagram Download", input: ShortcutInput) >> runShortcut
+		openApp(id: "com.burbn.instagram")
 		exit()
 	} >> IFResult 1
-	if(Output != nil) {
-		wait(seconds: Output)
-		runShortcut(name: "Instagram Download", input: ShortcutInput)
-		exit()
-	}
 	if(Output != nil) {
 		alert(alert: "${mainDict.key(msg.oldversion)}", cancel: false)
 		openURL(url: mainDict) >> openURL
@@ -136,8 +134,8 @@ if(ShortcutInput != nil) {
 			downloadURL(url: "https://routinehub.co/api/v1/shortcuts/7823/versions/latest") >> downloadURL
 			matchText(text: "${Contents of URL}", regex: "(?<="id":\D?)\d+") >> matchText
 			expandURL(url: "https://routinehub.co/download/${Matches}/") >> expandURL
-			replaceText(input: "${Expanded URL}", find: "^.+icloud.com/", replace: "shortcuts://", isRegex: true) >> replaceText
-			openURL(url: Updated Text) >> openURL 1
+			replaceText(input: "${Expanded URL}", find: "^.+icloud.com/", replace: "shortcuts://", isRegex: true) >> replaceText 1
+			openURL(url: Updated Text)
 			exit()
 		case("mainDict (notnow)"):
 		} >> MenuResult
@@ -177,7 +175,7 @@ var savePref = Variable
 			math(input: Chosen Item, operation: -, operand: "2") >> math
 			if(Calculation Result false 1) {
 				combineText(text: pref, combine: Custom) >> combineText
-				replaceText(input: "${Combined Text}", find: ".(..)$", replace: "${Chosen Item}$1", isRegex: true) >> replaceText 1
+				replaceText(input: "${Combined Text}", find: ".(..)$", replace: "${Chosen Item}$1", isRegex: true) >> replaceText 2
 				splitText(text: Updated Text, separator: Every Character) >> splitText
 				setValue(key: "selection", value: "${Split Text.as(Number)}", dictionary: pref) >> setValue 1
 var pref = Dictionary
@@ -202,9 +200,9 @@ var index = Variable
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.PutFileIntent
 				nothing()
 				if(item 1 == "mp4") {
-var F68A1F01-F32A-4F98-8BC3-9C27ED266CE4 = """ffmpeg -v error -i ￼.mp4 -metadata "creation_time=￼" -c copy -y t.mp4
+var 23E74E65-155A-4AC3-B4C2-0B67E85B762B = """ffmpeg -v error -i ￼.mp4 -metadata "creation_time=￼" -c copy -y t.mp4
 mv -f t.mp4 ￼.mp4"""
-text("${F68A1F01-F32A-4F98-8BC3-9C27ED266CE4}")
+text("${23E74E65-155A-4AC3-B4C2-0B67E85B762B}")
 				} >> IFResult 5
 			} else {
 				setName(input: item 1, name: "${Repeat Index}v") >> setName 2
@@ -214,17 +212,17 @@ var index = Calculation Result
 				getItemFromList(list: Contents of URL, type: Item At Index, index: index) >> getItemFromList
 				setName(input: Item from List, name: "${Repeat Index}a") >> setName 3
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.PutFileIntent
-var A82F0CF2-8B2D-4E19-B5B1-748B991A17ED = """ffmpeg -v error -i ￼v.mp4 -i ￼a.mp4 -c copy -map 0:v:0 -map 1:a:0 -metadata "creation_time=￼" -y ￼.mp4
+var 046931EC-C503-442B-99CE-494664464024 = """ffmpeg -v error -i ￼v.mp4 -i ￼a.mp4 -c copy -map 0:v:0 -map 1:a:0 -metadata "creation_time=￼" -y ￼.mp4
 rm -f ￼v.mp4 ￼a.mp4"""
-text("${A82F0CF2-8B2D-4E19-B5B1-748B991A17ED}")
+text("${046931EC-C503-442B-99CE-494664464024}")
 			} >> ffmpeg copy
 			math(input: index, operand: "1") >> math 2
 var index = Calculation Result
 			if(MediaDate == 1) {
 				keysFrom(dictionary: Output) >> keysFrom 3
-				text(text: "touch -t ${item 1.get(File Extension)} ${ActionOutput.get(File Extension)}.${Repeat Index}") >> text 2
+				text(text: "touch -t ${Dictionary Value} ${ActionOutput}.${Repeat Index}") >> text 2
 			} else {
-				text(text: "touch ${Repeat Index}.${Variable}")
+				text(text: "touch ${item 1.get(File Extension)}.${ActionOutput.get(File Extension)}")
 			} >> touch
 			combineText(text: "(
         {
@@ -259,19 +257,10 @@ var index = Calculation Result
 		repeatEach(Matches) {
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.ExecuteCommandIntent
 		} >> RepeatResult 2
-		count(type: Characters, input: count) >> digits
-		math(input: digits, operation: …, scientific: 10^x) >> math 3
 		repeatEach(Output) {
 			getItemFromList(list: extensions, type: Item At Index, index: Repeat Index) >> getItemFromList 1
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.GetFileIntent
-			nothing()
-			if(Output != nil) {
-				if(count > 1) {
-					math(input: Calculation Result, operand: Repeat Index) >> math 4
-					replaceText(input: "${Calculation Result}", find: "^.", replace: " ", isRegex: true)
-				}
-			} >> IFResult 6
-			setName(input: File, name: "${Output.as(Dictionary).key(user)} ${ActionOutput.as(Dictionary).key(user)}${If Result}") >> setName 4
+			setName(input: File, name: "${Output.as(Dictionary).key(user)} ${ActionOutput.as(Dictionary).key(user)}") >> setName 4
 		} >> RepeatResult 3
 var media = Repeat Results
 		count(input: media)
@@ -282,17 +271,17 @@ var media = Repeat Results
 					setName(input: Repeat Index, name: "${Repeat Item}")
 				} >> RepeatResult 4
 				choose(list: Repeat Results, prompt: "${mainDict.key(msg.reelsprompt)}") >> choose 1
-				math(input: Chosen Item, operation: -, operand: "2") >> math 5
+				math(input: Chosen Item, operation: -, operand: "2") >> math 3
 				if(Calculation Result false 1) {
 					combineText(text: pref, combine: Custom) >> combineText 2
-					replaceText(input: "${Combined Text}", find: ".(.)$", replace: "${Chosen Item}$1", isRegex: true) >> replaceText 2
+					replaceText(input: "${Combined Text}", find: ".(.)$", replace: "${Chosen Item}$1", isRegex: true) >> replaceText 3
 					splitText(text: Updated Text, separator: Every Character) >> splitText 1
 					setValue(key: "selection", value: "${Split Text.as(Number)}", dictionary: pref) >> setValue 2
 var pref = Dictionary
 					alert(alert: "${mainDict.key(msg.optionsaved)}", cancel: false)
 var savePref = Chosen Item
 				}
-			} >> IFResult 7
+			} >> IFResult 6
 			if(If Result == 2) {
 				getItemFromList(list: media, type: Last Item) >> getItemFromList 2
 var media = Item from List
@@ -310,17 +299,17 @@ var media = Item from List
 							setName(input: Repeat Index, name: "${Repeat Item}")
 						} >> RepeatResult 5
 						choose(list: Repeat Results, prompt: "${mainDict.key(msg.gridprompt)}") >> choose 2
-						math(input: Chosen Item, operation: -, operand: "2") >> math 6
+						math(input: Chosen Item, operation: -, operand: "2") >> math 4
 						if(Calculation Result false 1) {
 							combineText(text: pref, combine: Custom) >> combineText 3
-							replaceText(input: "${Combined Text}", find: "^(.).", replace: "$1${Chosen Item}", isRegex: true) >> replaceText 3
+							replaceText(input: "${Combined Text}", find: "^(.).", replace: "$1${Chosen Item}", isRegex: true) >> replaceText 4
 							splitText(text: Updated Text, separator: Every Character) >> splitText 2
 							setValue(key: "selection", value: "${Split Text.as(Number)}", dictionary: pref) >> setValue 3
 var pref = Dictionary
 							alert(alert: "${mainDict.key(msg.optionsaved)}", cancel: false)
 var savePref = Chosen Item
-						} >> IFResult 8
-					} >> IFResult 9
+						} >> IFResult 7
+					} >> IFResult 8
 				} >> ShowGrid
 				if(count > 7) {
 					number(value: 1) >> number 1
@@ -337,13 +326,13 @@ var savePref = Chosen Item
 							text(text: "ffmpeg -v error -t 1.3 -i ${Repeat Index}.mp4 -vf "fps=1.2,scale=256:-1" -y ${Variable}.gif") >> text 3
 						}
 					} >> RepeatResult 6
-var 4B38F638-32CB-4864-8CBC-1DE4D2C0F423 = """hideKeyboard
+var 40F27226-6974-43A9-A92C-6DC8D888E2CD = """hideKeyboard
 touch begin
 rm -f done *.jpg
 ￼
 rm -f *.mp4
 touch done"""
-text("${4B38F638-32CB-4864-8CBC-1DE4D2C0F423}")
+text("${40F27226-6974-43A9-A92C-6DC8D888E2CD}")
 					repeat(2) {
 						if(Matches == nil) {
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.ExecuteCommandIntent
@@ -352,8 +341,8 @@ text("${4B38F638-32CB-4864-8CBC-1DE4D2C0F423}")
 							matchText(text: "${output}", regex: "^begin") >> matchText 2
 						}
 					} >> RepeatResult 7
-					math(input: Output, operation: /, operand: "100") >> math 7
-					math(input: Calculation Result, operation: *, operand: "5") >> math 8
+					math(input: Output, operation: /, operand: "100") >> math 5
+					math(input: Calculation Result, operation: *, operand: "5") >> math 6
 					wait(seconds: Calculation Result)
 					repeat(20) {
 						if(Matches == nil) {
@@ -370,7 +359,7 @@ text("${4B38F638-32CB-4864-8CBC-1DE4D2C0F423}")
 							setName(input: File, name: "${Repeat Index}")
 						} else {
 							setName(input: Repeat Item, name: "${Repeat Index}") >> setName 5
-						} >> IFResult 10
+						} >> IFResult 9
 					} >> RepeatResult 9
 					choose(list: Repeat Results, multiple: true, all: SelectAll) >> choose 3
 					getName() >> getName
@@ -379,16 +368,16 @@ text("${4B38F638-32CB-4864-8CBC-1DE4D2C0F423}")
 					} >> RepeatResult 10
 				} else {
 					choose(list: media, multiple: true, all: SelectAll) >> choose 4
-				} >> IFResult 11
+				} >> IFResult 10
 var media = If Result
 			}
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.ExecuteCommandIntent
-		} >> IFResult 12
+		} >> IFResult 11
 		if(media != nil) {
 			keysFrom(dictionary: pref) >> Share
 			if(Share == 1) {
 				share(file: media) >> share
-			} >> IFResult 13
+			} >> IFResult 12
 			keysFrom(dictionary: pref) >> Save to Files
 			if(Save to Files == 1) {
 				keysFrom(dictionary: pref) >> keysFrom 4
@@ -405,8 +394,8 @@ var media = If Result
 						setValue(key: "folderlocation", value: "${Menu Result.as(Number)}", dictionary: pref) >> setValue 4
 var pref = Dictionary
 //Unable to get shortcuts action is.workflow.actions.getvariable
-					} >> IFResult 14
-				} >> IFResult 15
+					} >> IFResult 13
+				} >> IFResult 14
 				if(If Result == 1) {
 //Unable to get shortcuts action is.workflow.actions.folder
 				} else {
@@ -415,7 +404,7 @@ var pref = Dictionary
 					} else {
 //Unable to get shortcuts action is.workflow.actions.folder
 					}
-				} >> IFResult 16
+				} >> IFResult 15
 				if(pref == nil) {
 					keysFrom(dictionary: mainDict) >> keysFrom 5
 					askForInput(prompt: "${Dictionary Value}") >> askForInput
@@ -425,9 +414,9 @@ var savePref = Variable
 					if(Provided Input != nil) {
 						createFolder(path: "${pref.as(Dictionary).key(savefolder)}") >> createFolder
 					}
-				} >> IFResult 17
+				} >> IFResult 16
 				saveFile(input: media, ask: false, path: "${pref.as(Dictionary).key(savefolder)}") >> saveFile
-			} >> IFResult 18
+			} >> IFResult 17
 			keysFrom(dictionary: pref) >> Save to Album
 			if(Save to Album == 1) {
 				keysFrom(dictionary: pref) >> album
@@ -448,10 +437,10 @@ var savePref = Variable
 						} else {
 							saveToCameraRoll(image: media, album: album)
 						}
-					} >> IFResult 19
-				} >> IFResult 20
-			} >> IFResult 21
-		} >> IFResult 22
+					} >> IFResult 18
+				} >> IFResult 19
+			} >> IFResult 20
+		} >> IFResult 21
 		if(Output != nil) {
 			keysFrom(dictionary: pref) >> Copy Caption
 			if(Copy Caption > 2) {
@@ -459,59 +448,54 @@ var savePref = Variable
 					setName(input: Repeat Index, name: "${Repeat Item}")
 				} >> RepeatResult 11
 				choose(list: Repeat Results, prompt: "${mainDict.key(msg.copyprompt)}") >> choose 5
-				math(input: Chosen Item, operation: -, operand: "2") >> math 9
+				math(input: Chosen Item, operation: -, operand: "2") >> math 7
 				if(Calculation Result false 1) {
 					combineText(text: pref, combine: Custom) >> combineText 4
-					replaceText(input: "${Combined Text}", find: ".$", replace: "${Chosen Item}", isRegex: true) >> replaceText 4
+					replaceText(input: "${Combined Text}", find: ".$", replace: "${Chosen Item}", isRegex: true) >> replaceText 5
 					splitText(text: Updated Text, separator: Every Character) >> splitText 3
 					setValue(key: "selection", value: "${Split Text.as(Number)}", dictionary: pref) >> setValue 7
 var pref = Dictionary
 					alert(alert: "${mainDict.key(msg.optionsaved)}", cancel: false)
 var savePref = Chosen Item
-				} >> IFResult 23
-			} >> IFResult 24
+				} >> IFResult 22
+			} >> IFResult 23
 			if(If Result == 1) {
 				setClipboard(variable: Output)
 				getClipboard()
 			}
 		}
-	} >> IFResult 25
+	} >> IFResult 24
 	if(savePref != nil) {
 //Unable to get shortcuts action dk.simonbs.Scriptable.RunScriptInlineIntent
-	} >> IFResult 26
-	if(count == 0) {
-		if(Output != nil) {
-			menu(, [) {
-			case("mainDict (openscriptable)"):
+	} >> IFResult 25
+	if(Output != nil) {
+		menu(, [) {
+		case("mainDict (openscriptable)"):
 //Unable to get shortcuts action dk.simonbs.Scriptable.RunScriptInlineIntent
-			case("mainDict (notnow)"):
-			} >> MenuResult 4
-		} else {
+		case("mainDict (notnow)"):
+		} >> MenuResult 4
+	} else {
+		if(count == 0) {
 			alert(alert: "${mainDict.key(msg.nomedia)}", title: "${ShortcutInput}", cancel: false)
-		} >> IFResult 27
-	}
+		}
+	} >> IFResult 26
 } else {
 //Unable to get shortcuts action dk.simonbs.Scriptable.RunScriptInlineIntent
 	if(Output != nil) {
 		openApp(id: "dk.simonbs.Scriptable")
 		openApp(id: "com.apple.shortcuts")
 		exit()
-	} >> IFResult 28
-	if(Output != nil) {
-		wait(seconds: Output)
-		runShortcut(name: "Instagram Download")
-		exit()
-	}
+	} >> IFResult 27
 	if(Output != nil) {
 		alert(alert: "${mainDict.key(msg.oldversion)}", cancel: false)
 		openURL(url: mainDict)
 		exit()
 	}
 	if(Output != nil) {
-		text(text: "❰ ${mainDict.key(msg.userprompt)}${Variable.key(msg.userprompt)} ❱") >> text 5
+		text(text: "❰ ${Output.as(Dictionary).key(user)}${ActionOutput.as(Dictionary).key(user)} ❱") >> text 5
 	} else {
 		keysFrom(dictionary: mainDict)
-	} >> IFResult 29
+	} >> IFResult 28
 var pref = Output
 var menu = Variable
 	repeat(10) {
@@ -529,24 +513,24 @@ var menu = Variable
 					if(menu == 0) {
 //Unable to get shortcuts action dk.simonbs.Scriptable.RunScriptInlineIntent
 						getDictionaryFrom(input: Output) >> getDictionaryFrom 1
-						choose(list: Dictionary, prompt: "${mainDict.key(msg.settingprompt)}${Variable.key(msg.settingprompt)}${Dictionary.key(folderpath)}") >> choose 6
+						choose(list: Dictionary, prompt: "${mainDict.key(msg.settingprompt)}${Variable.key(msg.settingprompt)}${Dictionary.key(albumname)}") >> choose 6
 						if(Chosen Item == ""${mainDict.key(goback)}"") {
 var menu = Variable
 						} else {
 //Unable to get shortcuts action dk.simonbs.Scriptable.RunScriptInlineIntent
 							getDictionaryFrom(input: Output) >> getDictionaryFrom 2
 var pref = Dictionary
-						} >> IFResult 30
-					} >> IFResult 31
+						} >> IFResult 29
+					} >> IFResult 30
 				} >> RepeatResult 12
 			case("mainDict (getlink)"):
 				getClipboard() >> getClipboard
 				if(Clipboard .contains "instagram.com") {
-					runShortcut(name: "Instagram Download", input: Clipboard) >> runShortcut 1
+					runShortcut(name: "Instagram Download", input: Clipboard) >> runShortcut
 				} else {
 					alert(alert: "${Clipboard}", title: "${mainDict.key(msg.noclipboard)}", cancel: false)
-				} >> IFResult 32
+				} >> IFResult 31
 			} >> MenuResult 5
 		}
 	} >> RepeatResult 13
-}
+} >> IFResult 32
