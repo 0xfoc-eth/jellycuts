@@ -48,7 +48,7 @@ var Metadata = Texto
 	repeatEach(Dividir texto) {
 		if(Repeat Item 2 != nil) {
 			getItemFromList(list: Control emojis, type: Item At Index, index: Repeat Index 2) >> Control emojis
-			text(text: "${Metadata}${Variable}") >> Emojis
+			text(text: "${Control emojis}${ActionOutput}") >> Emojis
 			matchText(text: "${Emojis}", regex: "[🟥🟧🟨🟩]", caseSensitive: $2) >> matchText 1
 			getItemFromList(list: Coincidencias) >> Size
 			matchText(text: "${Emojis}", regex: "[🔻🔺]", caseSensitive: $2) >> matchText 2
