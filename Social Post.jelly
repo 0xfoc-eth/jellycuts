@@ -1,0 +1,30 @@
+import Shortcuts
+#Color: green, #Icon: textBubble
+
+/*
+Social post is a shortcut for copying the component parts of a social media post - the text of a post, URL, and image - to the app Paste for use in the apps of social networks like Mastodon and Threads. The app also relies on the third-party app Actions for Shortcuts. 
+
+The app is designed to create a social media post using the most recent item in the MacStories RSS feed but can be adapted to use with any URL using the Share Sheet.
+*/
+askForInput(prompt: "What do you want to say?") >> askForInput
+getRSSItems(url: "https://www.macstories.net/feed/", count: true) >> getRSSItems
+getImagesFrom(input: RSS Items) >> getImagesFrom
+choose(list: Images, multiple: true) >> choose
+openURL(url: "paste://") >> openURL
+setClipboard(variable: Chosen Item) >> setClipboard
+wait()
+//Unable to get shortcuts action com.sindresorhus.Actions.GetTitleOfURLIntent
+getURLSFromInput(text: "${RSS Items.get(URL)}") >> getURLSFromInput
+var F7C980AA-4F51-476A-AE68-E533BF516AE8 = """￼
+
+￼ – ￼"""
+text("${F7C980AA-4F51-476A-AE68-E533BF516AE8}")
+wait()
+//Unable to get shortcuts action com.wiheads.paste.AddItemIntent
+menu(Pick One, [Ivory, Threads]) {
+case("Ivory"):
+	encodeURL(url: "${Text}") >> encodeURL
+	openURL(url: "ivory:///post?text=${URL Encoded Text}") >> openURL 1
+case("Threads"):
+	setClipboard(variable: Text) >> setClipboard 1
+}
