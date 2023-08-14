@@ -15,15 +15,15 @@ setClipboard(variable: Chosen Item) >> setClipboard
 wait()
 //Unable to get shortcuts action com.sindresorhus.Actions.GetTitleOfURLIntent
 getURLSFromInput(text: "${RSS Items.get(URL)}") >> getURLSFromInput
-var F7C980AA-4F51-476A-AE68-E533BF516AE8 = """￼
+var A3F6AFF0-9F42-45E1-853C-849F0F2C7996 = """￼
 
 ￼ – ￼"""
-text("${F7C980AA-4F51-476A-AE68-E533BF516AE8}")
+text("${A3F6AFF0-9F42-45E1-853C-849F0F2C7996}")
 wait()
 //Unable to get shortcuts action com.wiheads.paste.AddItemIntent
 menu(Pick One, [Ivory, Threads]) {
 case("Ivory"):
-	encodeURL(url: "${Text}") >> encodeURL
+	decodeURL(url: "${Text}") >> decodeURL
 	openURL(url: "ivory:///post?text=${URL Encoded Text}") >> openURL 1
 case("Threads"):
 	setClipboard(variable: Text) >> setClipboard 1
