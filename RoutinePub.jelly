@@ -1,44 +1,65 @@
 import Shortcuts
-#Color: teal,#Icon: circledUpArrow
+#Color: teal, #Icon: circledUpArrow
 
-// RoutineHub by Harley Hicks
+/*
+RoutineHub originally created by Harley Hicks
 @RoutineHub
 
 RoutinePub by Mike Beasley
 @UpdateKit
-// RoutinePub contains an embedded version of CryptoKit by /u/schl3ck
+*/
+/*
+RoutinePub contains an embedded version of CryptoKit by /u/schl3ck
 
 Modified and redistributed with permission. Find a link in the credits option in the main menu.
-dictionary({"Name":"RoutinePub","Version":"6.1","RoutineHub ID":"69"})
-var Main Variables = Dictionary
-var Self = Main Variables
+*/
+dictionary({"Name":"RoutinePub","Version":"6.3","RoutineHub ID":"69"})
+var MainVariables = Dictionary
+var Self = Variable
 createFolder(path: "${Self}") >> createFolder
-text(text: "${Self}/Configuration.json") >> text
+if(ShortcutInput == nil) {
+	deviceDetails(detail: System Version) >> deviceDetails
+	downloadURL(url: "https://updatekit.mikebeas.com/v1", method: POST, requestJSON: ) >> downloadURL
+	keysFrom(dictionary: Contents of URL) >> keysFrom
+	if(Dictionary Value == "Up To Date") {
+		text(text: "RoutinePub version ${Contents of URL.as(Dictionary).key(payload.version)} is available.") >> text
+		menu(, [Install, Changes]) {
+		case("Install"):
+			openURL(url: Contents of URL) >> openURL
+			exit()
+		case("Changes"):
+			showResult(text: "${Contents of URL.as(Dictionary).key(payload.notes)}")
+			runShortcut(name: Self)
+			exit()
+		} >> MenuResult
+	} >> IFResult
+} >> IFResult 1
+text(text: "${Self}/Configuration.json") >> text 1
 var Settings = Text
-var UpdateKit = Main Variables
+var UpdateKit = Variable
 getFile(picker: false, path: "${Settings}", error: false) >> getFile
 var Encrypted = File
 dictionary({"isPassword":{"usePassword":"true"}})
-var Crypto Data = Dictionary
-if( != nil $2) {
+var CryptoData = Dictionary
+if(Encrypted != nil) {
 	setValue(key: "mode", value: "decrypt", dictionary: Crypto Data) >> setValue
-	setValue(key: "data", value: "${Encrypted}", dictionary: Dictionary) >> setValue
-	var Crypto Data = Dictionary
-	text(text: "Enter Your ${Self} Passcode") >> text
-	var Prompt = Text
+	setValue(key: "data", value: "${Encrypted}", dictionary: Dictionary) >> setValue 1
+var CryptoData = Dictionary
+	text(text: "Enter Your ${Self} Passcode") >> text 2
+var Prompt = Text
 } else {
 	askForInput(prompt: "Paste Your ${Self} API Key") >> askForInput
-	setValue(key: "mode", value: "encrypt", dictionary: Crypto Data) >> setValue
-	setValue(key: "data", value: "${Provided Input}", dictionary: Dictionary) >> setValue
-	var Crypto Data = Dictionary
-	text(text: "Create a ${Self} Passcode") >> text
-	var Prompt = Text
-} >> If Result
-askForInput(prompt: "${Prompt}", type: Number) >> askForInput
-text(text: ""${Provided Input}"") >> text
-setValue(key: "key", value: "${Text}", dictionary: Crypto Data) >> setValue
-var Crypto Data = Dictionary
-var C1C4F7DA-3343-4D0C-97A5-FFA710C928F1 = """// Stanford Javascript Crypto Library 
+	setValue(key: "mode", value: "encrypt", dictionary: Crypto Data) >> setValue 2
+	setValue(key: "data", value: "${Provided Input}", dictionary: Dictionary) >> setValue 3
+var CryptoData = Dictionary
+	text(text: "Create a ${Self} Passcode") >> text 3
+var Prompt = Text
+} >> IFResult 2
+askForInput(prompt: "${Prompt}", type: Number) >> askForInput 1
+text(text: ""${Provided Input}"") >> text 4
+setValue(key: "key", value: "${Text}", dictionary: Crypto Data) >> setValue 4
+var CryptoData = Dictionary
+var DD20CD15-2615-47BC-8DFC-1F1FD99880C7 = """// Stanford Javascript Crypto Library 
 // http://bitwiseshiftleft.github.io/sjcl/
 "use strict";var sjcl={cipher:{},hash:{},keyexchange:{},mode:{},misc:{},codec:{},exception:{corrupt:function(a){this.toString=function(){return"CORRUPT: "+this.message};this.message=a},invalid:function(a){this.toString=function(){return"INVALID: "+this.message};this.message=a},bug:function(a){this.toString=function(){return"BUG: "+this.message};this.message=a},notReady:function(a){this.toString=function(){return"NOT READY: "+this.message};this.message=a}}};
 sjcl.cipher.aes=function(a){this.s[0][0][0]||this.O();var b,c,d,e,f=this.s[0][4],g=this.s[1];b=a.length;var h=1;if(4!==b&&6!==b&&8!==b)throw new sjcl.exception.invalid("invalid aes key size");this.b=[d=a.slice(0),e=[]];for(a=b;a<4*b+28;a++){c=d[a-1];if(0===a%b||8===b&&4===a%b)c=f[c>>>24]<<24^f[c>>16&255]<<16^f[c>>8&255]<<8^f[c&255],0===a%b&&(c=c<<8^c>>>24^h<<24,h=h<<1^283*(h>>7));d[a]=d[a-b]^c}for(b=0;a;b++,a--)c=d[b&3?a:a-4],e[b]=4>=a||4>b?c:g[0][f[c>>>24]]^g[1][f[c>>16&255]]^g[2][f[c>>8&255]]^g[3][f[c&
@@ -101,8 +122,8 @@ null!=d[3]?b[d[2]]=parseInt(d[3],10):null!=d[4]?b[d[2]]=d[2].match(/^(ct|adata|s
 b){var c={},d;for(d=0;d<b.length;d++)void 0!==a[b[d]]&&(c[b[d]]=a[b[d]]);return c}};sjcl.encrypt=sjcl.json.encrypt;sjcl.decrypt=sjcl.json.decrypt;sjcl.misc.pa={};sjcl.misc.cachedPbkdf2=function(a,b){var c=sjcl.misc.pa,d;b=b||{};d=b.iter||1E3;c=c[a]=c[a]||{};d=c[d]=c[d]||{firstSalt:b.salt&&b.salt.length?b.salt.slice(0):sjcl.random.randomWords(2,0)};c=void 0===b.salt?d.firstSalt:b.salt;d[c]=d[c]||sjcl.misc.pbkdf2(a,c,b.iter);return{key:d[c].slice(0),salt:c.slice(0)}};
 "undefined"!==typeof module&&module.exports&&(module.exports=sjcl);"function"===typeof define&&define([],function(){return sjcl});
 """
-text("${C1C4F7DA-3343-4D0C-97A5-FFA710C928F1}")
-var 9AFD464C-557F-449F-ADAB-CCA301DD1FC8 = """<html><!-- crypto shortcut -->
+text("${DD20CD15-2615-47BC-8DFC-1F1FD99880C7}")
+var D10DE020-0981-44EB-9550-90C40BE7819B = """<html><!-- crypto shortcut -->
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="initial-scale=1, width=device-width">
@@ -208,32 +229,32 @@ dw(res, true);
 </script>
 </body>
 </html>"""
-text("${9AFD464C-557F-449F-ADAB-CCA301DD1FC8}")
+text("${D10DE020-0981-44EB-9550-90C40BE7819B}")
 decode(input: Text) >> decode
 replaceText(input: "${Base64 Encoded}", find: "\s") >> replaceText
 url(url: "data:text/html;base64,${Updated Text}") >> url
 getFileOfType(input: URL, type: "com.apple.webarchive") >> getFileOfType
 getTextFrom(input: File of Type) >> getTextFrom
-replaceText(input: "${Text}", find: "-", replace: "+") >> replaceText
-decode(input: Updated Text) >> decode
+replaceText(input: "${Text}", find: "-", replace: "+") >> replaceText 1
+decode(input: Updated Text) >> decode 1
 encodeURL(url: "${Base64 Encoded}") >> encodeURL
 getDictionaryFrom(input: URL Encoded Text) >> getDictionaryFrom
-keysFrom(dictionary: Dictionary) >> keysFrom
+keysFrom(dictionary: Dictionary) >> keysFrom 1
 var Key = Dictionary Value
-if( == nil $2) {
-	getFile(picker: false, path: "${Settings}", error: false) >> getFile
-	setValue(key: "API Key", value: "${Key}", dictionary: File) >> setValue
+if(Encrypted == nil) {
+	getFile(picker: false, path: "${Settings}", error: false) >> getFile 1
+	setValue(key: "API Key", value: "${Key}", dictionary: File) >> setValue 5
 	saveFile(input: Dictionary, ask: false, path: "${Settings}", overwrite: true) >> saveFile
-} >> If Result
-if( == nil $2) {
+} >> IFResult 3
+if(Key == nil) {
 	menu(Passcode Incorrect, [Try Again, Reset API Key]) {
 	case("Try Again"):
 		runShortcut(name: Self, show: false) >> runShortcut
 		exit()
 	case("Reset API Key"):
 		alert(alert: "This will delete your API key and allow you to reset it.")
-		getFile(picker: false, path: "${Settings}", error: false) >> getFile
-var 2566DAE1-03EA-4EE1-8C6A-8814AE18542E = """<html>
+		getFile(picker: false, path: "${Settings}", error: false) >> getFile 2
+var B406A08D-8DDF-4BAF-A495-402AC8F1546F = """<html>
 
 <body>
   <div id="output"></div>
@@ -255,104 +276,115 @@ var 2566DAE1-03EA-4EE1-8C6A-8814AE18542E = """<html>
 </body>
 
 </html>"""
-text("${2566DAE1-03EA-4EE1-8C6A-8814AE18542E}")
-		url(url: "data:text/html,${Text}") >> url
-		getFileOfType(input: URL, type: "com.apple.webarchive") >> getFileOfType
-		getTextFrom(input: File of Type) >> getTextFrom
-		getDictionaryFrom(input: Text) >> getDictionaryFrom
-		saveFile(input: Dictionary, ask: false, path: "${Settings}", overwrite: true) >> saveFile
-		runShortcut(name: Self, input: Saved File, show: false) >> runShortcut
+text("${B406A08D-8DDF-4BAF-A495-402AC8F1546F}")
+		url(url: "data:text/html,${Text}") >> url 1
+		getFileOfType(input: URL, type: "com.apple.webarchive") >> getFileOfType 1
+		getTextFrom(input: File of Type) >> getTextFrom 1
+		getDictionaryFrom(input: Text) >> getDictionaryFrom 1
+		saveFile(input: Dictionary, ask: false, path: "${Settings}", overwrite: true) >> saveFile 1
+		runShortcut(name: Self, input: Saved File, show: false) >> runShortcut 1
 		exit()
-	} >> Menu Result
-} >> If Result
-url(url: "https://routinehub.co/api/v1/${Key}/shortcuts") >> url
+	} >> MenuResult 1
+} >> IFResult 4
+url(url: "https://routinehub.co/api/v1/${Key}/shortcuts") >> url 2
 var API = URL
-menu(, [) {
+menu(, [Publish Update, My Shortcuts, Change API Key, RoutineHub Submission Rules, Credits]) {
 case("Publish Update"):
-	askForInput(prompt: "Shortcut URL", type: URL) >> askForInput
-	var URL = Provided Input
-	downloadURL(url: "${API}", headers: ) >> downloadURL
-	var Shortcuts = Contents of URL
-	keysFrom(dictionary: Shortcuts) >> keysFrom
+	askForInput(prompt: "Shortcut URL", type: URL) >> askForInput 2
+var URL = Provided Input
+	downloadURL(url: "${API}", headers: ) >> downloadURL 1
+var Shortcuts = Contents of URL
+	keysFrom(dictionary: Shortcuts) >> keysFrom 2
 	choose(list: Dictionary Value, prompt: "Select a RoutineHub Listing to Update  ") >> choose
-	var Shortcut = Chosen Item
-	keysFrom(dictionary: Shortcuts) >> keysFrom
-	var Remote ID = Dictionary Value
-	askForInput(prompt: "${Shortcut} Version Number") >> askForInput
-	var Version = Provided Input
-	askForInput(prompt: "${Shortcut} Release Notes") >> askForInput
-	var Notes = Provided Input
-	alert(alert: "${Notes}", title: "Publish ${Version} ${Variable}?", cancel: true)
-	url(url: "${Remote ID}/${Variable}/versions/create") >> url
-	downloadURL(url: "${URL}", method: POST, headers: , requestType: Form, requestJSON: ) >> downloadURL
-	keysFrom(dictionary: Contents of URL) >> keysFrom
-	if( == "success") {
-		alert(alert: "Updated ${Shortcut} to ${Variable}.", cancel: false)
+var Shortcut = Chosen Item
+	keysFrom(dictionary: Shortcuts) >> keysFrom 3
+var RemoteID = Dictionary Value
+	askForInput(prompt: "${Shortcut} Version Number") >> askForInput 3
+var Version = Provided Input
+	askForInput(prompt: "${Shortcut} Release Notes") >> askForInput 4
+var Notes = Provided Input
+	alert(alert: "${Notes}", title: "Publish ${Shortcut} ${Variable}?", cancel: true)
+	url(url: "${API}/${Variable}/versions/create") >> url 3
+	downloadURL(url: "${URL}", method: POST, headers: , requestType: Form, requestJSON: ) >> downloadURL 2
+	keysFrom(dictionary: Contents of URL) >> keysFrom 4
+	if(Dictionary Value == "success") {
+		text(text: "https://routinehub.co/shortcut/${Remote ID}") >> text 5
+		menu(, [Share Link, View on RoutineHub, Exit]) {
+		case("Share Link"):
+			share(file: Text) >> share
+		case("View on RoutineHub"):
+			openURL(url: Text) >> openURL 1
+		case("Exit"):
+		}
 	} else {
 		alert(alert: "${Contents of URL.as(Dictionary).key(message)}", title: "Update Failed", cancel: false)
-	} >> If Result
+	} >> IFResult 5
 	exit()
 case("My Shortcuts"):
-	downloadURL(url: "${API}", headers: ) >> downloadURL
-	keysFrom(dictionary: Contents of URL) >> keysFrom
-	if( == "error") {
+	downloadURL(url: "${API}", headers: ) >> downloadURL 3
+	keysFrom(dictionary: Contents of URL) >> keysFrom 5
+	if(Dictionary Value == "error") {
 		alert(alert: "${Contents of URL.as(Dictionary).key(message)}", title: "Error Getting Shortcuts", cancel: false)
 		exit()
-	} >> If Result
-	keysFrom(dictionary: Contents of URL) >> keysFrom
-	var Shortcuts = Dictionary Value
-	if( == "{}") {
+	} >> IFResult 6
+	keysFrom(dictionary: Contents of URL) >> keysFrom 6
+var Shortcuts = Dictionary Value
+	if(Shortcuts == "{}") {
 		alert(alert: "You do not have any shortcuts on RoutineHub. You need to create a listing.
 
 Would you like to open RoutineHub now?")
-		url(url: "https://routinehub.co") >> url
+		url(url: "https://routinehub.co") >> url 4
 		openURL(url: URL)
 		exit()
-	} >> If Result
-	keysFrom(dictionary: Shortcuts) >> keysFrom
-	choose(list: Dictionary Value, prompt: "Select a Shortcut") >> choose
-	var Shortcut = Chosen Item
-	keysFrom(dictionary: Shortcuts) >> keysFrom
-	var Data = Dictionary Value
-	keysFrom(dictionary: Data) >> keysFrom
-	if( == $2) {
-		text(text: "Unpublish") >> text
-		var Button = Text
+	} >> IFResult 7
+	keysFrom(dictionary: Shortcuts) >> keysFrom 7
+	choose(list: Dictionary Value, prompt: "Select a Shortcut") >> choose 1
+var Shortcut = Chosen Item
+	keysFrom(dictionary: Shortcuts) >> keysFrom 8
+var Data = Dictionary Value
+	keysFrom(dictionary: Data) >> keysFrom 9
+	if(Dictionary Value ==) {
+		text(text: "Unpublish") >> text 6
+var Button = Text
 		changeCase(text: Button, case: lowercase) >> changeCase
-		var Endpoint = Updated Text
+var Endpoint = Updated Text
 	} else {
-		text(text: "Publish") >> text
-		var Button = Text
-		changeCase(text: Button, case: lowercase) >> changeCase
-		var Endpoint = Updated Text
-	} >> If Result
+		text(text: "Publish") >> text 7
+var Button = Text
+		changeCase(text: Button, case: lowercase) >> changeCase 1
+var Endpoint = Updated Text
+	} >> IFResult 8
 	menu(, [) {
 	case("Copy RoutineHub ID"):
 		setClipboard(variable: Data)
 		exit()
 	case("Share Link"):
-var 24F7E3FB-2EA0-4362-B83B-DD6911E0DDE5 = """Check out ￼ on RoutineHub!
+var CD051095-CFDA-47A1-804F-5B1516E4CC84 = """Check out ￼ on RoutineHub!
 
 https://routinehub.co/shortcut/￼"""
-text("${24F7E3FB-2EA0-4362-B83B-DD6911E0DDE5}")
+text("${CD051095-CFDA-47A1-804F-5B1516E4CC84}")
 		share(file: Text)
+		exit()
+	case("View on RoutineHub"):
+		text(text: "https://routinehub.co/shortcut/${Data.as(Dictionary).key(id)}") >> text 8
+		openURL(url: Text) >> openURL 2
 		exit()
 	case("Button"):
 		alert(alert: "${Button} ${Variable}?")
-		url(url: "${Data.as(Dictionary).key(id)}/${Variable.as(Dictionary).key(id)}/${API}") >> url
-		downloadURL(url: "${URL}", method: POST, headers: ) >> downloadURL
-		keysFrom(dictionary: Contents of URL) >> keysFrom
-		if( == "success") {
-			alert(alert: "${Endpoint} has been ${Variable}ed.", cancel: false)
+		url(url: "${API}/${Variable}/${Endpoint}") >> url 5
+		downloadURL(url: "${URL}", method: POST, headers: ) >> downloadURL 4
+		keysFrom(dictionary: Contents of URL) >> keysFrom 10
+		if(Dictionary Value == "success") {
+			alert(alert: "${Shortcut} has been ${Variable}ed.", cancel: false)
 			exit()
 		} else {
 			alert(alert: "${Contents of URL.as(Dictionary).key(message)}", title: "Error", cancel: false)
 		}
-	} >> Menu Result
+	} >> MenuResult 2
 case("Change API Key"):
 	alert(alert: "This will delete your API key and allow you to reset it.")
-	getFile(picker: false, path: "${Settings}", error: false) >> getFile
-var 81628926-271E-4403-949C-2E9EE2C26A37 = """<html>
+	getFile(picker: false, path: "${Settings}", error: false) >> getFile 2
+var A6429BEC-1A07-457B-BB3F-4B61FDA80E4F = """<html>
 
 <body>
   <div id="output"></div>
@@ -374,96 +406,16 @@ var 81628926-271E-4403-949C-2E9EE2C26A37 = """<html>
 </body>
 
 </html>"""
-text("${81628926-271E-4403-949C-2E9EE2C26A37}")
-	url(url: "data:text/html,${Text}") >> url
-	getFileOfType(input: URL, type: "com.apple.webarchive") >> getFileOfType
-	getTextFrom(input: File of Type) >> getTextFrom
-	getDictionaryFrom(input: Text) >> getDictionaryFrom
-	saveFile(input: Dictionary, ask: false, path: "${Settings}", overwrite: true) >> saveFile
-	runShortcut(name: Self, input: Saved File, show: false) >> runShortcut
+text("${A6429BEC-1A07-457B-BB3F-4B61FDA80E4F}")
+	url(url: "data:text/html,${Text}") >> url 6
+	getFileOfType(input: URL, type: "com.apple.webarchive") >> getFileOfType 2
+	getTextFrom(input: File of Type) >> getTextFrom 2
+	getDictionaryFrom(input: Text) >> getDictionaryFrom 2
+	saveFile(input: Dictionary, ask: false, path: "${Settings}", overwrite: true) >> saveFile 2
+	runShortcut(name: Self, input: Saved File, show: false) >> runShortcut 2
 	exit()
-case("Update Self"):
-	keysFrom(dictionary: Main Variables) >> keysFrom
-	var Self Version = Dictionary Value
-	keysFrom(dictionary: Main Variables) >> keysFrom
-	var Self ID = Dictionary Value
-	deviceDetails(detail: System Version) >> deviceDetails
-	downloadURL(url: "https://updatekit.mikebeas.com/v1", method: POST, requestJSON: ) >> downloadURL
-	keysFrom(dictionary: Contents of URL) >> keysFrom
-	if( == "Up To Date") {
-var 476A4FBB-1002-4558-99FF-CE9D46610EB4 = """-- Version ￼ Available --
-
-￼"""
-text("${476A4FBB-1002-4558-99FF-CE9D46610EB4}")
-		menu(, [Install]) {
-		case("Install"):
-			openURL(url: Contents of URL) >> openURL
-		} >> Menu Result
-	} else {
-		alert(alert: "${Self Version} ${Variable} is the latest version.", cancel: false)
-	} >> If Result
-	exit()
-case("Shortcut Associations"):
-	alert(alert: "This menu item is no longer available due to changes Apple made in iOS 15.", title: "Feature Unavailable", cancel: false)
-	exit()
-	getFile(picker: false, path: "${Settings}", error: false) >> getFile
-	keysFrom(dictionary: File) >> keysFrom
-	var Full List = Dictionary Value
-	keysFrom(dictionary: Full List) >> keysFrom
-	count(input: Dictionary Value) >> count
-	if( == 0) {
-		alert(alert: "RoutinePub can associate your local shortcuts with listings on RoutineHub. RoutinePub will automatically learn these associations each time you successfully submit a shortcut.
-
-Next time you submit a new version of that shortcut, RoutinePub will automatically upload it to the correct online listing without asking you to select a shortcut from your account.
-
-If you need to manually add or remove one of these associations, you can do so from this menu.
-
-Note that renaming a shortcut on your device will break this association. It will create a new association next time you upload a new version, when you manually add a new association, or when you change the name back.", title: "You do not have any shortcut associations", cancel: false)
-		exit()
-	}
-	getShortcuts() >> getShortcuts
-	repeatEach(My Shortcuts) {
-		if( .contains ""${Repeat Item}"") {
-			var Actives += Repeat Item
-		} >> If Result
-	} >> Repeat Result
-	choose(list: Actives, prompt: "Select Associations to Remove", multiple: true) >> choose
-	repeatEach(Chosen Item) {
-		getFile(picker: false, path: "${Settings}", error: false) >> getFile
-var 3A5C65AD-32B1-479F-9AFF-ECBF469D8741 = """<html>
-
-<body>
-  <div id="output"></div>
-  <script>
-    // Remove from Dictionary JS by Mike Beasley
-
-    let currentList = ￼;
-    let newList = {};
-    const itemToRemove = '￼';
-
-    for (let item in currentList) {
-      if (item != itemToRemove) {
-        newList[item] = currentList[item];
-      }
-    }
-
-    document.getElementById('output').innerText = JSON.stringify(newList);
-  </script>
-</body>
-
-</html>"""
-text("${3A5C65AD-32B1-479F-9AFF-ECBF469D8741}")
-		url(url: "data:text/html,${Text}") >> url
-		getFileOfType(input: URL, type: "com.apple.webarchive") >> getFileOfType
-		getTextFrom(input: File of Type) >> getTextFrom
-		getDictionaryFrom(input: Text) >> getDictionaryFrom
-		var Updated = Dictionary
-		setValue(key: "Associations", value: "${Updated}", dictionary: File) >> setValue
-		saveFile(input: Dictionary, ask: false, path: "${Settings}", overwrite: true) >> saveFile
-	} >> Repeat Result
-	alert(alert: "The selected associations have been removed. You can recreate them by submitting new updates.", cancel: false)
 case("RoutineHub Submission Rules"):
-	alert(alert: "Include your own work - Your Shortcut must only contain your own work and content you have been allowed to reproduce.
+	showResult(text: "Include your own work - Your Shortcut must only contain your own work and content you have been allowed to reproduce.
 
 Include proper attribution - If some of your Shortcut is copied or borrowed from another shortcut, proper attribution must be placed in a note action inside the Shortcut at the top.
 
@@ -473,21 +425,21 @@ Do not link to illegally hosted content - Do not include links to places that vi
 
 Mark as NSFW if necessary - If your shortcut contains NSFW (not safe for work), or adult content (18+), it must be marked as such.
 
-Do not gather data from a user's device without permission - User data is owned by the user. Do not gather data and send it to yourself in any way without the user's permission.", title: "Submission Rules", cancel: false)
+Do not gather data from a user's device without permission - User data is owned by the user. Do not gather data and send it to yourself in any way without the user's permission.")
 case("Credits"):
-var 399147E2-0537-48EC-86E1-CBC94813484E = """RoutineHub is developed and managed by Harley Hicks.
+var 649EDD5A-FB8A-4FEF-9DD3-15C5E8F3D8D8 = """RoutineHub was originally created by Harley Hicks.
 
 RoutinePub is developed by Mike Beasley.
 
 CryptoKit was originally developed by /u/schl3ck, and was modified and redistributed with permission."""
-text("${399147E2-0537-48EC-86E1-CBC94813484E}")
+text("${649EDD5A-FB8A-4FEF-9DD3-15C5E8F3D8D8}")
 	menu(, [Visit RoutineHub, More By Mike Beasley, Learn More About CryptoKit]) {
 	case("Visit RoutineHub"):
-		url(url: "https://routinehub.co") >> url
+		url(url: "https://routinehub.co") >> url 7
 	case("More By Mike Beasley"):
-		url(url: "https://www.mikebeas.com") >> url
+		url(url: "https://www.mikebeas.com") >> url 8
 	case("Learn More About CryptoKit"):
 		url(url: "https://www.reddit.com/r/shortcuts/comments/9p2vix/cryptokit_a_cryptography_shortcut")
-	} >> Menu Result
-	openURL(url: Menu Result)
-} >> Menu Result
+	} >> MenuResult 3
+	openURL(url: Menu Result) >> openURL 3
+} >> MenuResult 4
