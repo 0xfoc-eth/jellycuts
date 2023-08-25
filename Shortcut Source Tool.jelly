@@ -3,15 +3,16 @@ import Shortcuts
 
 /*
 View, save, convert, edit shortcut source in xml or json format. Restore shortcuts from source. Create web review.
-2023-04-29 	v3.7.3  	u/gluebyte
-https://routinehub.co/shortcut/5256
+2023-08-24 	v3.7.4
+https://routinehub.co/user/gluebyte
+https://mastodon.social/@gluebyte
 */
 randomNumber(min: 1, max: 2) >> randomNumber
 if(Random Number == 1) {
 	getIP() >> getIP
 	if(Current IP Address != nil) {
 		downloadURL(url: "https://updatecheck.gluebyte.workers.dev/?id=33C37587") >> downloadURL
-		if(Contents of URL .contains "2023-04-29") {
+		if(Contents of URL .contains "2023-08-24") {
 			menu(, [🌏  Go to RoutineHub, 👾  Download Update, ⮐  Not Now]) {
 			case("🌏  Go to RoutineHub"):
 				openURL(url: "https://routinehub.co/shortcut/5256/")
@@ -56,7 +57,8 @@ if(Menu Result .beginsWith "{") {
 } >> IFResult 4
 var file = If Result
 setValue(key: "a", value: "${file.get(Name)}") >> setValue
-url(url: "data:text/html;charset=utf8,<body/><script>document.body.textContent=encodeURIComponent(((a=${Dictionary}.a).length>a.normalize().length)?a.split('').join('\u2009'):a)</script>") >> url
+replaceText(input: "${Dictionary}", find: "#", replace: "\u0023") >> replaceText 2
+url(url: "data:text/html;charset=utf8,<body/><script>document.body.textContent=encodeURIComponent(((a=${Updated Text}.a).length>a.normalize().length)?a.split('').join('\u2009'):a)</script>") >> url
 encodeURL(url: "${URL.as(RichText)}") >> encodeURL
 list(items: (
     "\Ud83e\Uddd0  Quick Look Source",
@@ -72,12 +74,13 @@ list(items: (
 choose(list: List, prompt: "${URL Encoded Text}.${ActionOutput} (${file.get(File Size)})") >> command
 if(command .beginsWith "❓") { >> IFResult 5
 	getFileOfType(input: file, type: "public.json") >> getFileOfType 1
-var 524A5DA5-D333-4442-85E2-3EEFAA1212E3 = """count = 0;
+	replaceText(input: "${File of Type}", find: "#", replace: "\u0023") >> replaceText 3
+var CDF810B3-E256-4816-BD76-32316B2E1F35 = """count = 0;
 d.WFWorkflowImportQuestions.forEach(q => { q.Text = q.Text.replace(/\+\+/g, s => { count++; return '\n' }) });
 if (count) { d.count = count }
 document.body.textContent = encodeURIComponent(JSON.stringify(d,null,2));"""
-text("${524A5DA5-D333-4442-85E2-3EEFAA1212E3}")
-	url(url: "data:text/html;charset=utf-8,<body/><script>const d=${Text};${ActionOutput}</script>") >> url 1
+text("${CDF810B3-E256-4816-BD76-32316B2E1F35}")
+	url(url: "data:text/html;charset=utf-8,<body/><script>const d=${Updated Text};${ActionOutput}</script>") >> url 1
 	encodeURL(url: "${URL.as(RichText)}") >> encodeURL 1
 	if(URL Encoded Text == nil) {
 		alert(alert: "‘++’ not found in Import Questions", cancel: false)
@@ -96,10 +99,10 @@ Please remove the first ’Stop and Output‘ action and close the editor when u
 if(command .beginsWith "✂️") { >> IFResult 6
 	count(input: file) >> count
 	math(input: Count, operation: -, operand: "1") >> math
-var 0BCB3909-6745-45BB-97EA-49EB5FAB1269 = """Enter start index (0 - ￼)
+var F8AABFCD-542A-4D23-BB9C-0F4E8566E936 = """Enter start index (0 - ￼)
 Index is based on action numbers in Web Review.
 To open Web Review, enter nothing."""
-text("${0BCB3909-6745-45BB-97EA-49EB5FAB1269}")
+text("${F8AABFCD-542A-4D23-BB9C-0F4E8566E936}")
 	askForInput(prompt: "${Text}", type: Number, allowDecimal: false, allowNegative: false) >> start
 	if(start >= 0) {
 		repeat(3) {
@@ -108,18 +111,19 @@ text("${0BCB3909-6745-45BB-97EA-49EB5FAB1269}")
 				if(end .between start...Calculation Result) {
 					number(value: 1) >> number
 				} else {
-var 444F250F-9AFE-4127-B8E2-1BD220ECEC7D = """
+var C0045C2E-A6AF-4C56-83A5-F4B50699AD39 = """
 🛑 End index should be between ￼ and ￼."""
-text("${444F250F-9AFE-4127-B8E2-1BD220ECEC7D}")
+text("${C0045C2E-A6AF-4C56-83A5-F4B50699AD39}")
 				} >> IFResult 7
 			} >> IFResult 8
 		} >> RepeatResult
 		getFileOfType(input: file, type: "public.json") >> getFileOfType 3
-var FD59F083-59C5-434F-B0AA-76B108453F1D = """d.WFWorkflowActions = d.WFWorkflowActions.slice(start, end+1);
+		replaceText(input: "${File of Type}", find: "#", replace: "\u0023") >> replaceText 4
+var BAF68BD3-8109-44B4-8BB9-06C49F61E9D9 = """d.WFWorkflowActions = d.WFWorkflowActions.slice(start, end+1);
 d.WFWorkflowImportQuestions = d.WFWorkflowImportQuestions.filter(q => { q.ActionIndex -= start; return q.ActionIndex >= 0 && q.ActionIndex <= end-start } );
 document.body.textContent = encodeURIComponent(JSON.stringify(d,null,2));"""
-text("${FD59F083-59C5-434F-B0AA-76B108453F1D}")
-		url(url: "data:text/html;charset=utf-8,<body/><script>const start=${start},end=${ActionOutput},d=${Text};${ActionOutput}</script>") >> url 2
+text("${BAF68BD3-8109-44B4-8BB9-06C49F61E9D9}")
+		url(url: "data:text/html;charset=utf-8,<body/><script>const start=${Text},end=${ActionOutput},d=${start};${ActionOutput}</script>") >> url 2
 		encodeURL(url: "${URL.as(RichText)}") >> encodeURL 2
 		setName(input: URL Encoded Text, name: "a.json") >> setName 6
 		getFileOfType(input: Renamed Item, type: "com.apple.plist") >> getFileOfType 4
@@ -131,10 +135,11 @@ text("${FD59F083-59C5-434F-B0AA-76B108453F1D}")
 	}
 } >> IFResult 9
 if(If Result .beginsWith "🔍") { >> IFResult 10
-	replaceText(input: "${file.get(Name)}", find: "&", replace: "&amp;") >> replaceText 2
+	replaceText(input: "${file.get(Name)}", find: "&", replace: "&amp;") >> replaceText 5
 	replaceText(input: "${Updated Text}", find: "<", replace: "&lt;") >> shortcutname
 	dictionary({})
 	setValue(key: "name", value: "${shortcutname}", dictionary: Dictionary) >> setValue 1
+	replaceText(input: "${Dictionary}", find: "#", replace: "\u0023") >> replaceText 6
 	getFileOfType(input: file, type: "public.json") >> getFileOfType 5
 var src = File of Type
 	if(src .contains "{"__type__":"data","__value__":"YnBsaXN0") {
@@ -142,7 +147,7 @@ var src = File of Type
 		repeatEach(Matches) {
 			getMatchGroup(matches: Repeat Item) >> getMatchGroup
 			getMatchGroup(matches: Repeat Item, index: "2") >> b64
-			encode(input: b64) >> encode 3
+			decode(input: b64) >> decode
 			setName(input: Base64 Encoded, name: "a.plist") >> setName 8
 			nothing()
 			if(Text == "UserActivityData") {
@@ -151,14 +156,18 @@ var src = File of Type
 			if(Text == "IntentData") {
 				valueFor(key: "$objects.13", dictionary: Renamed Item) >> valueFor 1
 			} >> IFResult 12
-			dictionary({"k":"${Renamed Item}${ActionOutput}"})
-			replaceText(input: "${Dictionary}", find: "^\{"k":|\}$", isRegex: true) >> replaceText 3
-			replaceText(input: "${src}", find: "{"__type__":"data","__value__":"${b64}"}", replace: "${Updated Text}") >> replaceText 4
+			dictionary({"k":"${If Result}${ActionOutput}"})
+			replaceText(input: "${Dictionary}", find: "^\{"k":|\}$", isRegex: true) >> replaceText 7
+			replaceText(input: "${src}", find: "{"__type__":"data","__value__":"${b64}"}", replace: "${Updated Text}") >> replaceText 8
 var src = Updated Text
 			nothing()
 		} >> RepeatResult 1
 	} >> IFResult 13
-var 4145C67C-1FA5-4025-BE2E-21A9445306BD = """const idDict = {
+	replaceText(input: "${src}", find: "#", replace: "\u0023") >> src
+	getShortcuts() >> getShortcuts
+	setValue(key: "n", value: "${My Shortcuts}") >> setValue 2
+	replaceText(input: "${Dictionary}", find: "#", replace: "\u0023") >> sNames
+var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 "is.workflow.actions.conditional":[{
 	"name":"If $\ufffc0 $\ufffc1",
 	"group":"gGray",
@@ -237,7 +246,7 @@ var 4145C67C-1FA5-4025-BE2E-21A9445306BD = """const idDict = {
 	"name":"Comment",
 	"group":"gYellow",
 	"param":{
-		"WFCommentActionText":"#",
+		"WFCommentActionText":"\u0023",
 }}],
 "is.workflow.actions.detect.text":[{
 	"name":"Get Text from $\ufffc0",
@@ -312,7 +321,7 @@ var 4145C67C-1FA5-4025-BE2E-21A9445306BD = """const idDict = {
 	"name":"Show Result",
 	"group":"gYellow",
 	"param":{
-		"Text":"#",
+		"Text":"\u0023",
 }}],
 "is.workflow.actions.notification":[{
 	"name":"Show Notification $\ufffc0",
@@ -336,7 +345,7 @@ var 4145C67C-1FA5-4025-BE2E-21A9445306BD = """const idDict = {
 	"name":"Text",
 	"group":"gYellow",
 	"param":{
-		"WFTextActionText":"#",
+		"WFTextActionText":"\u0023",
 }}],
 "is.workflow.actions.text.split":[{
 	"name":"Split Text $\ufffc0 by $\ufffc1",
@@ -435,7 +444,7 @@ var 4145C67C-1FA5-4025-BE2E-21A9445306BD = """const idDict = {
 	"name":"Dictionary",
 	"group":"gOrange",
 	"param":{
-		"WFItems":"#",
+		"WFItems":"\u0023",
 }}],
 "is.workflow.actions.getvalueforkey":[{
 	"name":"Get Dictionary $\ufffc1 in $\ufffc0",
@@ -455,7 +464,7 @@ var 4145C67C-1FA5-4025-BE2E-21A9445306BD = """const idDict = {
 	"name":"List",
 	"group":"gOrange",
 	"param":{
-		"WFItems":"#",
+		"WFItems":"\u0023",
 }}],
 "is.workflow.actions.getitemfromlist":[{
 	"name":"Get $\ufffc1 from List $\ufffc0",
@@ -491,7 +500,7 @@ var 4145C67C-1FA5-4025-BE2E-21A9445306BD = """const idDict = {
 	"group":"gBlue",
 }],
 "is.workflow.actions.documentpicker.open":[{
-	"name":"Get File $\ufffc0 from Folder",
+	"name":"Get File at Path $\ufffc0 from Folder",
 	"group":"gBlue",
 	"param":{
 		"WFGetFilePath":"$\ufffc0",
@@ -557,19 +566,19 @@ var 4145C67C-1FA5-4025-BE2E-21A9445306BD = """const idDict = {
 "is.workflow.actions.runjavascriptonwebpage":[{
 	"name":"Run JavaScript on $\ufffc0",
 	"param":{
-		"WFJavaScript":"#",
+		"WFJavaScript":"\u0023",
 }}],
 "is.workflow.actions.runapplescript":[{
 	"name":"Run AppleScript with $\ufffc0",
 	"param":{
 		"Input":"$\ufffc0",
-		"Script":"#",
+		"Script":"\u0023",
 }}],
 "is.workflow.actions.runjavascriptforautomation":[{
 	"name":"Run JXA with $\ufffc0",
 	"param":{
 		"Input":"$\ufffc0",
-		"Script":"#",
+		"Script":"\u0023",
 }}],
 "is.workflow.actions.runshellscript":[{
 	"name":"Run Shell Script",
@@ -1269,7 +1278,7 @@ var 4145C67C-1FA5-4025-BE2E-21A9445306BD = """const idDict = {
 	"group":"gGray",
 }],
 "is.workflow.actions.returntohomescreen":[{
-	"name":"Return to Home Screen",
+	"name":"Go to Home Screen",
 }],
 "is.workflow.actions.delay":[{
 	"name":"Wait $\ufffc0 seconds",
@@ -2884,7 +2893,7 @@ let output = d.WFWorkflowActions.map((a,i) => {
 		adict = id[flow];
 		name = adict.name;
 		if (loop) {
-			if (flow && (l0 = loopindex[0])<i-5) { name += `&#12288;▵<span class="magic" onclick="magictap(${l0})">${l0}</span>`; }
+			if (flow && (l0 = loopindex[0])<i-5) { name += `\u3000▵<span class="magic" onclick="magictap(${l0})">${l0}</span>`; }
 			if (a.WFWorkflowActionIdentifier.startsWith('is.workflow.actions.repeat')) {
 				if (flow) {
 					if (repeatlevel > 1) { name = name.replace('Repeat', `Repeat[${repeatlevel}]`); }
@@ -2938,6 +2947,9 @@ let output = d.WFWorkflowActions.map((a,i) => {
 				delete param.WFItemRangeStart;
 				delete param.WFItemRangeEnd;
 			}
+		} if (a.WFWorkflowActionIdentifier === 'is.workflow.actions.runworkflow' && !param.WFWorkflow?.isSelf && typeof(param.WFWorkflowName) === 'string' && typeof(param.WFWorkflow?.workflowName) === 'string' && (param.WFWorkflowName !== param.WFWorkflow.workflowName || !sNames.includes(param.WFWorkflowName))) {
+			name = name.replace('$\ufffc1', `<span class="box" style="color:red;font-weight:bold">${gettext(param.WFWorkflowName)}</span>`);
+			delete param.WFWorkflowName;
 		}
 	} else if (['is.workflow.actions.useractivity.open', 'is.workflow.actions.sirikit.donation.handle'].includes(a.WFWorkflowActionIdentifier)) {
 		let p = (a.WFWorkflowActionIdentifier === 'is.workflow.actions.useractivity.open') ? 'UserActivityData' : 'IntentData';
@@ -2962,7 +2974,7 @@ let output = d.WFWorkflowActions.map((a,i) => {
 				case '$':
 					if (pstr !== '$\ufffc9') { name = name.replace(pstr,`<span class="box">${gettext(v)}</span>`); }
 					break;
-				case '#':
+				case '\u0023':
 					let t = gettext(v);
 					if (mobile) {
 						t = truncate(t, 1500, JSON.stringify(v).length);
@@ -2974,7 +2986,7 @@ let output = d.WFWorkflowActions.map((a,i) => {
 				default:
 					switch (pstr) {
 					 	case 'CustomOutputName':
-							name += ` <b>&#12288;➔ ${v}</b>`;
+							name += ` <b>\u3000➔ ${v}</b>`;
 							break;
 						default:
 							pstr = k.replace(/^WF/,'');
@@ -3030,14 +3042,14 @@ let output = d.WFWorkflowActions.map((a,i) => {
 		let d = [...new Set(gVarDict[i])];
 		if (d.length == 1 && d[0] == i+1) {
 			connected = true;
-			return t.replace('</button>', `&#12288;&#187;</button>`);
+			return t.replace('</button>', `\u3000»</button>`);
 		} else {
 			let l = d.map(a => (a == i+1) ? `<i>${(connected = true) ? a : a}</i>` : `<span class="magic" onclick="magictap(${a})">${a}</span>`).join(' ');
-			return t.replace('</button>', `&#12288;&#187; ${l}</button>`);
+			return t.replace('</button>', `\u3000» ${l}</button>`);
 		}
 	}
 	return t;
-}).join('').replace(/(<button class=")button (gGray nonbottom(?: nontop)?)(?: closed)?((?:(?!<button).)+?)<div class="content contentloop[^>]+><\/div>/gs,'$1$2$3').replace(/\n<\/(div|span)>/g, '\n&#8203;</$1>');
+}).join('').replace(/(<button class=")button (gGray nonbottom(?: nontop)?)(?: closed)?((?:(?!<button).)+?)<div class="content contentloop[^>]+><\/div>/gs,'$1$2$3').replace(/\n<\/(div|span)>/g, '\n\u200b</$1>');
 
 let actionCount = d.WFWorkflowActions.length;
 delete d.WFWorkflowActions;
@@ -3074,7 +3086,7 @@ function gettext(i) {
 					case 'WFTextTokenString':
 						return stringify(i.Value);
 					case 'WFDictionaryFieldValue':
-						return stringifyMap(getdict(i.Value)).replace(/<span class=\\"[^>]+>/g, m => m.replace(/\\"/g,'"')).replace(/(  +|^)\{\n +/g,'$1{  ').replace(/( *)(\{.*)\n\1\}/g,'$1$2 }').replace(/": "((.*) <i>as (Number|Boolean)<\/i>)"/g, (m,p1,p2) => '": ' + (p2.includes('<span') ? p1 : p2));
+						return stringifyMap(getdict(i.Value)).replace(/<span class=\\"[^>]+>/g, m => m.replace(/\\"/g,'"')).replace(/(  +|^)\{\n +/g,'$1{  ').replace(/( *)(\{.*)\n\1\}/g,'$1$2 }').replace(/": "((.*) <i>as (Number|Boolean)<\/i>)"/g, (m,p1,p2) => '": ' + (p2.includes('<span') ? p2 : p1));
 					case 'WFQuantityFieldValue':
 						return variablename(mapNullUndef(i.Value.Magnitude, '')) + ' ' + i.Value.Unit;
 					case 'WFContentPredicateTableTemplate':
@@ -3252,22 +3264,23 @@ function getdict(dict) {
 	const out = new Map();
 	for (const d of dict.WFDictionaryFieldValueItems) {
 		let v = getvalue(d);
-		out.set(stringify(d.WFKey.Value), (mobile && typeof(v) === 'string') ? truncate(v, 150) : v);
+		if (!out.has(k = stringify(d.WFKey.Value))) {
+			out.set(k, (mobile && typeof(v) === 'string') ? truncate(v, 150) : v);
+		}
 	}
 	return out;
 }
 
 function getvalue(d) {
 	if (typeof d !== 'object') { return escapeStr(d); }
-	if (d.WFValue == null) return null;
-	let v = d.WFValue.Value;
+	let v = d.WFValue ? d.WFValue.Value : null;
 	switch (d.WFItemType) {
 		case 0: return stringify(v) + ((s=d.WFValue.Synonyms) ? ' <i>Synonyms</i>[' + s.map(a=>gettext(a)).join(', ') + ']' : '');
 		case 1: return getdict(v.Value);
 		case 2: return v.map(getvalue);
 		case 3: return stringify(v) + ' <i>as Number</i>';
 		case 4: return v.Value ? variablename(v.Value) + ' <i>as Boolean</i>' : v;
-		case 5: return variablename(v.Value);
+		case 5: return variablename(v ? v.Value : {Type:'Choose'});
 	}
 }
 
@@ -3282,12 +3295,12 @@ function stringifyMap(o) {
 
 function escapeStr(s) {
 	return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')
-		.replace(/[\0-\x08\x0B-\x1F\x7F-\xA0\xAD\u2000-\u200B\u2028\u2029\u202F\u205F-\u2064\u3000]/g, c => '<b>\\u{'+c.charCodeAt(0).toString(16).toUpperCase()+'}</b>').replace(/[\x09\x20]+$/gm, s => '<b>'+s.replace(/\x09/g,'\\u{tab}').replace(/\x20/g,'\\u{space}')+'</b>');
+		.replace(/[\0-\x08\x0B-\x1F\x7F-\xA0\xAD\u2000-\u200B\u2028\u2029\u202F\u205F-\u2064\u2800\u3000]/g, c => '<b>\\u{'+c.charCodeAt(0).toString(16).toUpperCase()+'}</b>').replace(/[\x09\x20]+$/gm, s => '<b>'+s.replace(/\x09/g,'\\u{tab}').replace(/\x20/g,'\\u{space}')+'</b>');
 }"""
-text("${4145C67C-1FA5-4025-BE2E-21A9445306BD}")
-	url(url: "data:text/html;charset=utf-8,<body/><script>const mobile='${command}'.includes('trim'),expand='${ActionOutput}'.includes('expand'),shortcutname=${src}.name,d=${Variable},fileSize='${Text}';${ActionOutput}</script>") >> url 3
+text("${ECBE592A-3830-469E-855A-5365804674F3}")
+	url(url: "data:text/html;charset=utf-8,<body/><script>const mobile='${file.get(File Size)}'.includes('trim'),expand='${Variable.get(File Size)}'.includes('expand'),shortcutname=${sNames}.name,d=${ActionOutput},fileSize='${command}',sNames=${ActionOutput}.n;${src}</script>") >> url 3
 	encodeURL(url: "${URL.as(RichText)}") >> encodeURL 3
-var 3BCB05F4-748F-4F56-A213-F65F6B2DA1B1 = """<!DOCTYPE html><html><head><meta charset="utf-8">
+var 974A60CB-5E3E-41DE-A962-A480C7885FA1 = """<!DOCTYPE html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
 <meta name="format-detection" content="telephone=no,date=no">
 <title>￼</title>
@@ -3461,7 +3474,7 @@ function magictap(id) {
 	setTimeout(function(){ e.scrollIntoView({block:'nearest',behavior:'smooth'}); }, 10);
 }
 </script></body></html>"""
-text("${3BCB05F4-748F-4F56-A213-F65F6B2DA1B1}")
+text("${974A60CB-5E3E-41DE-A962-A480C7885FA1}")
 	setName(input: Text, name: "${file.get(Name)}.html") >> setName 9
 	menu(, [💻  Share, 📝  Save to Files, 🧭  Open in Browser]) {
 	case("💻  Share"):
@@ -3494,11 +3507,12 @@ choose(list: If Result) >> choose
 if(Chosen Item != "Skip") {
 	getFileOfType(input: file, type: "${Chosen Item.as(Text)}") >> getFileOfType 6
 } >> IFResult 17
+replaceText(input: "${If Result}", find: "#", replace: "\u0023") >> if result
 if(If Result .beginsWith "{") {
-	url(url: "data:text/html;charset=utf-8,<body/><script>document.body.textContent=encodeURIComponent(JSON.stringify(${If Result},null,3).replace(/[\0-\x08\x0B-\x1F\x7F-\xA0\xAD\u2000-\u200B\u2028\u2029\u202F\u205F-\u2064\u3000\uFFFC]/g, c => '\\u'+c.charCodeAt(0).toString(16).toUpperCase().padStart(4,'0')))</script>") >> url 5
+	url(url: "data:text/html;charset=utf-8,<body/><script>document.body.textContent=encodeURIComponent(JSON.stringify(${if result},null,3).replace(/[\0-\x08\x0B-\x1F\x7F-\xA0\xAD\u2000-\u200B\u2028\u2029\u202F\u205F-\u2064\u2800\u3000\uFFFC]/g, c => '\\u'+c.charCodeAt(0).toString(16).toUpperCase().padStart(4,'0')))</script>") >> url 5
 } else {
-	setValue(key: "x", value: "${If Result.as(Text)}") >> setValue 2
-	url(url: "data:text/html;charset=utf-8,<body/><script>document.body.textContent=encodeURIComponent(${Dictionary}.x.replace(/[\0-\x08\x0B-\x1F\x7F-\xA0\xAD\u2000-\u200B\u2028\u2029\u202F\u205F-\u2064\u3000\uFFFC]/g, c => '&#x'+c.charCodeAt(0).toString(16).toUpperCase()+';'))</script>") >> url 6
+	setValue(key: "x", value: "${if result}") >> setValue 3
+	url(url: "data:text/html;charset=utf-8,<body/><script>document.body.textContent=encodeURIComponent(${Dictionary}.x.replace(/[\0-\x08\x0B-\x1F\x7F-\xA0\xAD\u2000-\u200B\u2028\u2029\u202F\u205F-\u2064\u2800\u3000\uFFFC]/g, c => '&\u0023x'+c.charCodeAt(0).toString(16).toUpperCase()+';'))</script>") >> url 6
 } >> IFResult 18
 encodeURL(url: "${If Result.as(RichText)}") >> encodeURL 4
 setName(input: URL Encoded Text, name: "${file.get(Name)}.txt") >> setName 10
