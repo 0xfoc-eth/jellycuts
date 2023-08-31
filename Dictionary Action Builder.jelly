@@ -3,15 +3,16 @@ import Shortcuts
 
 /*
 JSON ←→ dictionary action conversion tool
-2023-04-13	v2.2.7 	u/gluebyte
-https://routinehub.co/shortcut/4626
+2023-08-30 	v2.2.8
+https://routinehub.co/user/gluebyte
+https://mastodon.social/@gluebyte
 */
 randomNumber(min: 1, max: 2) >> randomNumber
 if(Random Number == 1) {
 	getIP() >> getIP
 	if(Current IP Address != nil) {
 		downloadURL(url: "https://updatecheck.gluebyte.workers.dev/?id=5CC37B10") >> downloadURL
-		if(Contents of URL .contains "2023-04-13") {
+		if(Contents of URL .contains "2023-08-30") {
 			menu(, [🌏  Go to RoutineHub, 👾  Download Update, ⮐  Not Now]) {
 			case("🌏  Go to RoutineHub"):
 				openURL(url: "https://routinehub.co/shortcut/4626/") >> openURL
@@ -46,6 +47,7 @@ if(Updated Text == nil) {
 	} >> IFResult 3
 	if(Chosen Item .beginsWith "🥢  Extract") {
 		getFileOfType(input: Shortcut Result, type: "public.json") >> getFileOfType
+		replaceText(input: "${File of Type}", find: "#", replace: "\u0023") >> file of type
 		menu(Indentation Style:, [Standard (Tabs), Compact (2 Spaces)]) {
 		case("Standard (Tabs)"):
 			text(text: "'\t'") >> text
@@ -53,7 +55,7 @@ if(Updated Text == nil) {
 			text(text: ".replace(/(  +|^)\{\n +/g,'$1{  ').replace(/( *)(\{.*)\n\1\}/g,'$1$2 }')") >> compact
 			text(text: "'  '") >> text 1
 		} >> MenuResult 1
-var 64974CF1-138C-4E4D-B4C5-AA54858D3E88 = """const out = [];
+var 63627075-DF61-4E47-A8C2-4CEF24732E2C = """const out = [];
 for (const a of actions) {
 	if (a.WFWorkflowActionIdentifier === 'is.workflow.actions.dictionary' && (items = a.WFWorkflowActionParameters.WFItems)) {
 		out.push(getdict(items.Value));
@@ -103,8 +105,8 @@ function stringify(o) {
 	}
 	return JSON.stringify({a:o}).slice(5,-1);
 }"""
-text("${64974CF1-138C-4E4D-B4C5-AA54858D3E88}")
-		url(url: "data:text/html;charset=utf-8,<body/><script>const actions = ${Text}.WFWorkflowActions;${ActionOutput}</script>") >> url
+text("${63627075-DF61-4E47-A8C2-4CEF24732E2C}")
+		url(url: "data:text/html;charset=utf-8,<body/><script>const actions = ${file of type}.WFWorkflowActions;${ActionOutput}</script>") >> url
 		decodeURL(url: "${URL.as(RichText)}") >> decodeURL
 		if(URL Encoded Text == ".") {
 			alert(alert: "
@@ -151,8 +153,9 @@ text("${64974CF1-138C-4E4D-B4C5-AA54858D3E88}")
 	if(Chosen Item .beginsWith "⌨️  Enter") {
 		text(text: "${Ask}") >> text 2
 	} >> IFResult 10
-	setValue(key: "data", value: "${If Result}") >> setValue
-var 7EAC01F2-5E2A-4D7C-8815-1611A564312A = """let mode = 0;
+	replaceText(input: "${If Result}", find: "#", replace: "\u0023") >> replaceText 3
+	setValue(key: "data", value: "${Updated Text}") >> setValue
+var FC8B6B76-C08E-422A-9609-56178E9E9F4C = """let mode = 0;
 let stack = [];
 let output = '{"WFWorkflowActions":[';
 let action = '';
@@ -242,8 +245,8 @@ while (buffer !== '') {
 }
 output += '],"WFWorkflowIcon":{"WFWorkflowIconStartColor":4292093695}}'
 document.body.textContent = actioncount ? encodeURIComponent(output.replace(/\n/g, '\\n')) : '';"""
-text("${7EAC01F2-5E2A-4D7C-8815-1611A564312A}")
-	url(url: "data:text/html;charset=utf-8,<body/><script>let buffer=${Text}.data;${ActionOutput}</script>") >> url 1
+text("${FC8B6B76-C08E-422A-9609-56178E9E9F4C}")
+	url(url: "data:text/html;charset=utf-8,<body/><script>let buffer=${Dictionary}.data;${ActionOutput}</script>") >> url 1
 	decodeURL(url: "${URL.as(RichText)}") >> decodeURL 1
 	if(URL Encoded Text == "") {
 		alert(alert: "
