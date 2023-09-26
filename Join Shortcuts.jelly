@@ -3,7 +3,7 @@ import Shortcuts
 
 /*
 Join shortcuts without pre-setup
-2023-08-29 	v1.0.3
+2023-09-25 	v1.0.4
 https://routinehub.co/user/gluebyte
 https://mastodon.social/@gluebyte
 */
@@ -12,7 +12,7 @@ if(Random Number == 1) {
 	getIP() >> getIP
 	if(Current IP Address != nil) {
 		downloadURL(url: "https://updatecheck.gluebyte.workers.dev/?id=F14A3404") >> downloadURL
-		if(Contents of URL .contains "2023-08-29") {
+		if(Contents of URL .contains "2023-09-25") {
 			menu(, [🌏  Go to RoutineHub, 👾  Download Update, ⮐  Not Now]) {
 			case("🌏  Go to RoutineHub"):
 				openURL(url: "https://routinehub.co/shortcut/10038/")
@@ -29,23 +29,25 @@ if(Random Number == 1) {
 		} >> IFResult
 	}
 } >> IFResult 1
-alert(alert: "🌟 Let’s select main shortcut first.", tancel: false)
+alert(alert: "
+🌟 Let’s select main shortcut first.
+", tancel: false)
 runShortcut(name: "Shortcut Source Helper") >> runShortcut
 if(Shortcut Result == nil) {
 	exit()
 } >> IFResult 2
 getFileOfType(input: Shortcut Result, type: "public.json") >> mainshortcut
 replaceText(input: "${mainshortcut}", find: "#", replace: "\u0023") >> mainshortcut
-var 0FD3CAF3-2F41-47BF-A6E8-7434925800F0 = """let q = d.WFWorkflowImportQuestions.map(q => q.ActionIndex);
+var 37FAD23D-B06F-4724-A639-74BA43D6708C = """let q = d.WFWorkflowImportQuestions.map(q => q.ActionIndex);
 let last = d.WFWorkflowActions.length;
 let c = {"0":0};
 c[last] = last;
-let comments = d.WFWorkflowActions.map((a,i) => (a.WFWorkflowActionIdentifier === 'is.workflow.actions.comment' && i != last-1) ? `(${i+1}) ${(['', undefined].includes(t = a.WFWorkflowActionParameters.WFCommentActionText) ? '[empty]' : t).trim().replace(/\s+/g,' ')}` : false).filter(a => a != false);
+let comments = d.WFWorkflowActions.map((a,i) => (a.WFWorkflowActionIdentifier === 'is.workflow.actions.comment' && i != last-1) ? `(${i+1}) ${(['', undefined].includes(t = a.WFWorkflowActionParameters.WFCommentActionText) ? '[empty]' : (typeof t === 'string' ? t : t.Value.string)).trim().replace(/\s+/g,' ')}` : false).filter(a => a != false);
 comments.forEach(a => { n = a.match(/\((\d+)/)[1]; c[n] = parseInt(n); });
 document.body.textContent = encodeURIComponent(JSON.stringify({q:q, c:c, last:last, comments:comments}));"""
-text("${0FD3CAF3-2F41-47BF-A6E8-7434925800F0}")
+text("${37FAD23D-B06F-4724-A639-74BA43D6708C}")
 url(url: "data:text/html;charset=utf-8,<body/><script>const d=${Text};${ActionOutput}</script>") >> url
-decodeURL(url: "${URL.as(RichText)}") >> decodeURL
+encodeURL(url: "${URL.as(RichText)}") >> encodeURL
 setValue(key: "shortcut", value: "${mainshortcut.as(Dictionary)}", dictionary: URL Encoded Text) >> setValue
 var dict = Dictionary
 list(items: (
@@ -133,15 +135,15 @@ list(items: (
 )) >> list
 var menu = List
 if(dict == nil) {
-var CE0F5E18-B5A0-47A0-A96D-0749191310B0 = """[To insert shortcuts in the middle, add comment actions.]
+var 52E4A418-D442-476A-B5E5-B60332272763 = """[To insert shortcuts in the middle, add comment actions.]
 """
-text("${CE0F5E18-B5A0-47A0-A96D-0749191310B0}")
+text("${52E4A418-D442-476A-B5E5-B60332272763}")
 } >> IFResult 3
 dictionary({"0":"0","1":"1"})
 repeat(20) {
 	if(Number == nil) {
-		choose(list: menu, prompt: "${another}${ActionOutput}🎯  Insert ${inserted}shortcut after:", mll: $3) >> choose
-		if(Chosen Item == "🏁  FINISH JOINING  🏁") {
+		choose(list: menu, prompt: "${nocomment}${ActionOutput}🎯  Insert ${another}shortcut after:", mll: $3) >> choose
+		if(Chosen Item == "✳️🏁  FINISH JOINING  🏁✳️") {
 			number(value: 1) >> number
 		} else {
 			matchText(text: "${Chosen Item}", regex: "(?<=^\()\d+") >> position
@@ -153,7 +155,9 @@ var addif = Dictionary
 				number(value: 1)
 			} >> IFResult 5
 			if(If Result == 1) {
-				menu(💊  Put shortcut inside ‘If’ and ‘End If’?, [Yes, No]) {
+				menu(
+💊  Put shortcut inside ‘If’ and ‘End If’?
+, [Yes, No]) {
 				case("Yes"):
 var addif = Dictionary
 				case("No"):
@@ -164,7 +168,7 @@ var menu = Files
 			} >> IFResult 6
 			if(Repeat Index == 1) {
 				list(items: (
-    "\Ud83c\Udfc1  FINISH JOINING  \Ud83c\Udfc1",
+    "\U2733\Ufe0f\Ud83c\Udfc1  FINISH JOINING  \Ud83c\Udfc1\U2733\Ufe0f",
         {
         WFItemType = 0;
         WFValue =         {
@@ -192,7 +196,7 @@ var menu = List
 			replaceText(input: "${subshortcut}", find: "#", replace: "\u0023") >> subshortcut
 			setValue(key: "name", value: "${subshortcut.get(Name)}") >> setValue 1
 			replaceText(input: "${Dictionary}", find: "#", replace: "\u0023") >> replaceText 1
-var 6FE03759-AD2C-4FA3-9610-503E479996F6 = """let uuidgen = () => ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16).toUpperCase());
+var 7EB165E6-8DF0-4173-9A8D-466CFF3FBB11 = """let uuidgen = () => ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16).toUpperCase());
 (match = s.match(/"UUID":"[-0-9a-fA-F]{36,46}"/g)) && match.forEach(m => { s = s.split(m.slice(7)).join('"'+uuidgen()+'"') });
 (match = [...new Set(s.match(/"GroupingIdentifier":"[0-9a-fA-F-]{36,46}"/g))]) && match.forEach(m => { s = s.split(m.slice(21)).join('"'+uuidgen()+'"') });
 let actions = JSON.parse(s).WFWorkflowActions;
@@ -209,14 +213,14 @@ dict.q.forEach((a, i) => { if (a >= ￼) {
 	dict.shortcut.WFWorkflowImportQuestions[i].ActionIndex += n;
 }});
 document.body.textContent = encodeURIComponent(JSON.stringify(dict));"""
-text("${6FE03759-AD2C-4FA3-9610-503E479996F6}")
+text("${7EB165E6-8DF0-4173-9A8D-466CFF3FBB11}")
 			replaceText(input: "${dict}", find: "#", replace: "\u0023") >> dict
-			url(url: "data:text/html;charset=utf-8,<body/><script>let dict = ${Text}; let s = JSON.stringify(${ActionOutput});${dict}</script>") >> url 1
-			decodeURL(url: "${URL.as(RichText)}") >> decodeURL 1
+			url(url: "data:text/html;charset=utf-8,<body/><script>let dict = ${dict}; let s = JSON.stringify(${ActionOutput});${Text}</script>") >> url 1
+			encodeURL(url: "${URL.as(RichText)}") >> encodeURL 1
 var dict = URL Encoded Text
-var EB184F9C-17A5-4441-8AE0-4D4D61A3C201 = """🎉  ‘￼’ inserted.
+var 8D503928-D735-4BF4-BA5F-7DFF9D65DCD2 = """🎉  ‘￼’ inserted.
 """
-text("${EB184F9C-17A5-4441-8AE0-4D4D61A3C201}")
+text("${8D503928-D735-4BF4-BA5F-7DFF9D65DCD2}")
 			text(text: "another ") >> another
 			nothing()
 		} >> IFResult 9

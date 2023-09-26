@@ -3,7 +3,7 @@ import Shortcuts
 
 /*
 View, save, convert, edit shortcut source in xml or json format. Restore shortcuts from source. Create web review.
-2023-08-24 	v3.7.4
+2023-09-26 	v3.8
 https://routinehub.co/user/gluebyte
 https://mastodon.social/@gluebyte
 */
@@ -12,7 +12,7 @@ if(Random Number == 1) {
 	getIP() >> getIP
 	if(Current IP Address != nil) {
 		downloadURL(url: "https://updatecheck.gluebyte.workers.dev/?id=33C37587") >> downloadURL
-		if(Contents of URL .contains "2023-08-24") {
+		if(Contents of URL .contains "2023-09-26") {
 			menu(, [🌏  Go to RoutineHub, 👾  Download Update, ⮐  Not Now]) {
 			case("🌏  Go to RoutineHub"):
 				openURL(url: "https://routinehub.co/shortcut/5256/")
@@ -59,7 +59,7 @@ var file = If Result
 setValue(key: "a", value: "${file.get(Name)}") >> setValue
 replaceText(input: "${Dictionary}", find: "#", replace: "\u0023") >> replaceText 2
 url(url: "data:text/html;charset=utf8,<body/><script>document.body.textContent=encodeURIComponent(((a=${Updated Text}.a).length>a.normalize().length)?a.split('').join('\u2009'):a)</script>") >> url
-encodeURL(url: "${URL.as(RichText)}") >> encodeURL
+decodeURL(url: "${URL.as(RichText)}") >> decodeURL
 list(items: (
     "\Ud83e\Uddd0  Quick Look Source",
     "\Ud83d\Udcdd  Save Source",
@@ -71,17 +71,17 @@ list(items: (
     "\Ud83d\Udd0d  Create Web Review (expand all)",
     "\Ud83d\Udd0d  Create Web Review"
 )) >> list
-choose(list: List, prompt: "${URL Encoded Text}.${ActionOutput} (${file.get(File Size)})") >> command
+choose(list: List, prompt: "${file.get(File Size)}.${Variable.get(File Size)} (${URL Encoded Text})") >> command
 if(command .beginsWith "❓") { >> IFResult 5
 	getFileOfType(input: file, type: "public.json") >> getFileOfType 1
 	replaceText(input: "${File of Type}", find: "#", replace: "\u0023") >> replaceText 3
-var CDF810B3-E256-4816-BD76-32316B2E1F35 = """count = 0;
+var BAF27A7F-C1E8-4E8D-B841-E6FF38A74DA7 = """count = 0;
 d.WFWorkflowImportQuestions.forEach(q => { q.Text = q.Text.replace(/\+\+/g, s => { count++; return '\n' }) });
 if (count) { d.count = count }
 document.body.textContent = encodeURIComponent(JSON.stringify(d,null,2));"""
-text("${CDF810B3-E256-4816-BD76-32316B2E1F35}")
+text("${BAF27A7F-C1E8-4E8D-B841-E6FF38A74DA7}")
 	url(url: "data:text/html;charset=utf-8,<body/><script>const d=${Updated Text};${ActionOutput}</script>") >> url 1
-	encodeURL(url: "${URL.as(RichText)}") >> encodeURL 1
+	decodeURL(url: "${URL.as(RichText)}") >> decodeURL 1
 	if(URL Encoded Text == nil) {
 		alert(alert: "‘++’ not found in Import Questions", cancel: false)
 	} else {
@@ -99,10 +99,10 @@ Please remove the first ’Stop and Output‘ action and close the editor when u
 if(command .beginsWith "✂️") { >> IFResult 6
 	count(input: file) >> count
 	math(input: Count, operation: -, operand: "1") >> math
-var F8AABFCD-542A-4D23-BB9C-0F4E8566E936 = """Enter start index (0 - ￼)
+var 8AA7CFCC-691F-405B-ABE6-A3BF84E68B47 = """Enter start index (0 - ￼)
 Index is based on action numbers in Web Review.
 To open Web Review, enter nothing."""
-text("${F8AABFCD-542A-4D23-BB9C-0F4E8566E936}")
+text("${8AA7CFCC-691F-405B-ABE6-A3BF84E68B47}")
 	askForInput(prompt: "${Text}", type: Number, allowDecimal: false, allowNegative: false) >> start
 	if(start >= 0) {
 		repeat(3) {
@@ -111,20 +111,20 @@ text("${F8AABFCD-542A-4D23-BB9C-0F4E8566E936}")
 				if(end .between start...Calculation Result) {
 					number(value: 1) >> number
 				} else {
-var C0045C2E-A6AF-4C56-83A5-F4B50699AD39 = """
+var 62084D7D-8E5A-4228-A14D-B6BCB0F67E96 = """
 🛑 End index should be between ￼ and ￼."""
-text("${C0045C2E-A6AF-4C56-83A5-F4B50699AD39}")
+text("${62084D7D-8E5A-4228-A14D-B6BCB0F67E96}")
 				} >> IFResult 7
 			} >> IFResult 8
 		} >> RepeatResult
 		getFileOfType(input: file, type: "public.json") >> getFileOfType 3
 		replaceText(input: "${File of Type}", find: "#", replace: "\u0023") >> replaceText 4
-var BAF68BD3-8109-44B4-8BB9-06C49F61E9D9 = """d.WFWorkflowActions = d.WFWorkflowActions.slice(start, end+1);
+var C306F5FE-4677-420D-9C61-44E270A2DF89 = """d.WFWorkflowActions = d.WFWorkflowActions.slice(start, end+1);
 d.WFWorkflowImportQuestions = d.WFWorkflowImportQuestions.filter(q => { q.ActionIndex -= start; return q.ActionIndex >= 0 && q.ActionIndex <= end-start } );
 document.body.textContent = encodeURIComponent(JSON.stringify(d,null,2));"""
-text("${BAF68BD3-8109-44B4-8BB9-06C49F61E9D9}")
-		url(url: "data:text/html;charset=utf-8,<body/><script>const start=${Text},end=${ActionOutput},d=${start};${ActionOutput}</script>") >> url 2
-		encodeURL(url: "${URL.as(RichText)}") >> encodeURL 2
+text("${C306F5FE-4677-420D-9C61-44E270A2DF89}")
+		url(url: "data:text/html;charset=utf-8,<body/><script>const start=${Text},end=${ActionOutput},d=${Updated Text};${ActionOutput}</script>") >> url 2
+		decodeURL(url: "${URL.as(RichText)}") >> decodeURL 2
 		setName(input: URL Encoded Text, name: "a.json") >> setName 6
 		getFileOfType(input: Renamed Item, type: "com.apple.plist") >> getFileOfType 4
 		setName(input: File of Type, name: "✂️${file.get(Name)}.plist", dontIncludeExtension: $2) >> setName 7
@@ -147,7 +147,7 @@ var src = File of Type
 		repeatEach(Matches) {
 			getMatchGroup(matches: Repeat Item) >> getMatchGroup
 			getMatchGroup(matches: Repeat Item, index: "2") >> b64
-			decode(input: b64) >> decode
+			encode(input: b64) >> encode
 			setName(input: Base64 Encoded, name: "a.plist") >> setName 8
 			nothing()
 			if(Text == "UserActivityData") {
@@ -167,7 +167,7 @@ var src = Updated Text
 	getShortcuts() >> getShortcuts
 	setValue(key: "n", value: "${My Shortcuts}") >> setValue 2
 	replaceText(input: "${Dictionary}", find: "#", replace: "\u0023") >> sNames
-var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
+var 10C4E0BA-C386-4DA7-A819-4A9A620C9EC8 = """const idDict = {
 "is.workflow.actions.conditional":[{
 	"name":"If $\ufffc0 $\ufffc1",
 	"group":"gGray",
@@ -341,6 +341,10 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 	"name":"Make Spoken Audio from $\ufffc0",
 	"group":"gRed",
 }],
+"com.apple.ShortcutsActions.TranscribeAudioAction":[{ // 17
+	"name":"Transcribe Audio to Text",
+	"group":"gRed",
+}],
 "is.workflow.actions.gettext":[{
 	"name":"Text",
 	"group":"gYellow",
@@ -508,8 +512,16 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 "is.workflow.actions.file.delete":[{
 	"name":"Delete Files $\ufffc0",
 	"group":"gBlue",
-	"WFDeleteFileConfirmDeletion":"Confirm Before Deleting",
 }],
+"com.apple.DocumentsApp.ScanDocument":[{ 	// 17
+	"name":"Scan Document",
+	"group":"gBlue",
+}],
+"com.apple.DocumentsApp.SearchFile":[{ 	// 17
+	"name":"Search $\ufffc0 in Files",
+	"param":{
+		"searchPhrase":"$\ufffc0",
+}}],
 "is.workflow.actions.savetocameraroll":[{
 	"name":"Save Photos $\ufffc0 to $\ufffc1",
 	"param":{
@@ -676,15 +688,53 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 		"$\ufffc1":"Set",
 		"WFContentItemPropertyName":"$\ufffc2",
 }}],
-"com.apple.mobiletimer-framework.MobileTimerIntents.MTCreateAlarmIntent":[{
-	"name":"Create Alarm for $\ufffc0 called $\ufffc1",
+"com.apple.mobiletimer-framework.MobileTimerIntents.MTToggleAlarmIntent":[{
+	"name":"$\ufffc0 Alarm $\ufffc9",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"state":"$\ufffc9",
+}}],
+"com.apple.mobiletimer-framework.MobileTimerIntents.MTCreateAlarmIntent":[{ // 17
+	"name":"Add Alarm for $\ufffc0 called $\ufffc1",
 	"param":{
 		"dateComponents":"$\ufffc0",
-		"label":"$\ufffc1",
+		"name":"$\ufffc1",
+		"$\ufffc1":"Alarm",
 }}],
-"com.apple.mobiletimer-framework.MobileTimerIntents.MTGetAlarmsIntent":[{
-	"name":"Get All Alarms",
+"com.apple.mobiletimer.DeleteAlarmIntent":[{ // 17
+	"name":"Delete Alarms",
 }],
+"com.apple.mobiletimer.EditSleepAlarmIntent":[{ // 17
+	"name":"$\ufffc0 Next Sleep Alarm",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Skip",
+}}],
+"com.apple.mobiletimer-framework.MobileTimerIntents.MTGetAlarmsIntent":[{ 	// 17
+	"name":"Find Alarm $\ufffc0",
+	"param":{
+		"WFContentItemInputParameter":"$\ufffc0",
+		"$\ufffc0":"All Alarm",
+}}],
+
+"com.apple.mobiletimer.LapStopwatchIntent":[{ // 17
+	"name":"Lap Stopwatch",
+}],
+"com.apple.mobiletimer.ResetStopwatchIntent":[{ // 17
+	"name":"Reset Stopwatch",
+}],
+"com.apple.mobiletimer.StartStopwatchIntent":[{ // 17
+	"name":"Start Stopwatch",
+}],
+"com.apple.mobiletimer.StopStopwatchIntent":[{ // 17
+	"name":"Stop Stopwatch",
+}],
+"com.apple.clock.OpenTab":[{ // 16
+	"name":"Open Clock Tab $\ufffc0",
+	"param":{
+		"tab":"$\ufffc0",
+}}],
 "com.apple.mobiletimer.OpenTab":[{ // 16
 	"name":"Open Clock Tab $\ufffc0",
 	"param":{
@@ -775,6 +825,14 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 	"name":"Remove Tags from Notes",
 	"group":"gYellow",
 }],
+"com.apple.freeform.CRLiOSCreateBoardIntent":[{ // 17
+	"name":"Create New Freeform Board",
+}],
+"com.apple.freeform.CRLiOSOpenBoardIntent":[{ // 17
+	"name":"Open Freeform Board $\ufffc8",
+	"param":{
+		"$\ufffc8":"board.title.key",
+}}],
 "is.workflow.actions.showincalendar":[{
 	"name":"Open $\ufffc0 in Calendar",
 	"param":{
@@ -838,14 +896,24 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 	"param":{
 		"name":"$\ufffc0",
 }}],
-"com.apple.VoiceMemos.DeleteRecording":[{ // 16
-	"name":"Delete Voice Recordings",
-}],
+"com.apple.VoiceMemos.CreateRecording":[{ // 16
+	"name":"Create Voice Recording $\ufffc0",
+	"param":{
+		"name":"$\ufffc0",
+}}],
+"com.apple.VoiceMemos.RecordVoiceMemoIntent":[{ // 16
+	"name":"Create Voice Recording $\ufffc0",
+	"param":{
+		"name":"$\ufffc0",
+}}],
 "com.apple.VoiceMemos.PlayRecording":[{ // 16
 	"name":"Play Voice Recording",
 }],
 "com.apple.VoiceMemos.SelectRecording":[{ // 16
 	"name":"Open Voice Recording",
+}],
+"com.apple.VoiceMemos.StopRecording":[{ // 17
+	"name":"Stop Voice Recording",
 }],
 "com.apple.VoiceMemos.ChangeRecordingPlaybackSetting":[{ // 16
 	"name":"$\ufffc0 Voice Memo Playback Setting $\ufffc1",
@@ -876,6 +944,12 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 		"WFCameraCaptureDevice":"$\ufffc0",
 		"$\ufffc0":"Back",
 }}],
+"com.apple.ShortcutsActions.OpenCameraAction":[{ 	// 17
+	"name":"Open $\ufffc8 in Camera",
+	"param":{
+		"$\ufffc8":"cameraMode.title.key",
+		"$\ufffc":"Photo",
+}}],
 "is.workflow.actions.posters.get":[{ // 16.2
 	"name":"Get $\ufffc0 Wallpaper",
 	"param":{
@@ -883,9 +957,9 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 		"$\ufffc0":"All",
 }}],
 "is.workflow.actions.posters.switch":[{ // 16.2
-	"name":"Switch Wallpaper to $\ufffc0",
+	"name":"Switch Wallpaper to $\ufffc8",
 	"param":{
-		"WFPoster":"$\ufffc0",
+		"$\ufffc8":"WFPoster.name",
 }}],
 "is.workflow.actions.wallpaper.set":[{
 	"name":"Set $\ufffc1 Wallpaper Photo to $\ufffc0",
@@ -901,6 +975,21 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 	"name":"Start Timer for $\ufffc0",
 	"param":{
 		"WFDuration":"$\ufffc0",
+}}],
+"com.apple.mobiletimer.CancelTimerIntent":[{ 	// 17
+	"name":"Cancel Current Timer",
+}],
+"com.apple.mobiletimer.PauseTimerIntent":[{ 	// 17
+	"name":"Pause Current Timer",
+}],
+"com.apple.mobiletimer.ResumeTimerIntent":[{ 	// 17
+	"name":"Resume Current Timer",
+}],
+"com.apple.mobiletimer.GetCurrentTimerDetailsIntent":[{ 	// 17
+	"name":"Get $\ufffc0 of Current Timer",
+	"param":{
+		"mode":"$\ufffc0",
+		"$\ufffc0":"Remaining Time",
 }}],
 "is.workflow.actions.detect.phonenumber":[{
 	"name":"Get Phone Numbers from $\ufffc0",
@@ -1057,6 +1146,10 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 "is.workflow.actions.importaudiofiles":[{
 	"name":"Import Audio $\ufffc0 into Music",
 }],
+"com.apple.musicrecognition.RecognizeMusicIntent":[{ 	// 17
+	"name":"Recognize Music",
+	"group":"gBlue",
+}],
 "is.workflow.actions.getlatestphotoimport":[{
 	"name":"Get Last Import",
 }],
@@ -1089,6 +1182,11 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 	"param":{
 		"WFGetLatestPhotoCount":"$\ufffc0",
 		"$\ufffc0":"1",
+}}],
+"com.apple.mobileslideshow.OpenCollectionIntent":[{ 	// 17
+	"name":"Open Photo Collection $\ufffc8",
+	"param":{
+		"$\ufffc8":"target.title.key",
 }}],
 "is.workflow.actions.getepisodesforpodcast":[{
 	"name":"Get Episodes of Podcast $\ufffc0",
@@ -1196,9 +1294,11 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 	"group":"gOrange",
 }],
 "com.apple.iBooks.OpenDefaultCollectionIntent":[{ // 16.2
-	"name":"Open Book Collection",
+	"name":"Open Book Collection $\ufffc8",
 	"group":"gOrange",
-}],
+	"param":{
+		"$\ufffc8":"target.title.key",
+}}],
 "com.apple.iBooks.OpenRecentBookIntent":[{ // 16.2
 	"name":"Open Current Book",
 	"group":"gOrange",
@@ -1661,6 +1761,10 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 		"WFMakeImageFromPDFPageImageFormat":"$\ufffc1",
 		"$\ufffc1":"PNG image",
 }}],
+"is.workflow.actions.makeimagefromrichtext":[{ 	// 17
+	"name":"Make Image from Rich Text $\ufffc0",
+	"group":"gBlue",
+}],
 "is.workflow.actions.compresspdf":[{ // 16
 	"name":"Optimize File Size of PDF $\ufffc0",
 	"group":"gBlue",
@@ -1762,6 +1866,14 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 }],
 "is.workflow.actions.health.workout.log":[{
 	"name":"Log Workout",
+}],
+"is.workflow.actions.workout.start":[{
+	"group":"gGreen",
+	"name":"Start Workout",
+}],
+"is.workflow.actions.workout.end":[{ 	// 17
+	"group":"gGreen",
+	"name":"End Workout",
 }],
 "is.workflow.actions.filter.files":[{
 	"name":"Filter Files $\ufffc0",
@@ -1876,6 +1988,13 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 		"WFContentItemInputParameter":"$\ufffc0",
 		"$\ufffc0":"All Displays",
 }}],
+"com.apple.ShortcutsActions.CellularPlanEntity":[{ 	// 17
+	"name":"Find Cellular Plans $\ufffc0",
+	"group":"gGreen",
+	"param":{
+		"WFContentItemInputParameter":"$\ufffc0",
+		"$\ufffc0":"All Plans",
+}}],
 "is.workflow.actions.properties.calendarevents":[{
 	"name":"Get $\ufffc1 of Calendar Events $\ufffc0",
 	"param":{
@@ -1949,6 +2068,9 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 		"WFContentItemPropertyName":"$\ufffc1",
 		"$\ufffc1":"Page Contents",
 }}],
+"com.apple.mobilesafari.ListenToPage":[{ 	// 17
+	"name":"Listen to Safari Page",
+}],
 "is.workflow.actions.properties.weather.conditions":[{
 	"name":"Get $\ufffc1 of Weather Conditions $\ufffc0",
 	"group":"gBlue",
@@ -2046,11 +2168,13 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 		"$\ufffc0":"Battery Level",
 }}],
 "is.workflow.actions.setvolume":[{
-	"name":"Set Volume to $\ufffc0",
+	"name":"Set $\ufffc0 Volume to $\ufffc1",
 	"group":"gRed",
 	"param":{
-		"WFVolume":"$\ufffc0",
-		"$\ufffc0":"0.5",
+		"WFVolumeSetting":"$\ufffc0",
+		"$\ufffc0":"Media",
+		"WFVolume":"$\ufffc1",
+		"$\ufffc1":"0.5",
 }}],
 "is.workflow.actions.setbrightness":[{
 	"name":"Set Brightness to $\ufffc0",
@@ -2114,14 +2238,6 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 	"name":"$\ufffc0 Use Background Sounds When Media is Playing $\ufffc9",
 	"param":{
 		"operation":"$\ufffc0",
-		"$\ufffc0":"Turn",
-		"state":"$\ufffc9",
-}}],
-"com.apple.mobiletimer-framework.MobileTimerIntents.MTToggleAlarmIntent":[{
-	"name":"$\ufffc0 Alarm “$\ufffc1” $\ufffc9",
-	"param":{
-		"operation":"$\ufffc0",
-		"alarm":"$\ufffc1",
 		"$\ufffc0":"Turn",
 		"state":"$\ufffc9",
 }}],
@@ -2380,6 +2496,12 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 		"state":"$\ufffc9",
 		"$\ufffc9":{"default":0},
 }}],
+"com.apple.AccessibilityUtilities.AXSettingsShortcuts.AXSetLeftRightBalanceIntent":[{ 	// 17
+	"name":"$\ufffc0 Left/Right Balance",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Toggle",
+}}],
 "is.workflow.actions.flashlight":[{
 	"name":"$\ufffc0 Flashlight $\ufffc9",
 	"group":"gBlue",
@@ -2443,9 +2565,11 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 		"$\ufffc9":{"key":"style","default":"dark","dict":{"dark":"dark", "light":"light"}},
 }}],
 "is.workflow.actions.wifi.set":[{
-	"name":"Turn Wi-Fi $\ufffc9",
+	"name":"$\ufffc0 Wi-Fi $\ufffc9",
 	"group":"gBlue",
 	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
 		"OnValue":"$\ufffc9",
 		"$\ufffc9":{"key":"OnValue"},
 }}],
@@ -2453,8 +2577,10 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 	"name":"Get Current Focus",
 }],
 "is.workflow.actions.dnd.set":[{
-	"name":"Turn Focus $\ufffc9",
+	"name":"$\ufffc0 Focus $\ufffc9",
 	"param":{
+		"Operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
 		"Enabled":"$\ufffc9",
 		"$\ufffc9":{"key":"Enabled","default":0},
 }}],
@@ -2497,6 +2623,52 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 		"$\ufffc0":"Turn",
 		"OnValue":"$\ufffc9",
 		"$\ufffc9":{"key":"OnValue"},
+}}],
+"is.workflow.actions.personalhotspot.password.set":[{ // 17
+	"name":"Set Hotspot Password to $\ufffc0",
+	"group":"gGreen",
+}],
+"is.workflow.actions.personalhotspot.password.get":[{ // 17
+	"name":"Get Hotspot Password",
+	"group":"gGreen",
+}],
+"com.apple.ShortcutsActions.ResetCellularDataStatisticsAction":[{ // 17
+	"name":"Reset Cellular Data Statistics",
+	"group":"gGreen",
+}],
+"com.apple.ShortcutsActions.SetDataRoamingAction":[{ // 17
+	"name":"$\ufffc0 Data Roaming $\ufffc9 for $\ufffc8",
+	"group":"gGreen",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"state":"$\ufffc9",
+		"$\ufffc8":"plan.title.key",
+}}],
+"com.apple.ShortcutsActions.SetDefaultCellularPlanAction":[{ // 17
+	"name":"Set Default $\ufffc0 Line to $\ufffc8",
+	"group":"gGreen",
+	"param":{
+		"type":"$\ufffc0",
+		"$\ufffc0":"Voice",
+		"$\ufffc8":"plan.title.key",
+}}],
+"com.apple.ShortcutsActions.ToggleCellularPlanAction":[{ // 17
+	"name":"$\ufffc0 $\ufffc8 Cellular Plan $\ufffc9",
+	"group":"gGreen",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"state":"$\ufffc9",
+		"$\ufffc8":"plan.title.key",
+}}],
+"com.apple.ShortcutsActions.SetSilentModeAction":[{ // 17
+	"name":"$\ufffc0 Silent Mode $\ufffc9",
+	"group":"gRed",
+	"param":{
+		"operation":"$\ufffc0",
+		"$\ufffc0":"Turn",
+		"state":"$\ufffc9",
 }}],
 "com.apple.AccessibilityUtilities.AXSettingsShortcuts.AXToggleColorFiltersIntent":[{ // 16
 	"name":"$\ufffc0 Color Filters $\ufffc9",
@@ -2627,6 +2799,9 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 		"$\ufffc0":"Turn",
 		"state":"$\ufffc9",
 }}],
+"is.workflow.actions.openpasswords":[{ 	// 17
+	"name":"Show Passwords",
+}],
 "is.workflow.actions.connecttoservers":[{
 	"name":"Connect to Servers $\ufffc0",
 }],
@@ -2683,12 +2858,18 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 "is.workflow.actions.watchmedo":[{
 	"name":"Watch Me Do",
 }],
+"com.apple.TVRemoteUIService.LaunchScreenSaverIntent":[{
+	"name":"Launch Screen Saver on Apple TV",
+}],
 "com.apple.TVRemoteUIService.LaunchApplicationIntent":[{
 	"name":"Open App on Apple TV",
 }],
 "com.apple.TVRemoteUIService.PauseContentIntent":[{
 	"name":"Play/Pause Apple TV",
-}],
+	"param":{
+		"mediaCommand":"$\ufffc0",
+		"$\ufffc0":"Play/Pause",
+}}],
 "com.apple.TVRemoteUIService.LaunchRemoteIntent":[{
 	"name":"Show Remote Control",
 }],
@@ -2697,6 +2878,43 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 }],
 "com.apple.TVRemoteUIService.WakeAppleTVIntent":[{
 	"name":"Wake Apple TV",
+}],
+"com.apple.TVRemoteUIService.ToggleCaptionsIntent":[{ 	// 17
+	"name":"$\ufffc0 Captions for Apple TV",
+	"param":{
+		"toggle":"$\ufffc0",
+		"$\ufffc0":"Turn",
+}}],
+"com.apple.TVRemoteUIService.ToggleSystemAppearanceIntent":[{ 	// 17
+	"name":"Set $\ufffc0 Mode on Apple TV",
+	"param":{
+		"appearanceToggle":"$\ufffc0",
+		"$\ufffc0":"Light",
+}}],
+"com.apple.TVRemoteUIService.ReduceLoudSoundsIntent":[{ 	// 17
+	"name":"Set Reduce Loud Sounds $\ufffc9 Mode on Apple TV",
+	"param":{
+		"toggle":"$\ufffc9",
+}}],
+"com.apple.TVRemoteUIService.LaunchRemoteIntent":[{ 	// 17
+	"name":"Show Remote Control for Apple TV",
+}],
+"com.apple.TVRemoteUIService.SkipContentIntent":[{ 	// 17
+	"name":"Skip $\ufffc0 $\ufffc1 Seconds on Apple TV",
+	"param":{
+		"skipCommand":"$\ufffc0",
+		"$\ufffc0":"Forward",
+		"skipDuration":"$\ufffc1",
+		"$\ufffc1":"10",
+}}],
+"com.apple.TVRemoteUIService.SleepAppleTVIntent":[{ 	// 17
+	"name":"Sleep Apple TV",
+}],
+"com.apple.TVRemoteUIService.WakeAppleTVIntent":[{ 	// 17
+	"name":"Wake Apple TV",
+}],
+"com.apple.TVRemoteUIService.SwitchUserAccountIntent":[{ 	// 17
+	"name":"Switch User Account on Apple TV",
 }],
 "com.apple.AccessibilityUtilities.AXSettingsShortcuts.AXStartRemoteWatchScreenIntent":[{ // 16
 	"name":"Start Apple Watch Remote Screen",
@@ -2715,6 +2933,11 @@ var ECBE592A-3830-469E-855A-5365804674F3 = """const idDict = {
 	"param":{
 		"state":"$\ufffc0",
 		"$\ufffc0":"Off",
+}}],
+"com.apple.tips.CollectionOpenIntent":[{ // 17
+	"name":"Open Tips Collection $\ufffc8",
+	"param":{
+		"$\ufffc8":"collection.title.key",
 }}],
 "is.workflow.actions.giphy":[{
 	"name":"Search Giphy GIFs",
@@ -3008,6 +3231,12 @@ let output = d.WFWorkflowActions.map((a,i) => {
 			p.push(`\n\t\t<div class="row"><div class="col1">${d.key}</div>\n\t\t\t<div class="col2">${typeof(k)==='object'?gettext(k):d.dict[k]}</div></div>`);
 		}
 		return '';
+	}).replace('$\ufffc8', m => {
+		let k = adict.param[m].split('.').reduce((a, b) => a?.[b], param);
+		if (k) {
+			return `<span class="box">${k}</span>`;
+		}
+		return mapNullUndef(adict.param['$\ufffc'], '<span class="box"></span>');
 	});
 	for (let m of mapNullUndef(name.match(/\$\ufffc\d/g), [])) {
 		let p = adict.param[m];
@@ -3086,7 +3315,7 @@ function gettext(i) {
 					case 'WFTextTokenString':
 						return stringify(i.Value);
 					case 'WFDictionaryFieldValue':
-						return stringifyMap(getdict(i.Value)).replace(/<span class=\\"[^>]+>/g, m => m.replace(/\\"/g,'"')).replace(/(  +|^)\{\n +/g,'$1{  ').replace(/( *)(\{.*)\n\1\}/g,'$1$2 }').replace(/": "((.*) <i>as (Number|Boolean)<\/i>)"/g, (m,p1,p2) => '": ' + (p2.includes('<span') ? p2 : p1));
+						return stringifyMap(getdict(i.Value)).replace(/<span class=\\"[^>]+>/g, m => m.replace(/\\"/g,'"')).replace(/(  +|^)\{\n +/g,'$1{  ').replace(/( *)(\{.*)\n\1\}/g,'$1$2 }');
 					case 'WFQuantityFieldValue':
 						return variablename(mapNullUndef(i.Value.Magnitude, '')) + ' ' + i.Value.Unit;
 					case 'WFContentPredicateTableTemplate':
@@ -3264,9 +3493,7 @@ function getdict(dict) {
 	const out = new Map();
 	for (const d of dict.WFDictionaryFieldValueItems) {
 		let v = getvalue(d);
-		if (!out.has(k = stringify(d.WFKey.Value))) {
-			out.set(k, (mobile && typeof(v) === 'string') ? truncate(v, 150) : v);
-		}
+		out.set(stringify(d.WFKey.Value) + ' ' + Math.random().toString().replace('.',''), (mobile && typeof(v) === 'string') ? truncate(v, 150) : v);
 	}
 	return out;
 }
@@ -3288,19 +3515,23 @@ function stringifyMap(o) {
 	let px = '   ';
 	if (typeof o === 'object') {
 		if (Array.isArray(o)) return o.length ? '[\n'+ px + o.map(a=>stringifyMap(a)).join(',\n').replace(/\n/g,'\n'+px) + '\n]' : '[]';
-		return (oo=Array.from(o.entries())).length ? '{\n' + px + oo.map(a=>stringifyMap(a[0])+': '+stringifyMap(a[1])).join(',\n').replace(/\n/g,'\n'+px) + '\n' + '}' : '{}';
+		return (oo=Array.from(o.entries())).length ? '{\n' + px + oo.map(a=>stringifyMap(a[0]).replace(/ \d+"$/,'"')+': '+stringifyMap(a[1])).join(',\n').replace(/\n/g,'\n'+px) + '\n' + '}' : '{}';
 	}
-	return JSON.stringify({a:o}).slice(5,-1);
+	if ((s=JSON.stringify({a:o}).slice(5,-1)).endsWith('</i>"')) {
+		return s.includes('<span') ? s.slice(1,-1) : s.replace(/^"| <i>as (Number|Boolean)<\/i>"$/g, '');
+	} else {
+		return s;
+	}
 }
 
 function escapeStr(s) {
 	return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')
 		.replace(/[\0-\x08\x0B-\x1F\x7F-\xA0\xAD\u2000-\u200B\u2028\u2029\u202F\u205F-\u2064\u2800\u3000]/g, c => '<b>\\u{'+c.charCodeAt(0).toString(16).toUpperCase()+'}</b>').replace(/[\x09\x20]+$/gm, s => '<b>'+s.replace(/\x09/g,'\\u{tab}').replace(/\x20/g,'\\u{space}')+'</b>');
 }"""
-text("${ECBE592A-3830-469E-855A-5365804674F3}")
-	url(url: "data:text/html;charset=utf-8,<body/><script>const mobile='${file.get(File Size)}'.includes('trim'),expand='${Variable.get(File Size)}'.includes('expand'),shortcutname=${sNames}.name,d=${ActionOutput},fileSize='${command}',sNames=${ActionOutput}.n;${src}</script>") >> url 3
-	encodeURL(url: "${URL.as(RichText)}") >> encodeURL 3
-var 974A60CB-5E3E-41DE-A962-A480C7885FA1 = """<!DOCTYPE html><html><head><meta charset="utf-8">
+text("${10C4E0BA-C386-4DA7-A819-4A9A620C9EC8}")
+	url(url: "data:text/html;charset=utf-8,<body/><script>const mobile='${command}'.includes('trim'),expand='${ActionOutput}'.includes('expand'),shortcutname=${src}.name,d=${ActionOutput},fileSize='${Updated Text}',sNames=${ActionOutput}.n;${file.get(File Size)}</script>") >> url 3
+	decodeURL(url: "${URL.as(RichText)}") >> decodeURL 3
+var 3D71A863-51CA-411E-8D13-ACC11A83CF5F = """<!DOCTYPE html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
 <meta name="format-detection" content="telephone=no,date=no">
 <title>￼</title>
@@ -3474,7 +3705,7 @@ function magictap(id) {
 	setTimeout(function(){ e.scrollIntoView({block:'nearest',behavior:'smooth'}); }, 10);
 }
 </script></body></html>"""
-text("${974A60CB-5E3E-41DE-A962-A480C7885FA1}")
+text("${3D71A863-51CA-411E-8D13-ACC11A83CF5F}")
 	setName(input: Text, name: "${file.get(Name)}.html") >> setName 9
 	menu(, [💻  Share, 📝  Save to Files, 🧭  Open in Browser]) {
 	case("💻  Share"):
@@ -3514,7 +3745,7 @@ if(If Result .beginsWith "{") {
 	setValue(key: "x", value: "${if result}") >> setValue 3
 	url(url: "data:text/html;charset=utf-8,<body/><script>document.body.textContent=encodeURIComponent(${Dictionary}.x.replace(/[\0-\x08\x0B-\x1F\x7F-\xA0\xAD\u2000-\u200B\u2028\u2029\u202F\u205F-\u2064\u2800\u3000\uFFFC]/g, c => '&\u0023x'+c.charCodeAt(0).toString(16).toUpperCase()+';'))</script>") >> url 6
 } >> IFResult 18
-encodeURL(url: "${If Result.as(RichText)}") >> encodeURL 4
+decodeURL(url: "${If Result.as(RichText)}") >> decodeURL 4
 setName(input: URL Encoded Text, name: "${file.get(Name)}.txt") >> setName 10
 var file = Renamed Item
 if(command .beginsWith "🧐") {
@@ -3527,7 +3758,7 @@ if(command .beginsWith "💻") {
 	share(file: file) >> share 1
 }
 if(command .beginsWith "✏️") {
-	text(text: "${file}${Variable}") >> text 1
+	text(text: "${Ask}${file}") >> text 1
 	if(Text .beginsWith "{") {
 		setName(input: Text, name: "a.json") >> setName 11
 		getFileOfType(input: Renamed Item, type: "com.apple.plist") >> getFileOfType 7

@@ -1,151 +1,1578 @@
 import Shortcuts
-#Color: Red, #Icon: circledStop
+#Color: green, #Icon: circledStop
 
 /*
-Downloads public or private photos and videos from posts, stories, highlights, IGTV, reels, etc.
-2023-04-21 	v3.2.1 	u/gluebyte
-https://routinehub.co/shortcut/7823/
+Downloads public or private photos and videos from posts, stories, highlights, reels, etc at highest quality
+2023-09-20 	v3.2.7
+https://routinehub.co/user/gluebyte
+https://threads.net/@gluebyte
 */
-var 6C407C89-CD0B-44DA-8DC4-5A5584082B12 = """{
-"version": "2023-04-21",
-"id": "DF1910A2",
-"prefversion": "4",
-"filename": "Instagram Download.json",
-"defaultpref": {
-	"prefversion": 4,
-	"selection": [ 1, 3, 2, 2, 1, 3, 3, 3 ],
-	"updatecheck": 0,
-},
-"prefstring": [
-	{ "title": "Show List for Multiple Items" },
-	{ "title": "⤷ Show Videos in Grid View",
-		"option": [ "Yes [1/3]", "No [2/3]", "Ask Always [3/3]" ]
-	},
-	{ "title": "Share" },
-	{ "title": "Save to Files" },
-	{ "title": "Save to Photos" },
-	{ "title": "Media Date",
-		"option": [ "Date Posted [1/3]", "Current Date [2/3]", "Ask Always [3/3]" ]
-	},
-	{ "title": "Get Reels Cover",
-		"option": [ "Yes [1/3]", "No [2/3]", "Ask Always [3/3]" ]
-	},
-	{ "title": "Copy Caption to Clipboard",
-		"option": [ "Yes [1/3]", "No [2/3]", "Ask Always [3/3]" ]
-	},
-],
-"option": [ "☑️", "⬜️" ],
-"0": 0,
-"1": 1,
-"emptytext": "",
-"newline": "\n",
-"emptydict": {},
-"onmy": "On My ",
-"gotoweb": "🌏  Go to RoutineHub",
-"downloadupdate": "👾  Download Update",
-"notnow": "⮐  Not Now",
-"getashell": "📲  Get a-Shell mini from App Store",
-"haveashell0": "✅  a-Shell mini is installed",
-"haveashell1": "✅  a-Shell mini or a-Shell is installed",
-"onestory": "☝️ Download current story only",
-"allstory1": "🔢 Show list for all items",
-"allstory١": "🔢 Show list for all items",
-"allstory2": "🔢 Download all items",
-"allstory٢": "🔢 Download all items",
-"selectall": "Select All  ☑️ ☑️ ☑️",
-"selectnone": "Select None  ⬜️ ⬜️ ⬜️",
-"contact": "🐤 Contact gluebyte on Reddit",
-"contact2": "🐧 Contact gluebyte on RoutineHub",
-"settings": "⚙️  User Settings",
-"login": "👤 Sign in / Switch accounts",
-"getlink": "📋 Download media from copied link",
-"goback": "⮐  Go Back",
-"openscriptable": "🌐  Open Scriptable Browser",
-"folder": "• Media Folder: ",
-"album": "• Media Album: ",
-"recents": "Recents",
-"contacturl": "https://www.reddit.com/user/gluebyte",
-"web1": "https://routinehub.co/user/gluebyte",
-"dateoptions": [ "Always Date Posted", "Always Current Date", "Date Posted", "Current Date" ],
-"gridoptions": [ "Always Yes", "Always No", "Yes", "No" ],
-"reelsoptions": [ "Always Yes", "Always No", "Yes", "No" ],
-"copyoptions": [ "Always Yes", "Always No", "Yes", "No" ],
-"msg": {
-	"oldversion": "❗️ This is an old version. RoutineHub will open now.",
-	"newversion": "New Version Available",
-	"private": "\n🔒 Could not download private media. Please sign in with an account that follows this account and try again. Scriptable’s browser will open.\n",
-	"nologin1": "\n✅ Media has been downloaded. Please sign in on Scriptable’s browser in the next screen.\n",
-	"nologin2": "\n⛔️ No media has been downloaded. Please sign in on Scriptable’s browser in the next screen and try again.\n",
-	"oops": "\n⛔️ Oops, an error occurred. Please sign in on Scriptable’s browser in the next screen and try again.\n",
-	"accounterror": "\n🆘 Instagram responded with an error. If the problem persists, try logging out and logging in again in the Instagram app.\n",
-	"login": "\n\nScriptable will open Instagram web.\nPlease close browser when finished.\n\n",
-	"ok": "OK",
-	"nomedia": "\n🚫 No media has been downloaded. If the problem persists, try deleting and reinstalling the Scriptable app.\n",
-	"ashellprompt0": "\nThis shortcut requires the free ‘a-Shell mini’ app:\n",
-	"ashellprompt1": "\nThis shortcut requires the free ‘a-Shell mini’ or ‘a-Shell’ app:\n",
-	"story": "\nStory count: ",
-	"gridprompt": "\nShow selection list in grid view?\n",
-	"dateprompt": "\nChoose date of media:\n",
-	"reelsprompt": "\nDownload reels cover?\n",
-	"optionsaved": "✨ Option has been saved. To change settings, run ‘Instagram Download’ from the Shortcuts app.",
-	"countprompt": "\nMedia count: ",
-	"album": "Please select photo album from the following list. You can change it later in ‘User Settings’.",
-	"copyprompt": "\nCopy post caption to clipboard?\n",
-	"menuprompt": "You can sign in to Instagram or switch accounts using the menu below.\n\n",
-	"userprompt": "Current account: ",
-	"nouserprompt": "❰ You are not logged in. ❱",
-	"settingprompt": "Tap any item to change option. To reset folder or album, turn the option off and on.",
-	"locationprompt": "Where do you want to save media?",
-	"folderprompt1": "Enter folder name for media:",
-	"folderprompt0": "Enter folder name for media. It will be created inside iCloud Drive/Shortcuts folder:",
-	"noclipboard": "No Instagram link in clipboard.",
-}
-}"""
-text("${6C407C89-CD0B-44DA-8DC4-5A5584082B12}")
-getDictionaryFrom(input: Text) >> getDictionaryFrom
+list(items: (
+        {
+        WFItemType = 1;
+        WFValue =         {
+            Value =             {
+                Value =                 {
+                    WFDictionaryFieldValueItems =                     (
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = version;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "2023-09-20";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = id;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = DF1910A2;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = prefversion;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = 4;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = filename;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "Instagram Download.json";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 1;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = defaultpref;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    Value =                                     {
+                                        WFDictionaryFieldValueItems =                                         (
+                                                                                        {
+                                                WFItemType = 3;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = prefversion;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = 4;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 2;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = selection;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     (
+                                                                                                                {
+                                                            WFItemType = 3;
+                                                            WFValue =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = 1;
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                        },
+                                                                                                                {
+                                                            WFItemType = 3;
+                                                            WFValue =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = 3;
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                        },
+                                                                                                                {
+                                                            WFItemType = 3;
+                                                            WFValue =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = 2;
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                        },
+                                                                                                                {
+                                                            WFItemType = 3;
+                                                            WFValue =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = 2;
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                        },
+                                                                                                                {
+                                                            WFItemType = 3;
+                                                            WFValue =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = 1;
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                        },
+                                                                                                                {
+                                                            WFItemType = 3;
+                                                            WFValue =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = 3;
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                        },
+                                                                                                                {
+                                                            WFItemType = 3;
+                                                            WFValue =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = 3;
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                        },
+                                                                                                                {
+                                                            WFItemType = 3;
+                                                            WFValue =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = 3;
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                        }
+                                                    );
+                                                    WFSerializationType = WFArrayParameterState;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 3;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = updatecheck;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = 0;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            }
+                                        );
+                                    };
+                                    WFSerializationType = WFDictionaryFieldValue;
+                                };
+                                WFSerializationType = WFDictionaryFieldValue;
+                            };
+                        },
+                                                {
+                            WFItemType = 2;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = prefstring;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 (
+                                                                        {
+                                        WFItemType = 1;
+                                        WFValue =                                         {
+                                            Value =                                             {
+                                                Value =                                                 {
+                                                    WFDictionaryFieldValueItems =                                                     (
+                                                                                                                {
+                                                            WFItemType = 0;
+                                                            WFKey =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = title;
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                            WFValue =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = "Show List for Multiple Items";
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                        }
+                                                    );
+                                                };
+                                                WFSerializationType = WFDictionaryFieldValue;
+                                            };
+                                            WFSerializationType = WFDictionaryFieldValue;
+                                        };
+                                    },
+                                                                        {
+                                        WFItemType = 1;
+                                        WFValue =                                         {
+                                            Value =                                             {
+                                                Value =                                                 {
+                                                    WFDictionaryFieldValueItems =                                                     (
+                                                                                                                {
+                                                            WFItemType = 0;
+                                                            WFKey =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = title;
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                            WFValue =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = "\U2937 Show Videos in Grid View";
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                        },
+                                                                                                                {
+                                                            WFItemType = 2;
+                                                            WFKey =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = option;
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                            WFValue =                                                             {
+                                                                Value =                                                                 (
+                                                                    "Yes [1/3]",
+                                                                    "No [2/3]",
+                                                                    "Ask Always [3/3]"
+                                                                );
+                                                                WFSerializationType = WFArrayParameterState;
+                                                            };
+                                                        }
+                                                    );
+                                                };
+                                                WFSerializationType = WFDictionaryFieldValue;
+                                            };
+                                            WFSerializationType = WFDictionaryFieldValue;
+                                        };
+                                    },
+                                                                        {
+                                        WFItemType = 1;
+                                        WFValue =                                         {
+                                            Value =                                             {
+                                                Value =                                                 {
+                                                    WFDictionaryFieldValueItems =                                                     (
+                                                                                                                {
+                                                            WFItemType = 0;
+                                                            WFKey =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = title;
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                            WFValue =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = Share;
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                        }
+                                                    );
+                                                };
+                                                WFSerializationType = WFDictionaryFieldValue;
+                                            };
+                                            WFSerializationType = WFDictionaryFieldValue;
+                                        };
+                                    },
+                                                                        {
+                                        WFItemType = 1;
+                                        WFValue =                                         {
+                                            Value =                                             {
+                                                Value =                                                 {
+                                                    WFDictionaryFieldValueItems =                                                     (
+                                                                                                                {
+                                                            WFItemType = 0;
+                                                            WFKey =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = title;
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                            WFValue =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = "Save to Files";
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                        }
+                                                    );
+                                                };
+                                                WFSerializationType = WFDictionaryFieldValue;
+                                            };
+                                            WFSerializationType = WFDictionaryFieldValue;
+                                        };
+                                    },
+                                                                        {
+                                        WFItemType = 1;
+                                        WFValue =                                         {
+                                            Value =                                             {
+                                                Value =                                                 {
+                                                    WFDictionaryFieldValueItems =                                                     (
+                                                                                                                {
+                                                            WFItemType = 0;
+                                                            WFKey =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = title;
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                            WFValue =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = "Save to Photos";
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                        }
+                                                    );
+                                                };
+                                                WFSerializationType = WFDictionaryFieldValue;
+                                            };
+                                            WFSerializationType = WFDictionaryFieldValue;
+                                        };
+                                    },
+                                                                        {
+                                        WFItemType = 1;
+                                        WFValue =                                         {
+                                            Value =                                             {
+                                                Value =                                                 {
+                                                    WFDictionaryFieldValueItems =                                                     (
+                                                                                                                {
+                                                            WFItemType = 0;
+                                                            WFKey =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = title;
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                            WFValue =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = "Media Date";
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                        },
+                                                                                                                {
+                                                            WFItemType = 2;
+                                                            WFKey =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = option;
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                            WFValue =                                                             {
+                                                                Value =                                                                 (
+                                                                    "Date Posted [1/3]",
+                                                                    "Current Date [2/3]",
+                                                                    "Ask Always [3/3]"
+                                                                );
+                                                                WFSerializationType = WFArrayParameterState;
+                                                            };
+                                                        }
+                                                    );
+                                                };
+                                                WFSerializationType = WFDictionaryFieldValue;
+                                            };
+                                            WFSerializationType = WFDictionaryFieldValue;
+                                        };
+                                    },
+                                                                        {
+                                        WFItemType = 1;
+                                        WFValue =                                         {
+                                            Value =                                             {
+                                                Value =                                                 {
+                                                    WFDictionaryFieldValueItems =                                                     (
+                                                                                                                {
+                                                            WFItemType = 0;
+                                                            WFKey =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = title;
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                            WFValue =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = "Get Reels Cover";
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                        },
+                                                                                                                {
+                                                            WFItemType = 2;
+                                                            WFKey =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = option;
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                            WFValue =                                                             {
+                                                                Value =                                                                 (
+                                                                    "Yes [1/3]",
+                                                                    "No [2/3]",
+                                                                    "Ask Always [3/3]"
+                                                                );
+                                                                WFSerializationType = WFArrayParameterState;
+                                                            };
+                                                        }
+                                                    );
+                                                };
+                                                WFSerializationType = WFDictionaryFieldValue;
+                                            };
+                                            WFSerializationType = WFDictionaryFieldValue;
+                                        };
+                                    },
+                                                                        {
+                                        WFItemType = 1;
+                                        WFValue =                                         {
+                                            Value =                                             {
+                                                Value =                                                 {
+                                                    WFDictionaryFieldValueItems =                                                     (
+                                                                                                                {
+                                                            WFItemType = 0;
+                                                            WFKey =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = title;
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                            WFValue =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = "Copy Caption to Clipboard";
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                        },
+                                                                                                                {
+                                                            WFItemType = 2;
+                                                            WFKey =                                                             {
+                                                                Value =                                                                 {
+                                                                    string = option;
+                                                                };
+                                                                WFSerializationType = WFTextTokenString;
+                                                            };
+                                                            WFValue =                                                             {
+                                                                Value =                                                                 (
+                                                                    "Yes [1/3]",
+                                                                    "No [2/3]",
+                                                                    "Ask Always [3/3]"
+                                                                );
+                                                                WFSerializationType = WFArrayParameterState;
+                                                            };
+                                                        }
+                                                    );
+                                                };
+                                                WFSerializationType = WFDictionaryFieldValue;
+                                            };
+                                            WFSerializationType = WFDictionaryFieldValue;
+                                        };
+                                    }
+                                );
+                                WFSerializationType = WFArrayParameterState;
+                            };
+                        },
+                                                {
+                            WFItemType = 2;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = option;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 (
+                                    "\U2611\Ufe0f",
+                                    "\U2b1c\Ufe0f"
+                                );
+                                WFSerializationType = WFArrayParameterState;
+                            };
+                        },
+                                                {
+                            WFItemType = 3;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = 0;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = 0;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 3;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = 1;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = 1;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = emptytext;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = newline;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "\n";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 1;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = emptydict;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    Value =                                     {
+                                        WFDictionaryFieldValueItems =                                         (
+                                        );
+                                    };
+                                    WFSerializationType = WFDictionaryFieldValue;
+                                };
+                                WFSerializationType = WFDictionaryFieldValue;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = onmy;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "On My ";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = gotoweb;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "\Ud83c\Udf0f  Go to RoutineHub";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = downloadupdate;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "\Ud83d\Udc7e  Download Update";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = notnow;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "\U2b90  Not Now";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = getashell;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "\Ud83d\Udcf2  Get a-Shell mini from App Store";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = haveashell0;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "\U2705  a-Shell mini is installed";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = haveashell1;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "\U2705  a-Shell mini or a-Shell is installed";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = onestory;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "\U261d\Ufe0f  Download current story only";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = allstory1;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "\Ud83d\Udd22  Show list for all items";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = "allstory\U0661";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "\Ud83d\Udd22  Show list for all items";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = allstory2;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "\Ud83d\Udd22  Download all items";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = "allstory\U0662";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "\Ud83d\Udd22  Download all items";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = selectall;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "Select All  \U2611\Ufe0f \U2611\Ufe0f \U2611\Ufe0f";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = selectnone;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "Select None  \U2b1c\Ufe0f \U2b1c\Ufe0f \U2b1c\Ufe0f";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = contact;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "\Ud83e\Uddf5  Contact gluebyte on Threads";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = contact2;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "\Ud83d\Udc27  Contact gluebyte on RoutineHub";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = settings;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "\U2699\Ufe0f  User Settings";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = login;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "\Ud83d\Udc64  Sign in / Switch accounts";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = getlink;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "\Ud83d\Udccb  Download media from copied link";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = goback;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "\U2b90  Go Back";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = openscriptable;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "\Ud83c\Udf10  Open Scriptable Browser";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = folder;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "\U2022 Media Folder: ";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = album;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "\U2022 Media Album: ";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = recents;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = Recents;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = contacturl;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "barcelona://user?username=gluebyte";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 0;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = web1;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    string = "https://routinehub.co/user/gluebyte";
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                        },
+                                                {
+                            WFItemType = 2;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = dateoptions;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 (
+                                    "Always Date Posted",
+                                    "Always Current Date",
+                                    "Date Posted",
+                                    "Current Date"
+                                );
+                                WFSerializationType = WFArrayParameterState;
+                            };
+                        },
+                                                {
+                            WFItemType = 2;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = gridoptions;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 (
+                                    "Always Yes",
+                                    "Always No",
+                                    Yes,
+                                    No
+                                );
+                                WFSerializationType = WFArrayParameterState;
+                            };
+                        },
+                                                {
+                            WFItemType = 2;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = reelsoptions;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 (
+                                    "Always Yes",
+                                    "Always No",
+                                    Yes,
+                                    No
+                                );
+                                WFSerializationType = WFArrayParameterState;
+                            };
+                        },
+                                                {
+                            WFItemType = 2;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = copyoptions;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 (
+                                    "Always Yes",
+                                    "Always No",
+                                    Yes,
+                                    No
+                                );
+                                WFSerializationType = WFArrayParameterState;
+                            };
+                        },
+                                                {
+                            WFItemType = 1;
+                            WFKey =                             {
+                                Value =                                 {
+                                    string = msg;
+                                };
+                                WFSerializationType = WFTextTokenString;
+                            };
+                            WFValue =                             {
+                                Value =                                 {
+                                    Value =                                     {
+                                        WFDictionaryFieldValueItems =                                         (
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = oldversion;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "\U2757\Ufe0f This is an old version. RoutineHub will open now.";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = newversion;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "New Version Available";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = private;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "\n\Ud83d\Udd12 Could not download private media. Please sign in with an account that follows this account and try again. Scriptable\U2019s browser will open.\n";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = nologin1;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "\n\U2705 Media has been downloaded. Please sign in on Scriptable\U2019s browser in the next screen.\n";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = nologin2;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "\n\U26d4\Ufe0f No media has been downloaded. Please sign in on Scriptable\U2019s browser in the next screen and try again.\n";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = oops;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "\n\U26d4\Ufe0f Oops, an error occurred. Please sign in on Scriptable\U2019s browser in the next screen and try again.\n";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = accounterror;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "\n\Ud83c\Udd98 Instagram responded with an error. If the problem persists, try logging out and logging in again in the Instagram app.\n";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = login;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "\n\nScriptable will open Instagram web.\nPlease close the browser after logging in or out.\n\n";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = ok;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = OK;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = nomedia;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "\n\Ud83d\Udeab No media has been downloaded. If the problem persists, try deleting and reinstalling the Scriptable app.\n";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = ashellprompt0;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "\nThis shortcut requires the free \U2018a-Shell mini\U2019 app:\n";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = ashellprompt1;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "\nThis shortcut requires the free \U2018a-Shell mini\U2019 or \U2018a-Shell\U2019 app:\n";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = story;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "\nStory count: ";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = gridprompt;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "\nShow selection list in grid view?\n";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = dateprompt;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "\nChoose date of media:\n";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = reelsprompt;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "\nDownload reels cover?\n";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = optionsaved;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "\U2728 Option has been saved. To change settings, run \U2018Instagram Download\U2019 from the Shortcuts app.";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = countprompt;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "\nMedia count: ";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = album;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "Please select photo album from the following list. You can change it later in \U2018User Settings\U2019.";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = copyprompt;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "\nCopy post caption to clipboard?\n";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = menuprompt;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "You can sign in to Instagram or switch accounts using the menu below.\n\n";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = userprompt;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "Current account: ";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = nouserprompt;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "\U2770 You are not logged in. \U2771";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = settingprompt;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "Tap any item to change option. To reset folder or album, turn the option off and on.";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = locationprompt;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "Where do you want to save media?";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = folderprompt1;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "Enter folder name for media:";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = folderprompt0;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "Enter folder name for media. It will be created inside iCloud Drive/Shortcuts folder:";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
+                                                        string = noclipboard;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "No Instagram link in clipboard.";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            }
+                                        );
+                                    };
+                                    WFSerializationType = WFDictionaryFieldValue;
+                                };
+                                WFSerializationType = WFDictionaryFieldValue;
+                            };
+                        }
+                    );
+                };
+                WFSerializationType = WFDictionaryFieldValue;
+            };
+            WFSerializationType = WFDictionaryFieldValue;
+        };
+    }
+)) >> list
+getDictionaryFrom(input: List) >> getDictionaryFrom
 var mainDict = Dictionary
-text(text: "0") >> text
-if(DeviceDetails != nil) {
-	text(text: "1") >> text 1
-} >> IFResult
-var OS = If Result
 if(ShortcutInput != nil) {
 //Unable to get shortcuts action dk.simonbs.Scriptable.RunScriptInlineIntent
-	if(Output != nil) {
-		openApp(id: "dk.simonbs.Scriptable")
-		openApp(id: "com.burbn.instagram") >> openApp
-		runShortcut(name: "Instagram Download", input: ShortcutInput) >> runShortcut
-		exit()
+} else {
+//Unable to get shortcuts action dk.simonbs.Scriptable.RunScriptInlineIntent
+} >> IFResult
+getDictionaryFrom(input: If Result) >> getDictionaryFrom 1
+var Output = Dictionary
+if(Output != nil) {
+	openApp(id: "dk.simonbs.Scriptable") >> openApp
+	if(ShortcutInput != nil) {
+		openApp(id: "com.burbn.instagram") >> openApp 1
+	} else {
+		openApp(id: "com.apple.shortcuts") >> openApp 2
 	} >> IFResult 1
-	if(Output != nil) {
-		wait(seconds: Output)
-		runShortcut(name: "Instagram Download", input: ShortcutInput)
+	runShortcut(name: "Instagram Download", input: ShortcutInput) >> runShortcut
+	exit()
+} >> IFResult 2
+if(Output != nil) {
+	wait(seconds: Output)
+	runShortcut(name: "Instagram Download", input: ShortcutInput) >> runShortcut 1
+	exit()
+} >> IFResult 3
+if(Output != nil) {
+	alert(alert: "${mainDict.key(msg.oldversion)}", cancel: false)
+	openURL(url: mainDict) >> openURL
+	exit()
+} >> IFResult 4
+if(Output != nil) {
+	menu(, [) {
+	case("mainDict (gotoweb)"):
+		openURL(url: mainDict)
 		exit()
-	}
-	if(Output != nil) {
-		alert(alert: "${mainDict.key(msg.oldversion)}", cancel: false)
-		openURL(url: mainDict) >> openURL
+	case("mainDict (downloadupdate)"):
+		downloadURL(url: "https://routinehub.co/api/v1/shortcuts/7823/versions/latest") >> downloadURL
+		matchText(text: "${Contents of URL}", regex: "(?<="id":\D?)\d+") >> matchText
+		expandURL(url: "https://routinehub.co/download/${Matches}/") >> expandURL
+		replaceText(input: "${Expanded URL}", find: "^.+icloud.com/", replace: "shortcuts://", isRegex: true) >> replaceText
+		openURL(url: Updated Text) >> openURL 1
 		exit()
-	} >> IFResult 2
-	if(Output != nil) {
-		menu(, [) {
-		case("mainDict (gotoweb)"):
-			openURL(url: mainDict)
-			exit()
-		case("mainDict (downloadupdate)"):
-			downloadURL(url: "https://routinehub.co/api/v1/shortcuts/7823/versions/latest") >> downloadURL
-			matchText(text: "${Contents of URL}", regex: "(?<="id":\D?)\d+") >> matchText
-			expandURL(url: "https://routinehub.co/download/${Matches}/") >> expandURL
-			replaceText(input: "${Expanded URL}", find: "^.+icloud.com/", replace: "shortcuts://", isRegex: true) >> replaceText
-			openURL(url: Updated Text) >> openURL 1
-			exit()
-		case("mainDict (notnow)"):
-		} >> MenuResult
-	} >> IFResult 3
-var pref = Output
+	case("mainDict (notnow)"):
+	} >> MenuResult
+} >> IFResult 5
+getDictionaryFrom(input: Output) >> getDictionaryFrom 2
+var pref = Dictionary
+if(ShortcutInput != nil) { >> IFResult 6
+	text(text: "0") >> text
+	if(DeviceDetails != nil) {
+		text(text: "1") >> text 1
+	} >> OS
 	if(pref == nil) {
-		keysFrom(dictionary: mainDict) >> ashellprompt
-		keysFrom(dictionary: mainDict) >> haveashell
+		valuesFrom(dictionary: mainDict) >> ashellprompt
+		valuesFrom(dictionary: mainDict) >> haveashell
 		menu(, [) {
 		case("mainDict (getashell)"):
 			openURL(url: "https://apps.apple.com/app/id1543537943")
@@ -155,20 +1582,28 @@ var pref = Output
 var pref = Dictionary
 var savePref = Variable
 		} >> MenuResult 1
-	} >> IFResult 4
-//Unable to get shortcuts action is.workflow.actions.getvariable
+	} >> IFResult 7
 	if(Output != nil) {
-		keysFrom(dictionary: mainDict) >> keysFrom
+		valuesFrom(dictionary: mainDict) >> valuesFrom
 		menu(, [) {
 		case("mainDict (onestory)"):
-			keysFrom(dictionary: Output) >> keysFrom 1
+			getDictionaryFrom(input: Output) >> getDictionaryFrom 3
+var Output = Dictionary
 		case("Dictionary Value"):
-//Unable to get shortcuts action is.workflow.actions.getvariable
 		} >> MenuResult 2
-	} >> Output
-	keysFrom(dictionary: Output) >> count
+	} >> IFResult 8
+	valuesFrom(dictionary: Output) >> valuesFrom 1
+	if(Dictionary Value > 0) {
+		downloadURL(url: "${Output.key(urls)}") >> downloadURL 1
+		if(Contents of URL .contains "txt") {
+			alert(alert: "${Contents of URL.get(File Extension)}")
+			setValue(key: "count", value: "${mainDict.key(0)}", dictionary: Output) >> setValue 1
+var Output = Dictionary
+		}
+	}
+	valuesFrom(dictionary: Output) >> count
 	if(count > 0) {
-		keysFrom(dictionary: pref) >> Media Date
+		valuesFrom(dictionary: pref) >> Media Date
 		if(Media Date > 2) {
 			repeatEach(mainDict) {
 				setName(input: Repeat Index, name: "${Repeat Item}") >> setName
@@ -179,33 +1614,32 @@ var savePref = Variable
 				combineText(text: pref, combine: Custom) >> combineText
 				replaceText(input: "${Combined Text}", find: ".(..)$", replace: "${Chosen Item}$1", isRegex: true) >> replaceText 1
 				splitText(text: Updated Text, separator: Every Character) >> splitText
-				setValue(key: "selection", value: "${Split Text.as(Number)}", dictionary: pref) >> setValue 1
+				setValue(key: "selection", value: "${Split Text.as(Number)}", dictionary: pref) >> setValue 2
 var pref = Dictionary
 				alert(alert: "${mainDict.key(msg.optionsaved)}", cancel: false)
 var savePref = Chosen Item
 			}
 		} >> MediaDate
-		downloadURL(url: "${Output.as(Dictionary).key(urls)}") >> downloadURL 1
 var index = Variable
 		repeat(count) {
 			getItemFromList(list: Contents of URL, type: Item At Index, index: index) >> item 1
 //Unable to get shortcuts action is.workflow.actions.appendvariable
 			if(MediaDate == 1) {
-				keysFrom(dictionary: Output)
+				valuesFrom(dictionary: Output)
 			} else {
 				formatDate(date: "${CurrentDate}", dStyle: Custom, custom: "yyyy-MM-dd'T'HHmmss")
 			} >> timecode
-			keysFrom(dictionary: Output) >> keysFrom 2
+			valuesFrom(dictionary: Output) >> valuesFrom 2
 			count(input: Dictionary Value) >> count 1
 			if(Count == 1) {
-				setName(input: item 1, name: "${Repeat Index}.${Variable}") >> setName 1
+				setName(input: item 1, name: "${item 1.get(File Extension)}.${ActionOutput.get(File Extension)}") >> setName 1
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.PutFileIntent
 				nothing()
 				if(item 1 == "mp4") {
-var F68A1F01-F32A-4F98-8BC3-9C27ED266CE4 = """ffmpeg -v error -i ￼.mp4 -metadata "creation_time=￼" -c copy -y t.mp4
+var 7C45DB46-7FC1-4E9D-B7AD-02CC45AA5FF0 = """ffmpeg -v error -i ￼.mp4 -metadata "creation_time=￼" -c copy -y t.mp4
 mv -f t.mp4 ￼.mp4"""
-text("${F68A1F01-F32A-4F98-8BC3-9C27ED266CE4}")
-				} >> IFResult 5
+text("${7C45DB46-7FC1-4E9D-B7AD-02CC45AA5FF0}")
+				} >> IFResult 9
 			} else {
 				setName(input: item 1, name: "${Repeat Index}v") >> setName 2
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.PutFileIntent
@@ -214,15 +1648,15 @@ var index = Calculation Result
 				getItemFromList(list: Contents of URL, type: Item At Index, index: index) >> getItemFromList
 				setName(input: Item from List, name: "${Repeat Index}a") >> setName 3
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.PutFileIntent
-var A82F0CF2-8B2D-4E19-B5B1-748B991A17ED = """ffmpeg -v error -i ￼v.mp4 -i ￼a.mp4 -c copy -map 0:v:0 -map 1:a:0 -metadata "creation_time=￼" -y ￼.mp4
+var C2678778-65BE-46BC-9922-9CB8CF4D78AE = """ffmpeg -v error -i ￼v.mp4 -i ￼a.mp4 -c copy -map 0:v:0 -map 1:a:0 -metadata "creation_time=￼" -y ￼.mp4
 rm -f ￼v.mp4 ￼a.mp4"""
-text("${A82F0CF2-8B2D-4E19-B5B1-748B991A17ED}")
+text("${C2678778-65BE-46BC-9922-9CB8CF4D78AE}")
 			} >> ffmpeg copy
 			math(input: index, operand: "1") >> math 2
 var index = Calculation Result
 			if(MediaDate == 1) {
-				keysFrom(dictionary: Output) >> keysFrom 3
-				text(text: "touch -t ${item 1.get(File Extension)} ${ActionOutput.get(File Extension)}.${Repeat Index}") >> text 2
+				valuesFrom(dictionary: Output) >> valuesFrom 3
+				text(text: "touch -t ${Dictionary Value} ${ActionOutput}.${Repeat Index}") >> text 2
 			} else {
 				text(text: "touch ${Repeat Index}.${Variable}")
 			} >> touch
@@ -268,15 +1702,15 @@ var index = Calculation Result
 			if(Output != nil) {
 				if(count > 1) {
 					math(input: Calculation Result, operand: Repeat Index) >> math 4
-					replaceText(input: "${Calculation Result}", find: "^.", replace: " ", isRegex: true)
-				}
-			} >> IFResult 6
-			setName(input: File, name: "${Output.as(Dictionary).key(user)} ${ActionOutput.as(Dictionary).key(user)}${If Result}") >> setName 4
+					replaceText(input: "${Calculation Result}", find: "^.", replace: "-", isRegex: true)
+				} >> IFResult 10
+			} >> IFResult 11
+			setName(input: File, name: "${Output.key(user)} ${Variable.key(user)}${If Result}") >> setName 4
 		} >> RepeatResult 3
 var media = Repeat Results
 		count(input: media)
 		if(Output != nil) {
-			keysFrom(dictionary: pref) >> Reels Cover
+			valuesFrom(dictionary: pref) >> Reels Cover
 			if(Reels Cover > 2) {
 				repeatEach(mainDict) {
 					setName(input: Repeat Index, name: "${Repeat Item}")
@@ -287,12 +1721,12 @@ var media = Repeat Results
 					combineText(text: pref, combine: Custom) >> combineText 2
 					replaceText(input: "${Combined Text}", find: ".(.)$", replace: "${Chosen Item}$1", isRegex: true) >> replaceText 2
 					splitText(text: Updated Text, separator: Every Character) >> splitText 1
-					setValue(key: "selection", value: "${Split Text.as(Number)}", dictionary: pref) >> setValue 2
+					setValue(key: "selection", value: "${Split Text.as(Number)}", dictionary: pref) >> setValue 3
 var pref = Dictionary
 					alert(alert: "${mainDict.key(msg.optionsaved)}", cancel: false)
 var savePref = Chosen Item
 				}
-			} >> IFResult 7
+			} >> IFResult 12
 			if(If Result == 2) {
 				getItemFromList(list: media, type: Last Item) >> getItemFromList 2
 var media = Item from List
@@ -300,11 +1734,11 @@ var media = Item from List
 			number(value: 1)
 		} >> new count
 		if(new count > 1) {
-			keysFrom(dictionary: pref) >> Show List
+			valuesFrom(dictionary: pref) >> Show List
 			if(Show List == 1) {
 				number(value: 2) >> number
 				if(Output != nil) {
-					keysFrom(dictionary: pref) >> Show Grid
+					valuesFrom(dictionary: pref) >> Show Grid
 					if(Show Grid > 2) {
 						repeatEach(mainDict) {
 							setName(input: Repeat Index, name: "${Repeat Item}")
@@ -315,12 +1749,12 @@ var media = Item from List
 							combineText(text: pref, combine: Custom) >> combineText 3
 							replaceText(input: "${Combined Text}", find: "^(.).", replace: "$1${Chosen Item}", isRegex: true) >> replaceText 3
 							splitText(text: Updated Text, separator: Every Character) >> splitText 2
-							setValue(key: "selection", value: "${Split Text.as(Number)}", dictionary: pref) >> setValue 3
+							setValue(key: "selection", value: "${Split Text.as(Number)}", dictionary: pref) >> setValue 4
 var pref = Dictionary
 							alert(alert: "${mainDict.key(msg.optionsaved)}", cancel: false)
 var savePref = Chosen Item
-						} >> IFResult 8
-					} >> IFResult 9
+						} >> IFResult 13
+					} >> IFResult 14
 				} >> ShowGrid
 				if(count > 7) {
 					number(value: 1) >> number 1
@@ -337,13 +1771,13 @@ var savePref = Chosen Item
 							text(text: "ffmpeg -v error -t 1.3 -i ${Repeat Index}.mp4 -vf "fps=1.2,scale=256:-1" -y ${Variable}.gif") >> text 3
 						}
 					} >> RepeatResult 6
-var 4B38F638-32CB-4864-8CBC-1DE4D2C0F423 = """hideKeyboard
+var 37408C03-2583-481F-91CF-F9F392CCE495 = """hideKeyboard
 touch begin
 rm -f done *.jpg
 ￼
 rm -f *.mp4
 touch done"""
-text("${4B38F638-32CB-4864-8CBC-1DE4D2C0F423}")
+text("${37408C03-2583-481F-91CF-F9F392CCE495}")
 					repeat(2) {
 						if(Matches == nil) {
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.ExecuteCommandIntent
@@ -370,7 +1804,7 @@ text("${4B38F638-32CB-4864-8CBC-1DE4D2C0F423}")
 							setName(input: File, name: "${Repeat Index}")
 						} else {
 							setName(input: Repeat Item, name: "${Repeat Index}") >> setName 5
-						} >> IFResult 10
+						} >> IFResult 15
 					} >> RepeatResult 9
 					choose(list: Repeat Results, multiple: true, all: SelectAll) >> choose 3
 					getName() >> getName
@@ -379,19 +1813,19 @@ text("${4B38F638-32CB-4864-8CBC-1DE4D2C0F423}")
 					} >> RepeatResult 10
 				} else {
 					choose(list: media, multiple: true, all: SelectAll) >> choose 4
-				} >> IFResult 11
+				} >> IFResult 16
 var media = If Result
 			}
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.ExecuteCommandIntent
-		} >> IFResult 12
+		} >> IFResult 17
 		if(media != nil) {
-			keysFrom(dictionary: pref) >> Share
+			valuesFrom(dictionary: pref) >> Share
 			if(Share == 1) {
 				share(file: media) >> share
-			} >> IFResult 13
-			keysFrom(dictionary: pref) >> Save to Files
+			} >> IFResult 18
+			valuesFrom(dictionary: pref) >> Save to Files
 			if(Save to Files == 1) {
-				keysFrom(dictionary: pref) >> keysFrom 4
+				valuesFrom(dictionary: pref) >> valuesFrom 4
 				if(OS == 1) {
 					if(Dictionary Value == nil) {
 						menu(, [) {
@@ -402,11 +1836,11 @@ var media = If Result
 						case("iCloud Drive/Shortcuts"):
 							number(value: 3)
 						} >> MenuResult 3
-						setValue(key: "folderlocation", value: "${Menu Result.as(Number)}", dictionary: pref) >> setValue 4
+						setValue(key: "folderlocation", value: "${Menu Result.as(Number)}", dictionary: pref) >> setValue 5
 var pref = Dictionary
 //Unable to get shortcuts action is.workflow.actions.getvariable
-					} >> IFResult 14
-				} >> IFResult 15
+					} >> IFResult 19
+				} >> IFResult 20
 				if(If Result == 1) {
 //Unable to get shortcuts action is.workflow.actions.folder
 				} else {
@@ -415,45 +1849,46 @@ var pref = Dictionary
 					} else {
 //Unable to get shortcuts action is.workflow.actions.folder
 					}
-				} >> IFResult 16
+				} >> IFResult 21
 				if(pref == nil) {
-					keysFrom(dictionary: mainDict) >> keysFrom 5
+					valuesFrom(dictionary: mainDict) >> valuesFrom 5
 					askForInput(prompt: "${Dictionary Value}") >> askForInput
-					setValue(key: "savefolder", value: "${Provided Input}", dictionary: pref) >> setValue 5
+					text(text: "${Provided Input}") >> text 4
+					setValue(key: "savefolder", value: "${Text}", dictionary: pref) >> setValue 6
 var pref = Dictionary
 var savePref = Variable
 					if(Provided Input != nil) {
-						createFolder(path: "${pref.as(Dictionary).key(savefolder)}") >> createFolder
+						createFolder(path: "${pref.key(savefolder)}") >> createFolder
 					}
-				} >> IFResult 17
-				saveFile(input: media, ask: false, path: "${pref.as(Dictionary).key(savefolder)}") >> saveFile
-			} >> IFResult 18
-			keysFrom(dictionary: pref) >> Save to Album
+				} >> IFResult 22
+				saveFile(input: media, ask: false, path: "${pref.key(savefolder)}") >> saveFile
+			} >> IFResult 23
+			valuesFrom(dictionary: pref) >> Save to Album
 			if(Save to Album == 1) {
-				keysFrom(dictionary: pref) >> album
+				valuesFrom(dictionary: pref) >> album
 				if(album == nil) {
 					alert(alert: "${mainDict.key(msg.album)}", cancel: false)
 					saveToCameraRoll(image: media, album: Ask) >> saveToCameraRoll
 					getItemFromList(list: Saved Photo Media) >> getItemFromList 3
-					text(text: "${Item from List}") >> text 4
-					setValue(key: "album", value: "${Text}", dictionary: pref) >> setValue 6
+					text(text: "${Item from List}") >> text 5
+					setValue(key: "album", value: "${Text}", dictionary: pref) >> setValue 7
 var pref = Dictionary
 var savePref = Variable
 				} else {
 					if(album == ""${mainDict.key(emptytext)}"") {
 						saveToCameraRoll(image: media) >> saveToCameraRoll 1
 					} else {
-						if(OS > 0) {
+						if(OS == 1) {
 							createAlbum(photos: media, name: "${album}") >> createAlbum
 						} else {
 							saveToCameraRoll(image: media, album: album)
 						}
-					} >> IFResult 19
-				} >> IFResult 20
-			} >> IFResult 21
-		} >> IFResult 22
+					} >> IFResult 24
+				} >> IFResult 25
+			} >> IFResult 26
+		} >> IFResult 27
 		if(Output != nil) {
-			keysFrom(dictionary: pref) >> Copy Caption
+			valuesFrom(dictionary: pref) >> Copy Caption
 			if(Copy Caption > 2) {
 				repeatEach(mainDict) {
 					setName(input: Repeat Index, name: "${Repeat Item}")
@@ -464,55 +1899,39 @@ var savePref = Variable
 					combineText(text: pref, combine: Custom) >> combineText 4
 					replaceText(input: "${Combined Text}", find: ".$", replace: "${Chosen Item}", isRegex: true) >> replaceText 4
 					splitText(text: Updated Text, separator: Every Character) >> splitText 3
-					setValue(key: "selection", value: "${Split Text.as(Number)}", dictionary: pref) >> setValue 7
+					setValue(key: "selection", value: "${Split Text.as(Number)}", dictionary: pref) >> setValue 8
 var pref = Dictionary
 					alert(alert: "${mainDict.key(msg.optionsaved)}", cancel: false)
 var savePref = Chosen Item
-				} >> IFResult 23
-			} >> IFResult 24
+				} >> IFResult 28
+			} >> IFResult 29
 			if(If Result == 1) {
-				setClipboard(variable: Output)
+				setClipboard(variable: Output) >> setClipboard
 				getClipboard()
 			}
 		}
-	} >> IFResult 25
+	} >> IFResult 30
 	if(savePref != nil) {
 //Unable to get shortcuts action dk.simonbs.Scriptable.RunScriptInlineIntent
-	} >> IFResult 26
+	} >> IFResult 31
 	if(count == 0) {
 		if(Output != nil) {
 			menu(, [) {
 			case("mainDict (openscriptable)"):
+				alert(alert: "${mainDict.key(msg.login)}")
 //Unable to get shortcuts action dk.simonbs.Scriptable.RunScriptInlineIntent
 			case("mainDict (notnow)"):
 			} >> MenuResult 4
 		} else {
 			alert(alert: "${mainDict.key(msg.nomedia)}", title: "${ShortcutInput}", cancel: false)
-		} >> IFResult 27
+		} >> IFResult 32
 	}
 } else {
-//Unable to get shortcuts action dk.simonbs.Scriptable.RunScriptInlineIntent
 	if(Output != nil) {
-		openApp(id: "dk.simonbs.Scriptable")
-		openApp(id: "com.apple.shortcuts")
-		exit()
-	} >> IFResult 28
-	if(Output != nil) {
-		wait(seconds: Output)
-		runShortcut(name: "Instagram Download")
-		exit()
-	}
-	if(Output != nil) {
-		alert(alert: "${mainDict.key(msg.oldversion)}", cancel: false)
-		openURL(url: mainDict)
-		exit()
-	}
-	if(Output != nil) {
-		text(text: "❰ ${mainDict.key(msg.userprompt)}${Variable.key(msg.userprompt)} ❱") >> text 5
+		text(text: "❰ ${mainDict.key(msg.userprompt)}${Variable.key(msg.userprompt)} ❱") >> text 6
 	} else {
-		keysFrom(dictionary: mainDict)
-	} >> IFResult 29
-var pref = Output
+		valuesFrom(dictionary: mainDict)
+	} >> IFResult 33
 var menu = Variable
 	repeat(10) {
 		if(menu == 1) {
@@ -523,30 +1942,31 @@ var menu = Variable
 			case("mainDict (contact2)"):
 				openURL(url: mainDict)
 			case("mainDict (login)"):
+				alert(alert: "${mainDict.key(msg.login)}")
 //Unable to get shortcuts action dk.simonbs.Scriptable.RunScriptInlineIntent
 			case("mainDict (settings)"):
 				repeat(30) {
 					if(menu == 0) {
 //Unable to get shortcuts action dk.simonbs.Scriptable.RunScriptInlineIntent
-						getDictionaryFrom(input: Output) >> getDictionaryFrom 1
+						getDictionaryFrom(input: Output) >> getDictionaryFrom 4
 						choose(list: Dictionary, prompt: "${mainDict.key(msg.settingprompt)}${Variable.key(msg.settingprompt)}${Dictionary.key(folderpath)}") >> choose 6
 						if(Chosen Item == ""${mainDict.key(goback)}"") {
 var menu = Variable
 						} else {
 //Unable to get shortcuts action dk.simonbs.Scriptable.RunScriptInlineIntent
-							getDictionaryFrom(input: Output) >> getDictionaryFrom 2
+							getDictionaryFrom(input: Output) >> getDictionaryFrom 5
 var pref = Dictionary
-						} >> IFResult 30
-					} >> IFResult 31
+						} >> IFResult 34
+					} >> IFResult 35
 				} >> RepeatResult 12
 			case("mainDict (getlink)"):
 				getClipboard() >> getClipboard
 				if(Clipboard .contains "instagram.com") {
-					runShortcut(name: "Instagram Download", input: Clipboard) >> runShortcut 1
+					runShortcut(name: "Instagram Download", input: Clipboard) >> runShortcut 2
 				} else {
 					alert(alert: "${Clipboard}", title: "${mainDict.key(msg.noclipboard)}", cancel: false)
-				} >> IFResult 32
+				} >> IFResult 36
 			} >> MenuResult 5
 		}
 	} >> RepeatResult 13
-}
+} >> IFResult 37
