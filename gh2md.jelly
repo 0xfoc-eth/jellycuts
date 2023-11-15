@@ -1,5 +1,4 @@
 import Shortcuts
-import aShell
 #Color: Red, #Icon: barcode
 
 /*
@@ -34,12 +33,12 @@ text(text: "${Updated Text}.md") >> text 1
 var file = Text
 text() >> text 2
 setClipboard(variable: Text) >> setClipboard
-var 0FD7CA9E-55C4-476E-92CE-60AD3D8E09FD = """cd
+var D0D39477-4EE7-4E72-8C9F-004DC6F6E04A = """cd
 export GITHUB_ACCESS_TOKEN=￼
 gh2md ￼ ~/Documents/￼
 pbcopy < ~/Documents/￼
 open shortcuts://"""
-text("${0FD7CA9E-55C4-476E-92CE-60AD3D8E09FD}")
+text("${D0D39477-4EE7-4E72-8C9F-004DC6F6E04A}")
 //Unable to get shortcuts action AsheKube.app.a-Shell.ExecuteCommandIntent
 waitToReturn()
 getClipboard() >> getClipboard

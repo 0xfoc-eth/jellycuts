@@ -124,16 +124,16 @@ var InputtoFrames = Images
 	}
 } >> IFResult 2
 // Type contents of alerts below
-var 35CDD07B-2CCD-4C8E-8BBF-C2578BB82730 = """It looks like the Frames folder for Apple Frames 3.1 is not installed on your device.
+var 5DCCB8D2-7B67-4FB4-A22C-08198FB12035 = """It looks like the Frames folder for Apple Frames 3.1 is not installed on your device.
 
 You'll have to download this zipped folder ONCE for Apple Frames to work.
 
 Click OK and Shortcuts will download the zipped folder from MacStories.net and take care of installing it for you.
 
 (The download will take a few seconds.)"""
-text("${35CDD07B-2CCD-4C8E-8BBF-C2578BB82730}")
+text("${5DCCB8D2-7B67-4FB4-A22C-08198FB12035}")
 var SetupFileMessage = English Setup File Message
-var DDCB8314-8190-4086-A39E-8354635A6F79 = """The Frames folder has been successfully saved in iCloud Drive/Shortcuts.
+var 0FC18D15-A23A-46DE-B901-A31FC48D866D = """The Frames folder has been successfully saved in iCloud Drive/Shortcuts.
 
 There's nothing else you have to do now. Do NOT modify the contents of iCloud Drive/Shortcuts/Frames.
 
@@ -142,7 +142,7 @@ In the future, to install new versions of Apple Frames, you may have to delete t
 But for now: welcome to Apple Frames, and enjoy. ☺ 
 
 - Federico"""
-text("${DDCB8314-8190-4086-A39E-8354635A6F79}")
+text("${0FC18D15-A23A-46DE-B901-A31FC48D866D}")
 var ThankYouMessage = Text
 // Start routine to check for JSON file
 getFile(path: "/Frames/Frames.json", error: false) >> getFile
@@ -645,10 +645,10 @@ repeatEach(Processing Framed Screenshots) {
 // Final menu of actions for the framed images.
 dictionary({})
 var FramesDictionary = Dictionary
-var EDC42C6B-CCD3-40B6-8C5D-FDE27F9EB4A7 = """Framed ￼ ￼.
+var 1D990205-9BEB-451A-87CE-7BC77BA5CCE4 = """Framed ￼ ￼.
 
 Pick an action below."""
-text("${EDC42C6B-CCD3-40B6-8C5D-FDE27F9EB4A7}")
+text("${1D990205-9BEB-451A-87CE-7BC77BA5CCE4}")
 // Use the proper name for the filesystem based on user device
 if(DeviceDetails == "Mac") {
 	text(text: "Finder") >> text 5

@@ -1,4 +1,3 @@
-import Shortcuts 1092.6
+import Shortcuts
 #Color: red, #Icon: shortcuts
 
-airdrop(file: Clipboard)

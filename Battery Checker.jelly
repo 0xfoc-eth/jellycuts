@@ -9,7 +9,7 @@ import Shortcuts
 
 ⚠️If the result “Null”, it means that the data does not exist in the analyzed data.
 */
-dictionary({"Name":"Battery Checker","Version":"3.2","RH ID":"7696","Author":"thetheorier"})
+dictionary({"Name":"Battery Checker","Version":"3.3","RH ID":"7696","Author":"thetheorier"})
 if(ShortcutInput == nil) {
 	menu(
 This recipe can be run from the "Analytics Data" page in the Setting app.
@@ -34,7 +34,7 @@ It appears that the target analysis data does not include the number of "Cycle C
 ${ShortcutInput.get(Name)}
 ")
 	} else {
-var 24F106BD-96A5-4FD0-8546-E7BECE30F48F = """<!DOCTYPE html>
+var B9838654-D21D-4FAA-99CD-3F850DBEB65C = """<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8" />
@@ -129,7 +129,7 @@ body{
 </body>
 </html>
 """
-text("${24F106BD-96A5-4FD0-8546-E7BECE30F48F}")
+text("${B9838654-D21D-4FAA-99CD-3F850DBEB65C}")
 var html = テキスト
 		matchText(text: "${名称変更された項目}", regex: "(?<=timestamp\"\:\")\d{4}-\d{1,2}-\d{1,2}") >> matchText
 		replaceText(input: "${html}", find: "daNull", replace: "${一致.as(Date)}") >> replaceText
@@ -144,7 +144,7 @@ var html = アップデートされたテキスト
 			replaceText(input: "${html}", find: "iPhone", replace: "iPad") >> replaceText 3
 		} >> IFResult 1
 var html = “if文”の結果
-var 5C9E2801-F22C-46B7-A153-7CFCB0A507A3 = """{
+var 79724631-D196-4A92-A44B-FB110D7371B8 = """{
 	"Apple Watch":{
 		"Apple Watch 4 (40mm)"	:225,
 		"Apple Watch 4 (44mm)"	:291,
@@ -158,9 +158,12 @@ var 5C9E2801-F22C-46B7-A153-7CFCB0A507A3 = """{
 		"Apple Watch 7 (45mm)"	:309,
 		"Apple Watch 8 (41mm)"	:282,
 		"Apple Watch 8 (45mm)"	:308,
+		"Apple Watch 9 (41mm)"	:282,
+		"Apple Watch 9 (45mm)"	:308,
 		"Apple Watch SE 2 (40mm)"	:245,
 		"Apple Watch SE 2 (44mm)"	:296,
-		"Apple Watch Ultra"		:542
+		"Apple Watch Ultra"		:542,
+		"Apple Watch Ultra 2"	:564
 	},
 	"iPhone":{
 		"iPhone 8"			:1821,
@@ -220,15 +223,15 @@ var 5C9E2801-F22C-46B7-A153-7CFCB0A507A3 = """{
 		"iPad Pro 12.9'' 5"	:10566
 	}
 }"""
-text("${5C9E2801-F22C-46B7-A153-7CFCB0A507A3}")
+text("${79724631-D196-4A92-A44B-FB110D7371B8}")
 var dict = テキスト
 		filterFiles() >> filterFiles
 		choose(list: ファイル, prompt: "Select Model") >> choose
-		keysFrom(dictionary: dict) >> keysFrom
+		valuesFrom(dictionary: dict) >> valuesFrom
 		filterFiles() >> filterFiles 1
 		choose(list: ファイル, prompt: "Select Device") >> choose 1
 var selected = 選択した項目
-		keysFrom(dictionary: 辞書の値) >> keysFrom 1
+		valuesFrom(dictionary: 辞書の値) >> valuesFrom 1
 var design_capacity = 辞書の値
 		matchText(text: "${名称変更された項目}", regex: "(?<=last_value_CycleCount\"\:).*?\d+") >> matchText 2
 		getItemFromList(list: 一致) >> getItemFromList
@@ -271,7 +274,7 @@ var MaxSOC = リストからの項目
 		getItemFromList(list: 一致) >> getItemFromList 5
 var MinSOC = リストからの項目
 		if(MinSOC != nil) {
-			replaceText(input: "${html}", find: "soNull", replace: "${MinSOC}〜${Variable}") >> replaceText 10
+			replaceText(input: "${html}", find: "soNull", replace: "${MaxSOC}〜${Variable}") >> replaceText 10
 var html = アップデートされたテキスト
 		} >> IFResult 6
 		matchText(text: "${名称変更された項目}", regex: "(?<=last_value_MinimumFCC\"\:).*?\d+") >> matchText 8
@@ -279,7 +282,7 @@ var html = アップデートされたテキスト
 var MinFCC = リストからの項目
 		if(MinFCC != nil) {
 			replaceText(input: "${html}", find: "mfNull", replace: "${MinFCC}") >> replaceText 11
-			calculate(input: "${MinFCC.as(Number)}*100/${Variable.as(Number)}") >> calculate 2
+			calculate(input: "${design_capacity}*100/${Variable}") >> calculate 2
 			round(number: 計算結果, roundTo: Hundredths) >> round 2
 			replaceText(input: "${アップデートされたテキスト}", find: "mpNull", replace: "${端数処理済みの数値}") >> replaceText 12
 var html = アップデートされたテキスト
@@ -289,7 +292,7 @@ var html = アップデートされたテキスト
 var MinQMax = リストからの項目
 		if(MinQMax != nil) {
 			replaceText(input: "${html}", find: "mqNull", replace: "${MinQMax}") >> replaceText 13
-			calculate(input: "${MinQMax}*100/${Variable}") >> calculate 3
+			calculate(input: "${design_capacity}*100/${Variable}") >> calculate 3
 			round(number: 計算結果, roundTo: Hundredths) >> round 3
 			replaceText(input: "${アップデートされたテキスト}", find: "qpNull", replace: "${端数処理済みの数値}") >> replaceText 14
 var html = アップデートされたテキスト
@@ -299,7 +302,7 @@ var html = アップデートされたテキスト
 // Battery Health
 		if(NominalChargeCapacity != nil) {
 			if(RawMaxCapacity != nil) {
-				calculate(input: "${NominalChargeCapacity}*100/${Variable}") >> calculate 4
+				calculate(input: "${RawMaxCapacity}*100/${Variable}") >> calculate 4
 				round(number: 計算結果, roundTo: Hundredths) >> round 4
 				replaceText(input: "${html}", find: "dfNull", replace: "${端数処理済みの数値}") >> replaceText 16
 var html = アップデートされたテキスト
