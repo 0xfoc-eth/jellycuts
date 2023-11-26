@@ -1,0 +1,11 @@
+import Shortcuts
+#Color: blue, #Icon: clipboard
+
+var url = ShortcutInput
+getName() >> getName
+var title = Name
+//Unable to get shortcuts action com.culturedcode.ThingsiPad.TAIAddTodo2
+url(url: "things:///show?id=${To-Do.get(id)}") >> url
+openURL(url: URL) >> openURL
+//Unable to get shortcuts action com.appliedphasor.working-copy.GetFilesIntent
+playSound(file: Files)

@@ -1,9 +1,9 @@
 import Shortcuts
-#Color: green, #Icon: Target
+#Color: Red, #Icon: Target
 
 /*
 Downloads images and videos at highest quality from Threads.
-2023-08-31 	v1.0
+2023-10-23 	v1.0.1
 https://routinehub.co/user/gluebyte
 https://threads.net/@gluebyte
 */
@@ -24,7 +24,7 @@ list(items: (
                             };
                             WFValue =                             {
                                 Value =                                 {
-                                    string = "2023-08-31";
+                                    string = "2023-10-23";
                                 };
                                 WFSerializationType = WFTextTokenString;
                             };
@@ -1529,15 +1529,15 @@ var savePref = Chosen Item
 		} >> timecode
 		downloadURL(url: "${Output.key(urls)}") >> downloadURL 1
 		repeatEach(Contents of URL) {
-			setName(input: Repeat Item, name: "${Repeat Item.get(File Extension)}.${Variable.get(File Extension)}") >> setName 1
+			setName(input: Repeat Item, name: "${Repeat Index}.${Variable}") >> setName 1
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.PutFileIntent
 			if(Repeat Item == "mp4") {
-var E7742380-F84A-4CA3-8EB1-DEE89F2B2D4E = """ffmpeg -v error -i ￼.mp4 -metadata "creation_time=￼" -c copy -y t.mp4
+var C26E458A-DC85-4A9B-A4B2-20F73640E7F1 = """ffmpeg -v error -i ￼.mp4 -metadata "creation_time=￼" -c copy -y t.mp4
 mv -f t.mp4 ￼.mp4
 touch ￼￼.￼"""
-text("${E7742380-F84A-4CA3-8EB1-DEE89F2B2D4E}")
+text("${C26E458A-DC85-4A9B-A4B2-20F73640E7F1}")
 			} else {
-				text(text: "touch ${Repeat Index}${Variable}.${touchdate}")
+				text(text: "touch ${touchdate}${ActionOutput}.${Repeat Item.get(File Extension)}")
 			} >> IFResult 9
 		} >> RepeatResult 1
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.ExecuteCommandIntent
@@ -1550,7 +1550,7 @@ text("${E7742380-F84A-4CA3-8EB1-DEE89F2B2D4E}")
 				math(input: Calculation Result, operand: Repeat Index) >> math 2
 				replaceText(input: "${Calculation Result}", find: "^.", replace: "-", isRegex: true)
 			} >> IFResult 10
-			setName(input: File, name: "${Output.key(date)} ${Variable.key(date)}${If Result}") >> setName 2
+			setName(input: File, name: "${Output.key(user)} ${Variable.key(user)}${Output.key(date)}") >> setName 2
 		} >> RepeatResult 2
 var media = Repeat Results
 		if(count > 1) {
@@ -1579,13 +1579,13 @@ var savePref = Chosen Item
 							text(text: "ffmpeg -v error -t 1.3 -i ${Repeat Index}.mp4 -vf "fps=1.2,scale=256:-1" -y ${Variable}.gif") >> text 2
 						}
 					} >> RepeatResult 4
-var 02F34212-2DBA-4474-B74F-882A38EC308B = """hideKeyboard
+var 2A3D3AD3-1E2B-408A-B2C4-4DC91ABBDD2F = """hideKeyboard
 touch thbegin
 rm -f thdone *.jpg
 ￼
 rm -f *.mp4
 touch thdone"""
-text("${02F34212-2DBA-4474-B74F-882A38EC308B}")
+text("${2A3D3AD3-1E2B-408A-B2C4-4DC91ABBDD2F}")
 					repeat(2) {
 						if(output .beginsWith "thbegin") {
 						} else {
@@ -1611,12 +1611,14 @@ text("${02F34212-2DBA-4474-B74F-882A38EC308B}")
 							setName(input: Repeat Item, name: "${Repeat Index}") >> setName 3
 						} >> IFResult 14
 					} >> RepeatResult 7
+					wait(seconds: 0.01)
 					choose(list: Repeat Results, multiple: true, all: true) >> choose 2
 					getName() >> getName
 					repeatEach(Name) {
 						getItemFromList(list: media, type: Item At Index, index: Repeat Item)
 					} >> RepeatResult 8
 				} else {
+					wait(seconds: 0.01)
 					choose(list: media, multiple: true, all: true) >> choose 3
 				} >> IFResult 15
 var media = If Result
@@ -1647,12 +1649,12 @@ var pref = Dictionary
 					} >> IFResult 18
 				} >> IFResult 19
 				if(If Result == 1) {
-//Unable to get shortcuts action is.workflow.actions.folder
+					file(file: $0) >> file
 				} else {
 					if(If Result == 2) {
-//Unable to get shortcuts action is.workflow.actions.folder
+						file(file: $0) >> file 1
 					} else {
-//Unable to get shortcuts action is.workflow.actions.folder
+						file(file: $0) >> file 2
 					}
 				} >> IFResult 20
 				if(pref == nil) {
@@ -1726,7 +1728,7 @@ var login = Variable
 	} >> IFResult 31
 } else {
 	if(Output != nil) {
-		text(text: "❰ ${mainDict.key(msg.userprompt)}${Variable.key(msg.userprompt)} ❱") >> text 5
+		text(text: "❰ ${Output.key(user)}${Variable.key(user)} ❱") >> text 5
 	} else {
 		keysFrom(dictionary: mainDict)
 	} >> IFResult 32
@@ -1746,7 +1748,7 @@ var login = Variable
 					if(menu == 0) {
 //Unable to get shortcuts action dk.simonbs.Scriptable.RunScriptInlineIntent
 						getDictionaryFrom(input: Output) >> getDictionaryFrom 3
-						choose(list: Dictionary, prompt: "${Dictionary.key(folderpath)}${ActionOutput.key(folderpath)}${Dictionary.key(albumname)}") >> choose 5
+						choose(list: Dictionary, prompt: "${mainDict.key(msg.settingprompt)}${Variable.key(msg.settingprompt)}${Dictionary.key(albumname)}") >> choose 5
 						if(Chosen Item == ""${mainDict.key(goback)}"") {
 var menu = Variable
 						} else {
@@ -1782,6 +1784,6 @@ if(login != nil) {
 	if(Device Model == "iPhone") {
 		keysFrom(dictionary: mainDict) >> keysFrom 10
 	}
-	alert(alert: "${Dictionary Value}${ActionOutput}")
+	alert(alert: "${mainDict.key(msg.loginprompt)}${Variable.key(msg.loginprompt)}")
 //Unable to get shortcuts action dk.simonbs.Scriptable.RunScriptInlineIntent
 }
