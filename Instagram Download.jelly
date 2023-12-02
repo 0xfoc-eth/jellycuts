@@ -3,7 +3,7 @@ import Shortcuts
 
 /*
 Downloads public or private photos and videos from posts, stories, highlights, reels, etc at highest quality
-2023-11-01 	v3.3
+2023-12-01 	v3.3.3
 https://routinehub.co/user/gluebyte
 https://threads.net/@gluebyte
 */
@@ -24,7 +24,7 @@ list(items: (
                             };
                             WFValue =                             {
                                 Value =                                 {
-                                    string = "2023-11-01";
+                                    string = "2023-12-01";
                                 };
                                 WFSerializationType = WFTextTokenString;
                             };
@@ -1193,6 +1193,21 @@ list(items: (
                                                 WFItemType = 0;
                                                 WFKey =                                                 {
                                                     Value =                                                     {
+                                                        string = hasherror;
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                                WFValue =                                                 {
+                                                    Value =                                                     {
+                                                        string = "\U2709\Ufe0f Send error email to developer?";
+                                                    };
+                                                    WFSerializationType = WFTextTokenString;
+                                                };
+                                            },
+                                                                                        {
+                                                WFItemType = 0;
+                                                WFKey =                                                 {
+                                                    Value =                                                     {
                                                         string = login;
                                                     };
                                                     WFSerializationType = WFTextTokenString;
@@ -1571,8 +1586,8 @@ if(ShortcutInput != nil) { >> IFResult 6
 		text(text: "1") >> text 1
 	} >> OS
 	if(pref == nil) {
-		valuesFrom(dictionary: mainDict) >> ashellprompt
-		valuesFrom(dictionary: mainDict) >> haveashell
+		valueFor(key: "msg.ashellprompt${OS}", dictionary: mainDict) >> ashellprompt
+		valueFor(key: "haveashell${OS}", dictionary: mainDict) >> haveashell
 		menu(, [) {
 		case("mainDict (getashell)"):
 			openURL(url: "https://apps.apple.com/app/id1543537943")
@@ -1584,7 +1599,7 @@ var savePref = Variable
 		} >> MenuResult 1
 	} >> IFResult 7
 	if(Output != nil) {
-		valuesFrom(dictionary: mainDict) >> valuesFrom
+		valueFor(key: "allstory${pref.key(selection.1)}", dictionary: mainDict) >> valueFor
 		menu(, [) {
 		case("mainDict (onestory)"):
 			getDictionaryFrom(input: Output) >> getDictionaryFrom 3
@@ -1592,18 +1607,20 @@ var Output = Dictionary
 		case("Dictionary Value"):
 		} >> MenuResult 2
 	} >> IFResult 8
-	valuesFrom(dictionary: Output) >> valuesFrom 1
+	valueFor(key: "count", dictionary: Output) >> valueFor 1
 	if(Dictionary Value > 0) {
 		downloadURL(url: "${Output.key(urls)}") >> downloadURL 1
 		if(Contents of URL .contains "txt") {
-			alert(alert: "${Contents of URL.get(File Extension)}")
-			setValue(key: "count", value: "${mainDict.key(0)}", dictionary: Output) >> setValue 1
-var Output = Dictionary
+			replaceText(input: "🛑 Bad URL Hash Error 🛑 ${Contents of URL.get(File Extension)}", find: "
+", replace: " ", isseSensitive: $4) >> replaceText 1
+			alert(alert: "${Updated Text}", title: "${mainDict.key(msg.hasherror)}")
+//Unable to get shortcuts action is.workflow.actions.sendemail
+			exit()
 		}
 	} >> IFResult 9
-	valuesFrom(dictionary: Output) >> count
+	valueFor(key: "count", dictionary: Output) >> count
 	if(count > 0) {
-		valuesFrom(dictionary: pref) >> Media Date
+		valueFor(key: "selection.6", dictionary: pref) >> Media Date
 		if(Media Date > 2) {
 			repeatEach(mainDict) {
 				setName(input: Repeat Index, name: "${Repeat Item}") >> setName
@@ -1612,9 +1629,9 @@ var Output = Dictionary
 			math(input: Chosen Item, operation: -, operand: "2") >> math
 			if(Calculation Result false 1) {
 				combineText(text: pref, combine: Custom) >> combineText
-				replaceText(input: "${Combined Text}", find: ".(..)$", replace: "${Chosen Item}$1", isRegex: true) >> replaceText 1
+				replaceText(input: "${Combined Text}", find: ".(..)$", replace: "${Chosen Item}$1", isRegex: true) >> replaceText 2
 				splitText(text: Updated Text, separator: Every Character) >> splitText
-				setValue(key: "selection", value: "${Split Text.as(Number)}", dictionary: pref) >> setValue 2
+				setValue(key: "selection", value: "${Split Text.as(Number)}", dictionary: pref) >> setValue 1
 var pref = Dictionary
 				alert(alert: "${mainDict.key(msg.optionsaved)}", cancel: false)
 var savePref = Chosen Item
@@ -1625,20 +1642,20 @@ var index = Variable
 			getItemFromList(list: Contents of URL, type: Item At Index, index: index) >> item 1
 //Unable to get shortcuts action is.workflow.actions.appendvariable
 			if(MediaDate == 1) {
-				valuesFrom(dictionary: Output)
+				valueFor(key: "dates.${Repeat Index}", dictionary: Output)
 			} else {
 				formatDate(date: "${CurrentDate}", dStyle: Custom, custom: "yyyy-MM-dd'T'HHmmss")
 			} >> timecode
-			valuesFrom(dictionary: Output) >> valuesFrom 2
+			valueFor(key: "urls.${Repeat Index}", dictionary: Output) >> valueFor 2
 			count(input: Dictionary Value) >> count 1
 			if(Count == 1) {
-				setName(input: item 1, name: "${item 1.get(File Extension)}.${ActionOutput.get(File Extension)}") >> setName 1
+				setName(input: item 1, name: "${Repeat Index}.${Variable}") >> setName 1
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.PutFileIntent
 				nothing()
 				if(item 1 == "mp4") {
-var 8B287223-0A5E-4D18-A282-5174E7B9DE01 = """ffmpeg -v error -i ￼.mp4 -metadata "creation_time=￼" -c copy -y t.mp4
+var C1493CF1-1BDA-49A4-BE59-30FA7F6A4552 = """ffmpeg -v error -i ￼.mp4 -metadata "creation_time=￼" -c copy -y t.mp4
 mv -f t.mp4 ￼.mp4"""
-text("${8B287223-0A5E-4D18-A282-5174E7B9DE01}")
+text("${C1493CF1-1BDA-49A4-BE59-30FA7F6A4552}")
 				} >> IFResult 10
 			} else {
 				setName(input: item 1, name: "${Repeat Index}v") >> setName 2
@@ -1648,15 +1665,15 @@ var index = Calculation Result
 				getItemFromList(list: Contents of URL, type: Item At Index, index: index) >> getItemFromList
 				setName(input: Item from List, name: "${Repeat Index}a") >> setName 3
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.PutFileIntent
-var 9151D7FF-A234-4172-96EB-0026E53C764B = """ffmpeg -v error -i ￼v.mp4 -i ￼a.mp4 -c copy -map 0:v:0 -map 1:a:0 -metadata "creation_time=￼" -y ￼.mp4
+var 7FB91618-2951-44F7-9D50-C313E934193E = """ffmpeg -v error -i ￼v.mp4 -i ￼a.mp4 -c copy -map 0:v:0 -map 1:a:0 -metadata "creation_time=￼" -y ￼.mp4
 rm -f ￼v.mp4 ￼a.mp4"""
-text("${9151D7FF-A234-4172-96EB-0026E53C764B}")
+text("${7FB91618-2951-44F7-9D50-C313E934193E}")
 			} >> ffmpeg copy
 			math(input: index, operand: "1") >> math 2
 var index = Calculation Result
 			if(MediaDate == 1) {
-				valuesFrom(dictionary: Output) >> valuesFrom 3
-				text(text: "touch -t ${item 1.get(File Extension)} ${ActionOutput.get(File Extension)}.${Repeat Index}") >> text 2
+				valueFor(key: "tdates.${Repeat Index}", dictionary: Output) >> valueFor 3
+				text(text: "touch -t ${item 1.get(File Extension)} ${ActionOutput.get(File Extension)}.${Dictionary Value}") >> text 2
 			} else {
 				text(text: "touch ${Repeat Index}.${Variable}")
 			} >> touch
@@ -1710,7 +1727,7 @@ var index = Calculation Result
 var media = Repeat Results
 		count(input: media)
 		if(Output != nil) {
-			valuesFrom(dictionary: pref) >> Reels Cover
+			valueFor(key: "selection.7", dictionary: pref) >> Reels Cover
 			if(Reels Cover > 2) {
 				repeatEach(mainDict) {
 					setName(input: Repeat Index, name: "${Repeat Item}")
@@ -1719,9 +1736,9 @@ var media = Repeat Results
 				math(input: Chosen Item, operation: -, operand: "2") >> math 5
 				if(Calculation Result false 1) {
 					combineText(text: pref, combine: Custom) >> combineText 2
-					replaceText(input: "${Combined Text}", find: ".(.)$", replace: "${Chosen Item}$1", isRegex: true) >> replaceText 2
+					replaceText(input: "${Combined Text}", find: ".(.)$", replace: "${Chosen Item}$1", isRegex: true) >> replaceText 3
 					splitText(text: Updated Text, separator: Every Character) >> splitText 1
-					setValue(key: "selection", value: "${Split Text.as(Number)}", dictionary: pref) >> setValue 3
+					setValue(key: "selection", value: "${Split Text.as(Number)}", dictionary: pref) >> setValue 2
 var pref = Dictionary
 					alert(alert: "${mainDict.key(msg.optionsaved)}", cancel: false)
 var savePref = Chosen Item
@@ -1733,78 +1750,52 @@ var media = Item from List
 			}
 			number(value: 1)
 		} >> new count
+		replaceText(input: "${DeviceDetails.get(System Version)}", find: "^(\d+)\.(\d+).*", replace: "$1$2", isRegex: true) >> OS
 		if(new count > 1) {
-			valuesFrom(dictionary: pref) >> Show List
+			valueFor(key: "selection.1", dictionary: pref) >> Show List
 			if(Show List == 1) {
-				replaceText(input: "${DeviceDetails.get(System Version)}", find: "^(\d+)\.(\d+).*", replace: "$1$2", isRegex: true) >> OS
 				number(value: 2) >> number
-				if(OS >= 171) {
-					getNumbersFrom(text: Output) >> getNumbersFrom
-					if(Numbers == 0) {
-						list(items: (
-        {
-        WFItemType = 0;
-        WFValue =         {
-            Value =             {
-                attachmentsByRange =                 {
-                    "{0, 1}" =                     {
-                        Type = Variable;
-                        VariableName = media;
-                    };
-                };
-                string = "\Ufffc";
-            };
-            WFSerializationType = WFTextTokenString;
-        };
-    },
-    "\U2063"
-)) >> list 1
-var media = List
-						number(value: 2) >> number 1
-					}
-				} else {
-					if(Output != nil) {
-						valuesFrom(dictionary: pref) >> Show Grid
-						if(Show Grid > 2) {
-							repeatEach(mainDict) {
-								setName(input: Repeat Index, name: "${Repeat Item}")
-							} >> RepeatResult 5
-							choose(list: Repeat Results, prompt: "${mainDict.key(msg.gridprompt)}") >> choose 2
-							math(input: Chosen Item, operation: -, operand: "2") >> math 6
-							if(Calculation Result false 1) {
-								combineText(text: pref, combine: Custom) >> combineText 3
-								replaceText(input: "${Combined Text}", find: "^(.).", replace: "$1${Chosen Item}", isRegex: true) >> replaceText 3
-								splitText(text: Updated Text, separator: Every Character) >> splitText 2
-								setValue(key: "selection", value: "${Split Text.as(Number)}", dictionary: pref) >> setValue 4
+				if(Output != nil) {
+					valueFor(key: "selection.2", dictionary: pref) >> Show Grid
+					if(Show Grid > 2) {
+						repeatEach(mainDict) {
+							setName(input: Repeat Index, name: "${Repeat Item}")
+						} >> RepeatResult 5
+						choose(list: Repeat Results, prompt: "${mainDict.key(msg.gridprompt)}") >> choose 2
+						math(input: Chosen Item, operation: -, operand: "2") >> math 6
+						if(Calculation Result false 1) {
+							combineText(text: pref, combine: Custom) >> combineText 3
+							replaceText(input: "${Combined Text}", find: "^(.).", replace: "$1${Chosen Item}", isRegex: true) >> replaceText 4
+							splitText(text: Updated Text, separator: Every Character) >> splitText 2
+							setValue(key: "selection", value: "${Split Text.as(Number)}", dictionary: pref) >> setValue 3
 var pref = Dictionary
-								alert(alert: "${mainDict.key(msg.optionsaved)}", cancel: false)
+							alert(alert: "${mainDict.key(msg.optionsaved)}", cancel: false)
 var savePref = Chosen Item
-							} >> IFResult 14
-						} >> IFResult 15
-					} >> ShowGrid
-				} >> ShowGridTemp
+						} >> IFResult 14
+					} >> IFResult 15
+				} >> ShowGrid
 				if(count > 7) {
-					number(value: 1) >> number 2
+					number(value: 1) >> number 1
 					menu(, [) {
 					case("mainDict (selectall)"):
 					case("mainDict (selectnone)"):
 						number(value: 0)
 					}
 				} >> SelectAll
-				if(ShowGridTemp == 1) {
+				if(ShowGrid == 1) {
 					repeatEach(extensions) {
 						nothing()
 						if(Repeat Item == "mp4") {
 							text(text: "ffmpeg -v error -t 1.3 -i ${Repeat Index}.mp4 -vf "fps=1.2,scale=256:-1" -y ${Variable}.gif") >> text 3
 						}
 					} >> RepeatResult 6
-var C19DB5CC-B5F3-497B-B57D-81A86A424809 = """hideKeyboard
+var 5A3F9F27-5C95-4E25-B05F-97CF1A0D2FA7 = """hideKeyboard
 touch begin
 rm -f done *.jpg
 ￼
 rm -f *.mp4
 touch done"""
-text("${C19DB5CC-B5F3-497B-B57D-81A86A424809}")
+text("${5A3F9F27-5C95-4E25-B05F-97CF1A0D2FA7}")
 					repeat(2) {
 						if(Matches == nil) {
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.ExecuteCommandIntent
@@ -1833,6 +1824,10 @@ text("${C19DB5CC-B5F3-497B-B57D-81A86A424809}")
 							setName(input: Repeat Item, name: "${Repeat Index}") >> setName 5
 						} >> IFResult 16
 					} >> RepeatResult 9
+					if(OS >= 171) {
+//Unable to get shortcuts action is.workflow.actions.returntohomescreen
+						openApp(id: "com.burbn.instagram")
+					}
 					wait(seconds: 0.5)
 					choose(list: Repeat Results, multiple: true, all: SelectAll) >> choose 3
 					getName() >> getName
@@ -1840,22 +1835,33 @@ text("${C19DB5CC-B5F3-497B-B57D-81A86A424809}")
 						getItemFromList(list: media, type: Item At Index, index: Repeat Item)
 					} >> RepeatResult 10
 				} else {
+					if(OS >= 171) {
+						getNumbersFrom(text: Output) >> getNumbersFrom
+						if(Numbers == 0) {
+//Unable to get shortcuts action is.workflow.actions.returntohomescreen
+							openApp(id: "com.burbn.instagram")
+						}
+					} >> IFResult 17
 					wait(seconds: 0.5)
 					choose(list: media, multiple: true, all: SelectAll) >> choose 4
-					filterFiles()
-				} >> IFResult 17
+				} >> IFResult 18
 var media = If Result
 			}
 //Unable to get shortcuts action AsheKube.app.a-Shell-mini.ExecuteCommandIntent
-		} >> IFResult 18
+		} >> IFResult 19
 		if(media != nil) {
-			valuesFrom(dictionary: pref) >> Share
+			valueFor(key: "selection.3", dictionary: pref) >> Share
 			if(Share == 1) {
+				if(OS >= 171) {
+//Unable to get shortcuts action is.workflow.actions.returntohomescreen
+					openApp(id: "com.burbn.instagram")
+				}
+				wait(seconds: 0.5)
 				share(file: media) >> share
-			} >> IFResult 19
-			valuesFrom(dictionary: pref) >> Save to Files
+			} >> IFResult 20
+			valueFor(key: "selection.4", dictionary: pref) >> Save to Files
 			if(Save to Files == 1) {
-				valuesFrom(dictionary: pref) >> valuesFrom 4
+				valueFor(key: "folderlocation", dictionary: pref) >> valueFor 4
 				if(OS == 1) {
 					if(Dictionary Value == nil) {
 						menu(, [) {
@@ -1866,11 +1872,11 @@ var media = If Result
 						case("iCloud Drive/Shortcuts"):
 							number(value: 3)
 						} >> MenuResult 3
-						setValue(key: "folderlocation", value: "${Menu Result.as(Number)}", dictionary: pref) >> setValue 5
+						setValue(key: "folderlocation", value: "${Menu Result.as(Number)}", dictionary: pref) >> setValue 4
 var pref = Dictionary
 //Unable to get shortcuts action is.workflow.actions.getvariable
-					} >> IFResult 20
-				} >> IFResult 21
+					} >> IFResult 21
+				} >> IFResult 22
 				if(If Result == 1) {
 					file(file: $0) >> file
 				} else {
@@ -1879,29 +1885,29 @@ var pref = Dictionary
 					} else {
 						file(file: $0) >> file 2
 					}
-				} >> IFResult 22
+				} >> IFResult 23
 				if(pref == nil) {
-					valuesFrom(dictionary: mainDict) >> valuesFrom 5
+					valueFor(key: "msg.folderprompt${OS}", dictionary: mainDict) >> valueFor 5
 					askForInput(prompt: "${Dictionary Value}") >> askForInput
 					text(text: "${Provided Input}") >> text 4
-					setValue(key: "savefolder", value: "${Text}", dictionary: pref) >> setValue 6
+					setValue(key: "savefolder", value: "${Text}", dictionary: pref) >> setValue 5
 var pref = Dictionary
 var savePref = Variable
 					if(Provided Input != nil) {
 						createFolder(path: "${pref.key(savefolder)}") >> createFolder
 					}
-				} >> IFResult 23
+				} >> IFResult 24
 				saveFile(input: media, ask: false, path: "${pref.key(savefolder)}") >> saveFile
-			} >> IFResult 24
-			valuesFrom(dictionary: pref) >> Save to Album
+			} >> IFResult 25
+			valueFor(key: "selection.5", dictionary: pref) >> Save to Album
 			if(Save to Album == 1) {
-				valuesFrom(dictionary: pref) >> album
+				valueFor(key: "album", dictionary: pref) >> album
 				if(album == nil) {
 					alert(alert: "${mainDict.key(msg.album)}", cancel: false)
 					saveToCameraRoll(image: media, album: Ask) >> saveToCameraRoll
 					getItemFromList(list: Saved Photo Media) >> getItemFromList 3
 					text(text: "${Item from List}") >> text 5
-					setValue(key: "album", value: "${Text}", dictionary: pref) >> setValue 7
+					setValue(key: "album", value: "${Text}", dictionary: pref) >> setValue 6
 var pref = Dictionary
 var savePref = Variable
 				} else {
@@ -1913,12 +1919,12 @@ var savePref = Variable
 						} else {
 							saveToCameraRoll(image: media, album: album)
 						}
-					} >> IFResult 25
-				} >> IFResult 26
-			} >> IFResult 27
-		} >> IFResult 28
+					} >> IFResult 26
+				} >> IFResult 27
+			} >> IFResult 28
+		} >> IFResult 29
 		if(Output != nil) {
-			valuesFrom(dictionary: pref) >> Copy Caption
+			valueFor(key: "selection.8", dictionary: pref) >> Copy Caption
 			if(Copy Caption > 2) {
 				repeatEach(mainDict) {
 					setName(input: Repeat Index, name: "${Repeat Item}")
@@ -1927,23 +1933,23 @@ var savePref = Variable
 				math(input: Chosen Item, operation: -, operand: "2") >> math 9
 				if(Calculation Result false 1) {
 					combineText(text: pref, combine: Custom) >> combineText 4
-					replaceText(input: "${Combined Text}", find: ".$", replace: "${Chosen Item}", isRegex: true) >> replaceText 4
+					replaceText(input: "${Combined Text}", find: ".$", replace: "${Chosen Item}", isRegex: true) >> replaceText 5
 					splitText(text: Updated Text, separator: Every Character) >> splitText 3
-					setValue(key: "selection", value: "${Split Text.as(Number)}", dictionary: pref) >> setValue 8
+					setValue(key: "selection", value: "${Split Text.as(Number)}", dictionary: pref) >> setValue 7
 var pref = Dictionary
 					alert(alert: "${mainDict.key(msg.optionsaved)}", cancel: false)
 var savePref = Chosen Item
-				} >> IFResult 29
-			} >> IFResult 30
+				} >> IFResult 30
+			} >> IFResult 31
 			if(If Result == 1) {
 				setClipboard(variable: Output) >> setClipboard
 				getClipboard()
 			}
 		}
-	} >> IFResult 31
+	} >> IFResult 32
 	if(savePref != nil) {
 //Unable to get shortcuts action dk.simonbs.Scriptable.RunScriptInlineIntent
-	} >> IFResult 32
+	} >> IFResult 33
 	if(count == 0) {
 		if(Output != nil) {
 			menu(, [) {
@@ -1954,14 +1960,14 @@ var savePref = Chosen Item
 			} >> MenuResult 4
 		} else {
 			alert(alert: "${mainDict.key(msg.nomedia)}", title: "${ShortcutInput}", cancel: false)
-		} >> IFResult 33
+		} >> IFResult 34
 	}
 } else {
 	if(Output != nil) {
 		text(text: "❰ ${mainDict.key(msg.userprompt)}${Variable.key(msg.userprompt)} ❱") >> text 6
 	} else {
-		valuesFrom(dictionary: mainDict)
-	} >> IFResult 34
+		valueFor(key: "msg.nouserprompt", dictionary: mainDict)
+	} >> IFResult 35
 var menu = Variable
 	repeat(10) {
 		if(menu == 1) {
@@ -1979,15 +1985,15 @@ var menu = Variable
 					if(menu == 0) {
 //Unable to get shortcuts action dk.simonbs.Scriptable.RunScriptInlineIntent
 						getDictionaryFrom(input: Output) >> getDictionaryFrom 4
-						choose(list: Dictionary, prompt: "${mainDict.key(msg.settingprompt)}${Variable.key(msg.settingprompt)}${Dictionary.key(albumname)}") >> choose 6
+						choose(list: Dictionary, prompt: "${mainDict.key(msg.settingprompt)}${Variable.key(msg.settingprompt)}${Dictionary.key(folderpath)}") >> choose 6
 						if(Chosen Item == ""${mainDict.key(goback)}"") {
 var menu = Variable
 						} else {
 //Unable to get shortcuts action dk.simonbs.Scriptable.RunScriptInlineIntent
 							getDictionaryFrom(input: Output) >> getDictionaryFrom 5
 var pref = Dictionary
-						} >> IFResult 35
-					} >> IFResult 36
+						} >> IFResult 36
+					} >> IFResult 37
 				} >> RepeatResult 12
 			case("mainDict (getlink)"):
 				getClipboard() >> getClipboard
@@ -1995,8 +2001,8 @@ var pref = Dictionary
 					runShortcut(name: "Instagram Download", input: Clipboard) >> runShortcut 2
 				} else {
 					alert(alert: "${Clipboard}", title: "${mainDict.key(msg.noclipboard)}", cancel: false)
-				} >> IFResult 37
+				} >> IFResult 38
 			} >> MenuResult 5
 		}
 	} >> RepeatResult 13
-} >> IFResult 38
+} >> IFResult 39
