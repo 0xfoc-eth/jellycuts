@@ -3,7 +3,7 @@ import Shortcuts
 
 /*
 View, save, convert, edit shortcut source in xml or json format. Restore shortcuts from source. Create web review.
-2023-10-17 	v3.8.1
+2023-12-04 	v3.8.2
 https://routinehub.co/user/gluebyte
 https://mastodon.social/@gluebyte
 */
@@ -12,7 +12,7 @@ if(Random Number == 1) {
 	getIP() >> getIP
 	if(Current IP Address != nil) {
 		downloadURL(url: "https://updatecheck.gluebyte.workers.dev/?id=33C37587") >> downloadURL
-		if(Contents of URL .contains "2023-10-17") {
+		if(Contents of URL .contains "2023-12-04") {
 			menu(, [🌏  Go to RoutineHub, 👾  Download Update, ⮐  Not Now]) {
 			case("🌏  Go to RoutineHub"):
 				openURL(url: "https://routinehub.co/shortcut/5256/")
@@ -29,6 +29,7 @@ if(Random Number == 1) {
 		}
 	} >> IFResult
 } >> IFResult 1
+replaceText(input: "${DeviceDetails.get(System Version)}", find: "^(\d+)\.(\d+).*", replace: "$1$2", isRegex: true) >> OS
 menu(
 Get Source from:
 , [📋  Clipboard (iCloud link or plist/json), 📝  File, 💫  Shortcut]) {
@@ -41,6 +42,9 @@ case("📋  Clipboard (iCloud link or plist/json)"):
 		setName(input: Contents of URL, name: "${Contents of URL.as(Dictionary).key(fields.name.value)}.plist") >> setName
 	} >> IFResult 2
 case("📝  File"):
+	if(OS >= 171) {
+		wait()
+	}
 	selectFile() >> selectFile
 case("💫  Shortcut"):
 	runShortcut(name: "Shortcut Source Helper") >> runShortcut
@@ -71,16 +75,16 @@ list(items: (
     "\Ud83d\Udd0d  Create Web Review (expand all)",
     "\Ud83d\Udd0d  Create Web Review"
 )) >> list
-choose(list: List, prompt: "${file.get(File Size)}.${Variable.get(File Size)} (${file.get(File Extension)})") >> command
+choose(list: List, prompt: "${file.get(File Extension)}.${Variable.get(File Extension)} (${file.get(File Size)})") >> command
 if(command .beginsWith "❓") { >> IFResult 5
 	getFileOfType(input: file, type: "public.json") >> getFileOfType 1
 	replaceText(input: "${File of Type}", find: "\u0023", replace: "\\u0023", isRegex: true) >> replaceText 3
-var 6B2E0BC7-8232-492B-947A-9A658888900D = """count = 0;
+var 601938A0-7758-42F8-95C9-2513CC1D23F8 = """count = 0;
 d.WFWorkflowImportQuestions.forEach(q => { q.Text = q.Text.replace(/\+\+/g, s => { count++; return '\n' }) });
 if (count) { d.count = count }
 document.body.textContent = encodeURIComponent(JSON.stringify(d,null,2));"""
-text("${6B2E0BC7-8232-492B-947A-9A658888900D}")
-	url(url: "data:text/html;charset=utf-8,<body/><script>const d=${Updated Text};${ActionOutput}</script>") >> url 1
+text("${601938A0-7758-42F8-95C9-2513CC1D23F8}")
+	url(url: "data:text/html;charset=utf-8,<body/><script>const d=${Text};${ActionOutput}</script>") >> url 1
 	decodeURL(url: "${URL.as(RichText)}") >> decodeURL 1
 	if(URL Encoded Text == nil) {
 		alert(alert: "‘++’ not found in Import Questions", cancel: false)
@@ -99,10 +103,10 @@ Please remove the first ’Stop and Output‘ action and close the editor when u
 if(command .beginsWith "✂️") { >> IFResult 6
 	count(input: file) >> count
 	math(input: Count, operation: -, operand: "1") >> math
-var A3B7E564-0CDA-43EB-8CD7-42EFA24CC8A2 = """Enter start index (0 - ￼)
+var 7B6A0FC9-5B94-40E6-AC89-07CEA55665AB = """Enter start index (0 - ￼)
 Index is based on action numbers in Web Review.
 To open Web Review, enter nothing."""
-text("${A3B7E564-0CDA-43EB-8CD7-42EFA24CC8A2}")
+text("${7B6A0FC9-5B94-40E6-AC89-07CEA55665AB}")
 	askForInput(prompt: "${Text}", type: Number, allowDecimal: false, allowNegative: false) >> start
 	if(start >= 0) {
 		repeat(3) {
@@ -111,19 +115,19 @@ text("${A3B7E564-0CDA-43EB-8CD7-42EFA24CC8A2}")
 				if(end .between start...Calculation Result) {
 					number(value: 1) >> number
 				} else {
-var 58755F79-89C9-4807-B936-427D0AD007B5 = """
+var 31239B66-9CD7-4492-9BF2-3D547C8F55E5 = """
 🛑 End index should be between ￼ and ￼."""
-text("${58755F79-89C9-4807-B936-427D0AD007B5}")
+text("${31239B66-9CD7-4492-9BF2-3D547C8F55E5}")
 				} >> IFResult 7
 			} >> IFResult 8
 		} >> RepeatResult
 		getFileOfType(input: file, type: "public.json") >> getFileOfType 3
 		replaceText(input: "${File of Type}", find: "\u0023", replace: "\\u0023", isRegex: true) >> replaceText 4
-var 0FF96513-22B5-4C27-B00C-60CDB97E2616 = """d.WFWorkflowActions = d.WFWorkflowActions.slice(start, end+1);
+var 1CFE9A31-6784-43F9-94FE-71071005DA33 = """d.WFWorkflowActions = d.WFWorkflowActions.slice(start, end+1);
 d.WFWorkflowImportQuestions = d.WFWorkflowImportQuestions.filter(q => { q.ActionIndex -= start; return q.ActionIndex >= 0 && q.ActionIndex <= end-start } );
 document.body.textContent = encodeURIComponent(JSON.stringify(d,null,2));"""
-text("${0FF96513-22B5-4C27-B00C-60CDB97E2616}")
-		url(url: "data:text/html;charset=utf-8,<body/><script>const start=${Updated Text},end=${ActionOutput},d=${end};${ActionOutput}</script>") >> url 2
+text("${1CFE9A31-6784-43F9-94FE-71071005DA33}")
+		url(url: "data:text/html;charset=utf-8,<body/><script>const start=${Text},end=${ActionOutput},d=${end};${ActionOutput}</script>") >> url 2
 		decodeURL(url: "${URL.as(RichText)}") >> decodeURL 2
 		setName(input: URL Encoded Text, name: "a.json") >> setName 6
 		getFileOfType(input: Renamed Item, type: "com.apple.plist") >> getFileOfType 4
@@ -151,12 +155,12 @@ var src = File of Type
 			setName(input: Base64 Encoded, name: "a.plist") >> setName 8
 			nothing()
 			if(Text == "UserActivityData") {
-				keysFrom(dictionary: Renamed Item) >> keysFrom
+				valuesFrom(dictionary: Renamed Item) >> valuesFrom
 			} >> IFResult 11
 			if(Text == "IntentData") {
-				keysFrom(dictionary: Renamed Item) >> keysFrom 1
+				valuesFrom(dictionary: Renamed Item) >> valuesFrom 1
 			} >> IFResult 12
-			dictionary({"k":"${Renamed Item}${ActionOutput}"})
+			dictionary({"k":"${If Result}${ActionOutput}"})
 			replaceText(input: "${Dictionary}", find: "^\{"k":|\}$", isRegex: true) >> replaceText 7
 			replaceText(input: "${src}", find: "{"__type__":"data","__value__":"${b64}"}", replace: "${Updated Text}") >> replaceText 8
 var src = Updated Text
@@ -167,7 +171,7 @@ var src = Updated Text
 	getShortcuts() >> getShortcuts
 	setValue(key: "n", value: "${My Shortcuts}") >> setValue 2
 	replaceText(input: "${Dictionary}", find: "\u0023", replace: "\\u0023", isRegex: true) >> sNames
-var AC8513C3-70B3-47AD-A4DC-E6F5983299D1 = """const idDict = {
+var A9799FFC-0305-4713-B33F-F5AF38E0F29F = """const idDict = {
 "is.workflow.actions.conditional":[{
 	"name":"If $\ufffc0 $\ufffc1",
 	"group":"gGray",
@@ -3537,10 +3541,10 @@ function escapeStr(s) {
 	return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')
 		.replace(/[\0-\x08\x0B-\x1F\x7F-\xA0\xAD\u2000-\u200B\u2028\u2029\u202F\u205F-\u2064\u2800\u3000]/g, c => '<b>\\u{'+c.charCodeAt(0).toString(16).toUpperCase()+'}</b>').replace(/[\x09\x20]+$/gm, s => '<b>'+s.replace(/\x09/g,'\\u{tab}').replace(/\x20/g,'\\u{space}')+'</b>');
 }"""
-text("${AC8513C3-70B3-47AD-A4DC-E6F5983299D1}")
-	url(url: "data:text/html;charset=utf-8,<body/><script>const mobile='${src}'.includes('trim'),expand='${ActionOutput}'.includes('expand'),shortcutname=${Text}.name,d=${ActionOutput},fileSize='${Updated Text}',sNames=${ActionOutput}.n;${command}</script>") >> url 3
+text("${A9799FFC-0305-4713-B33F-F5AF38E0F29F}")
+	url(url: "data:text/html;charset=utf-8,<body/><script>const mobile='${command}'.includes('trim'),expand='${ActionOutput}'.includes('expand'),shortcutname=${src}.name,d=${ActionOutput},fileSize='${file.get(File Size)}',sNames=${Variable.get(File Size)}.n;${Text}</script>") >> url 3
 	decodeURL(url: "${URL.as(RichText)}") >> decodeURL 3
-var 11B612B9-BF50-4FA1-9D95-97B2A09CF06F = """<!DOCTYPE html><html><head><meta charset="utf-8">
+var 0782047F-C37C-464E-8A1B-C9122E41C4F4 = """<!DOCTYPE html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
 <meta name="format-detection" content="telephone=no,date=no">
 <title>￼</title>
@@ -3714,13 +3718,19 @@ function magictap(id) {
 	setTimeout(function(){ e.scrollIntoView({block:'nearest',behavior:'smooth'}); }, 10);
 }
 </script></body></html>"""
-text("${11B612B9-BF50-4FA1-9D95-97B2A09CF06F}")
+text("${0782047F-C37C-464E-8A1B-C9122E41C4F4}")
 	setName(input: Text, name: "${file.get(Name)}.html") >> setName 9
 	menu(, [💻  Share, 📝  Save to Files, 🧭  Open in Browser]) {
 	case("💻  Share"):
+		if(OS >= 171) {
+			wait()
+		}
 		share(file: Renamed Item) >> share
 		nothing()
 	case("📝  Save to Files"):
+		if(OS >= 171) {
+			wait()
+		}
 		saveFile(input: Renamed Item, ask: true, overwrite: false) >> saveFile
 		nothing()
 	case("🧭  Open in Browser"):
@@ -3757,15 +3767,6 @@ if(If Result .beginsWith "{") {
 decodeURL(url: "${If Result.as(RichText)}") >> decodeURL 4
 setName(input: URL Encoded Text, name: "${file.get(Name)}.txt") >> setName 10
 var file = Renamed Item
-if(command .beginsWith "🧐") {
-	quicklook(input: file)
-}
-if(command .beginsWith "📝") {
-	saveFile(input: file) >> saveFile 1
-}
-if(command .beginsWith "💻") {
-	share(file: file) >> share 1
-}
 if(command .beginsWith "✏️") {
 	text(text: "${Ask}${file}") >> text 1
 	if(Text .beginsWith "{") {
@@ -3775,4 +3776,17 @@ if(command .beginsWith "✏️") {
 	askForInput(prompt: "New Shortcut Name:", default: "${file.get(Name)}") >> askForInput
 	setName(input: If Result, name: "${Provided Input}.plist") >> setName 12
 	runShortcut(name: "Shortcut Source Helper", input: Renamed Item) >> runShortcut 3
+} else {
+	if(OS >= 171) {
+		wait()
+	}
+	if(command .beginsWith "🧐") {
+		quicklook(input: file)
+	}
+	if(command .beginsWith "📝") {
+		saveFile(input: file) >> saveFile 1
+	}
+	if(command .beginsWith "💻") {
+		share(file: file) >> share 1
+	}
 } >> IFResult 20
