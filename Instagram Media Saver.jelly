@@ -4,18 +4,21 @@ import Shortcuts
 var Input = ShortcutInput
 // First check if user is signed into Instagram within Scriptable app
 //Unable to get shortcuts action dk.simonbs.Scriptable.RunScriptInlineIntent
-valuesFrom(dictionary: Output) >> valuesFrom
+valueFor(key: "loggedIn", dictionary: Output) >> valueFor
 if(Dictionary Value == "false") { >> IFResult
 // User is not logged in, trying to get the user to login now...
 	alert(alert: "You are not logged into Instagram in Scriptable. After pressing OK you'll be taken to Scriptable to login.")
 //Unable to get shortcuts action dk.simonbs.Scriptable.RunScriptInlineIntent
 	exit()
 } >> IFResult 1
-dictionary({"ShortcutName":"Instagram Media Saver","Version":"1.66","ID":"5195"}) >> MainDict
+dictionary({"ShortcutName":"Instagram Media Saver","Version":"1.67","ID":"5195"}) >> MainDict
 var Dict = MainDict
 var SName = Variable
 /*
-1.66 beta
+1.67
+- new condensed multi media selection menu
+- fixed Follower Analysis feature
+1.66
 - fix updater issue with api call
 1.65
 - modify check for login to see if ds_user_id doesnt exist but also to check if it has a blank value (to try and mitigate logout issue without notify)
@@ -39,7 +42,7 @@ if(File == nil) { >> IFResult 2
     "Photos App",
     "Don't Store, Share Only!"
 )) >> list 1
-var A15F5E4F-AD6F-452D-8908-F337EB4B9DF5 = """Where do you want your media stored?
+var 024263DD-A00F-4F8F-91C4-3B8E88BC1650 = """Where do you want your media stored?
 
 This setting is saved for future runs. 
 
@@ -47,7 +50,7 @@ To reset, delete the file "settings.json" at:
 iCloud Drive/Shortcuts/￼
 
 This can also be done from the main menu"""
-text("${A15F5E4F-AD6F-452D-8908-F337EB4B9DF5}")
+text("${024263DD-A00F-4F8F-91C4-3B8E88BC1650}")
 	choose(list: List, prompt: "${Text}") >> choose
 	dictionary({"storageLocation":"${Chosen Item}","setupDate":"${CurrentDate}","versionDuringSetup":"${Dict.key(Version)}"})
 	saveFile(input: Dictionary, ask: false, path: "${SName}/settings.json") >> saveFile
@@ -60,18 +63,18 @@ var StorageLoc = Text
 
 Update Check 🔽🔽🔽
 */
-var 2C2947E1-EB0D-4E21-A48F-BEB99B4E58A4 = """{
+var D1E8CD73-940B-4051-82AA-5B82F515A528 = """{
 "version":"￼",
 "id":"￼",
 "module":"routinehub",
 "getOriginalDownloadUrl":true
 }"""
-text("${2C2947E1-EB0D-4E21-A48F-BEB99B4E58A4}")
+text("${D1E8CD73-940B-4051-82AA-5B82F515A528}")
 downloadURL(url: "https://updatekit.mikebeas.com/V1", method: POST, requestJSON: ) >> Server
 if(Server .contains "update") { >> IFResult 4
-	valuesFrom(dictionary: Server) >> valuesFrom 1
+	valueFor(key: "update", dictionary: Server) >> valueFor 1
 	if(Dictionary Value == "Updated") {
-var 371D2FDF-EF72-49BB-9AE1-DA289E3CB91C = """⬆️ 𝗨𝗽𝗱𝗮𝘁𝗲 ⬆️
+var 7B9746FB-E3C8-47B1-96E5-36B035CFF1AD = """⬆️ 𝗨𝗽𝗱𝗮𝘁𝗲 ⬆️
 
 An update is available for ￼, here are some information about it:
 
@@ -81,7 +84,7 @@ An update is available for ￼, here are some information about it:
 𝗥𝗲𝗹𝗲𝗮𝘀𝗲 𝗗𝗮𝘁𝗲: ￼
 𝗖𝗵𝗮𝗻𝗴𝗲𝘀:
 ￼"""
-text("${371D2FDF-EF72-49BB-9AE1-DA289E3CB91C}")
+text("${7B9746FB-E3C8-47B1-96E5-36B035CFF1AD}")
 		showResult(text: "${Text}")
 		list(items: (
         {
@@ -119,26 +122,26 @@ var switches = Dictionary
 	if(Settings .contains "showSaveNotifications") { >> IFResult 8
 var on-or-off = Variable
 		if(on-or-off == "Yes") {
-var 8A17EC70-FB0A-4381-B8A0-ECA0ABD65F00 = """BEGIN:VCARD
+var 21E31999-4FD8-48C7-B716-FE4A73242B49 = """BEGIN:VCARD
 VERSION:3.0
 N;CHARSET=utf-8:Save Notifications On;
 ORG:;
 PHOTO;ENCODING=b:￼
 END:VCARD"""
-text("${8A17EC70-FB0A-4381-B8A0-ECA0ABD65F00}")
+text("${21E31999-4FD8-48C7-B716-FE4A73242B49}")
 		} else {
-var C3DEE628-D6A2-4615-9940-BA3A90B1501D = """BEGIN:VCARD
+var 614BDAAE-4CB1-4697-8094-361B403169E0 = """BEGIN:VCARD
 VERSION:3.0
 N;CHARSET=utf-8:Save Notifications Off;
 ORG:;
 PHOTO;ENCODING=b:￼
 END:VCARD"""
-text("${C3DEE628-D6A2-4615-9940-BA3A90B1501D}")
+text("${614BDAAE-4CB1-4697-8094-361B403169E0}")
 		} >> IFResult 9
 	} else {
 		nothing()
 	} >> IFResult 10
-var A2D96AA7-1A42-4FDC-8DB2-9E3BD205BAFB = """BEGIN:VCARD
+var 0A35081C-936B-4E47-BD2A-D97EC8F02CC6 = """BEGIN:VCARD
 VERSION:3.0
 N;CHARSET=utf-8:Run Shortcut (multi-post or from clipboard);
 ORG:;
@@ -169,12 +172,12 @@ ORG:;
 END:VCARD
 
 ￼"""
-text("${A2D96AA7-1A42-4FDC-8DB2-9E3BD205BAFB}")
+text("${0A35081C-936B-4E47-BD2A-D97EC8F02CC6}")
 	setName(input: Text, name: "menu.vcf") >> setName
-var C495B0D7-2917-4AF4-816F-D8112EB463AE = """Welcome to ￼!
+var 82B138DA-D559-435D-A14F-309D23018D54 = """Welcome to ￼!
 
 You didn't share a post to the shortcut, so this menu allows some other features."""
-text("${C495B0D7-2917-4AF4-816F-D8112EB463AE}")
+text("${82B138DA-D559-435D-A14F-309D23018D54}")
 	choose(list: Renamed Item, prompt: "${Text}") >> choose 2
 	if(Chosen Item .contains "Notifications") { >> IFResult 11
 		if(Chosen Item .contains "On") {
@@ -192,32 +195,31 @@ text("${C495B0D7-2917-4AF4-816F-D8112EB463AE}")
 var Username = Provided Input
 		downloadURL(url: "https://I.Instagram.com/api/v1/users/web_profile_info/?username=${Username}", method: GET, headers: , requestType: File, requestJSON: , requestVar: Text) >> downloadURL
 //Unable to get shortcuts action is.workflow.actions.setvariable
-		number(value: 0) >> number 1
-var maxed = Number
+//Unable to get shortcuts action is.workflow.actions.setvariable
 		repeat(500) {
-			if(maxed == 0) {
-				downloadURL(url: "https://i.instagram.com/api/v1/friendships/${Contents of URL.as(Dictionary).key(data.user.id)}/followers/?count=1000&max_id=${ActionOutput.as(Dictionary).key(data.user.id)}", method: GET, headers: , requestType: File, requestJSON: , requestVar: Text) >> downloadURL 1
+			if(maxed != 1) {
+				downloadURL(url: "https://www.instagram.com/api/v1/friendships/${Contents of URL.as(Dictionary).key(data.user.id)}/followers/?count=100&max_id=${ActionOutput.as(Dictionary).key(data.user.id)}", method: GET, headers: , requestType: File, requestJSON: , requestVar: Text) >> downloadURL 1
 				if(Contents of URL .contains "next_max_id") {
 var maxed = Variable
 				} else {
 var maxid = Contents of URL
 				} >> IFResult 14
 				matchText(text: "${Contents of URL}", regex: "(?<=username"\:").*?(?=")") >> matchText
-			}
+			} >> IFResult 15
 		} >> RepeatResult
-		quicklook(input: Repeat Results)
 		combineText(text: Repeat Results, combine: Custom, separator: "|") >> CurrentFollowersCombined
 		text(text: "${Repeat Results}") >> CurrentFollowersTxt
-		getFile(path: "${Username}/${Variable} Analysis.txt", error: false) >> PreviousFollowers
+		getFile(path: "${SName}/${Variable} Analysis.txt", error: false) >> PreviousFollowers
 		if(PreviousFollowers != nil) {
-			replaceText(input: "${PreviousFollowers}", find: "\n?(\b${CurrentFollowersCombined}\b)\n?", isRegex: true) >> UsersWhoUnfollowed
+			replaceText(input: "${PreviousFollowers}", find: "\b(${CurrentFollowersCombined})\b\n?", replace: "", isRegex: true) >> replaceText 2
+			replaceText(input: "${Updated Text}", find: "^\n", isRegex: true) >> replaceText 3
 			replaceText(input: "${PreviousFollowers}", find: "\n", replace: "|", isRegex: true) >> PreviousFollowersCombined 
-			replaceText(input: "${CurrentFollowersTxt}", find: "\n?(\b${PreviousFollowersCombined }\b)\n?", isRegex: true) >> NewFollowers
-		} >> IFResult 15
-		count(type: Lines, input: UsersWhoUnfollowed) >> count
+			replaceText(input: "${CurrentFollowersTxt}", find: "\b(${PreviousFollowersCombined })\b\n?", isRegex: true) >> NewFollowersWithGaps
+		} >> IFResult 16
+		count(type: Lines, input: Updated Text) >> count
 		count(type: Lines, input: If Result) >> New Follower Count
-		saveFile(input: CurrentFollowersTxt, ask: false, path: "${Username}/${Variable} Analysis.txt", overwrite: true) >> saveFile 2
-var D2BBF503-8866-4003-A119-6642C11EB9C7 = """￼
+		saveFile(input: CurrentFollowersTxt, ask: false, path: "${SName}/${Variable} Analysis.txt", overwrite: true) >> saveFile 2
+var 1F43F547-4BF5-4DCD-BB85-44871A95D1B0 = """￼
 Total Followers: ￼
 
 New Followers (￼):
@@ -225,9 +227,11 @@ New Followers (￼):
 
 Users Who Unfollowed (￼):
 ￼"""
-text("${D2BBF503-8866-4003-A119-6642C11EB9C7}")
+text("${1F43F547-4BF5-4DCD-BB85-44871A95D1B0}")
+		wait()
 		quicklook(input: Text)
-		alert(alert: "Stop here")
+		wait()
+		exit()
 	}
 	if(Chosen Item .contains "Delete URLs") {
 		getFile(picker: false, path: "${SName.as(Text)}/urls.txt", error: false) >> getFile 1
@@ -240,28 +244,28 @@ text("${D2BBF503-8866-4003-A119-6642C11EB9C7}")
 				getFile(picker: false, path: "${SName}/settings.json", error: false) >> getFile 2
 			}
 		}
-	} >> IFResult 16
+	} >> IFResult 17
 	if(If Result != nil) {
 		deleteFile(input: If Result) >> deleteFile
 		exit()
-	} >> IFResult 17
+	} >> IFResult 18
 	getFile(picker: false, path: "${SName}/urls.txt", error: false) >> getFile 3
-	if(File != nil) { >> IFResult 18
+	if(File != nil) { >> IFResult 19
 var File = File
 		count(type: Characters, input: File) >> count 1
 		if(Count > 5) {
-var 90240E2D-5386-4A37-A910-8FC754E47240 = """You seem to have a list of URLs stored in iCloud Drive. 
+var A9921945-DF24-4041-A343-ABC3D4D1A178 = """You seem to have a list of URLs stored in iCloud Drive. 
 
 Should we download those posts now?"""
-text("${90240E2D-5386-4A37-A910-8FC754E47240}")
+text("${A9921945-DF24-4041-A343-ABC3D4D1A178}")
 			menu(, [Yes, No]) {
 			case("Yes"):
 				splitText(text: File) >> splitText
 				count(input: Split Text) >> count 2
-var B172805E-0540-4A07-90C6-4E214D452D7E = """Your urls.txt file is populated with ￼ links. 
+var 88508ECC-DCAA-49BE-B58D-6E9831809585 = """Your urls.txt file is populated with ￼ links. 
 
 How many of these should we download?"""
-text("${B172805E-0540-4A07-90C6-4E214D452D7E}")
+text("${88508ECC-DCAA-49BE-B58D-6E9831809585}")
 				list(items: (
         {
         WFItemType = 0;
@@ -289,11 +293,11 @@ text("${B172805E-0540-4A07-90C6-4E214D452D7E}")
 						askForInput(prompt: "What index should be the start? (Total:${Count})", type: Number) >> askForInput 1
 						askForInput(prompt: "What index should be the finish? (Start:${Count}; Total:${ActionOutput})", type: Number) >> askForInput 2
 						getItemFromList(list: Split Text, type: Items in Range, startIndex: Provided Input, endIndex: Provided Input)
-					} >> IFResult 19
-				} >> IFResult 20
+					} >> IFResult 20
+				} >> IFResult 21
 				repeatEach(If Result) {
 					runShortcut(name: SName, input: Repeat Item, show: false) >> runShortcut 1
-					replaceText(input: "${File}", find: "${Repeat Item}(\n|)", isRegex: true) >> replaceText 2
+					replaceText(input: "${File}", find: "${Repeat Item}(\n|)", isRegex: true) >> replaceText 4
 var File = Updated Text
 					saveFile(input: File, ask: false, path: "${SName}/urls.txt", overwrite: true) >> saveFile 3
 				} >> RepeatResult 1
@@ -307,20 +311,20 @@ var File = Updated Text
 var AutoModeSkip = Variable
 			} >> MenuResult
 		}
-	} >> IFResult 21
+	} >> IFResult 22
 	getClipboard()
 } else {
 //Unable to get shortcuts action is.workflow.actions.getvariable
-} >> IFResult 22
+} >> IFResult 23
 getFile(picker: false, path: "${SName}/urls.txt", error: false) >> getFile 5
-if(File != nil) { >> IFResult 23
+if(File != nil) { >> IFResult 24
 	if(AutoModeSkip != "1") {
 var AutoMode = Variable
-	} >> IFResult 24
-} >> IFResult 25
+	} >> IFResult 25
+} >> IFResult 26
 getURLSFromInput(text: "${If Result}") >> getURLSFromInput
 var InputURL = URLs
-if(InputURL .contains "nstagram") { >> IFResult 26
+if(InputURL .contains "nstagram") { >> IFResult 27
 	alert(alert: "Not a proper link.
 
 Please share an Instagram link to the shortcut or copy one to your clipboard before running the shortcut.
@@ -331,17 +335,17 @@ Exiting now.", title: "${Dict.key(ShortcutName)}", cancel: false)
 	matchText(text: "${InputURL}", regex: "(/p/|/reel/|/stories/|/tv/|/s/)") >> matchText 1
 	if(Matches != nil "/p/") {
 var NormalMode = Variable
-	} >> IFResult 27
-} >> IFResult 28
+	} >> IFResult 28
+} >> IFResult 29
 downloadURL(url: "${InputURL}", method: GET, headers: , requestType: File, requestJSON: , requestVar: Text) >> downloadURL 2
 htmlFromRichText(text: Contents of URL) >> htmlFromRichText
-if(NormalMode == ""${1}"") { >> IFResult 29
+if(NormalMode == ""${1}"") { >> IFResult 30
 	matchText(text: "${HTML from Rich Text}", regex: "https.{0,50}?/stories/highlights\/(.*?)\/") >> matchText 2
 	if(Matches != nil) {
 		getItemFromList(list: Matches) >> getItemFromList
 		getMatchGroup(matches: Item from List) >> getMatchGroup
 		downloadURL(url: "https://www.instagram.com/api/v1/feed/reels_media/?reel_ids=highlight%3A${Text}", method: GET, headers: , requestType: File, requestJSON: , requestVar: Text) >> downloadURL 3
-		valuesFrom(dictionary: Contents of URL) >> valuesFrom 2
+		valueFor(key: "reels_media.1", dictionary: Contents of URL) >> valueFor 2
 var PageJSON = Dictionary Value
 	} else { >>  3
 /*
@@ -351,14 +355,14 @@ Try matching the html for:
 */
 		matchText(text: "${HTML from Rich Text}", regex: "(?<=media_id\"\:\").*?(?=\")") >> Media ID Match
 		getItemFromList(list: Media ID Match) >> getItemFromList 1
-		if(Media ID Match == nil) { >> IFResult 30
+		if(Media ID Match == nil) { >> IFResult 31
 			matchText(text: "${HTML from Rich Text}", regex: "(?<=media\?id=).*?(?=\")") >> 2nd mediaID match
 			getItemFromList(list: 2nd mediaID match) >> getItemFromList 2
-			if(2nd mediaID match == nil) { >> IFResult 31
+			if(2nd mediaID match == nil) { >> IFResult 32
 				alert(alert: "Oops! Media ID can't be found. Please inform mvan231 about this issue and include the post link and any additional info.")
 				exit()
 			}
-		} >> IFResult 32
+		} >> IFResult 33
 		downloadURL(url: "https://i.instagram.com/api/v1/media/${If Result}/info", method: GET, headers: , requestType: File, requestJSON: , requestVar: Text) >> downloadURL 4
 // Output of the Get Contents of URL action above is the JSON from API response
 		getDictionaryFrom(input: Contents of URL) >> getDictionaryFrom
@@ -369,13 +373,13 @@ Get the media type
 2 = reel / video
 8 = mix of photo and video
 */
-		valuesFrom(dictionary: PageJSON) >> valuesFrom 3
+		valueFor(key: "items.1.media_type", dictionary: PageJSON) >> valueFor 3
 /*
 
 
 Get username 🔽🔽🔽
 */
-		valuesFrom(dictionary: PageJSON) >> valuesFrom 4
+		valueFor(key: "items.1.user.username", dictionary: PageJSON) >> valueFor 4
 		text(text: "@${Dictionary Value}") >> text 1
 var Username = Text
 /*
@@ -383,20 +387,20 @@ Get username 🔼🔼🔼
 
 Get photos and videos links 🔽
 */
-	} >> IFResult 33
-	if(PageJSON .contains "items") { >> IFResult 34
+	} >> IFResult 34
+	if(PageJSON .contains "items") { >> IFResult 35
 		repeatEach(PageJSON) {
-			valuesFrom(dictionary: PageJSON) >> valuesFrom 5
-			if(Dictionary Value .contains "video_versions") { >> IFResult 35
+			valueFor(key: "items.${Repeat Index}", dictionary: PageJSON) >> valueFor 5
+			if(Dictionary Value .contains "video_versions") { >> IFResult 36
 //Unable to get shortcuts action is.workflow.actions.appendvariable
-			} else { >>  36
-				if(Dictionary Value .contains "carousel_media") { >> IFResult 36
+			} else { >>  37
+				if(Dictionary Value .contains "carousel_media") { >> IFResult 37
 					repeatEach(Dictionary Value) {
 						if(Repeat Item 2 .contains "video_versions") {
 //Unable to get shortcuts action is.workflow.actions.appendvariable
 						} else {
 //Unable to get shortcuts action is.workflow.actions.appendvariable
-						} >> IFResult 37
+						} >> IFResult 38
 					}
 				} else {
 //Unable to get shortcuts action is.workflow.actions.appendvariable
@@ -411,21 +415,21 @@ Get photos and videos links 🔽
 Get caption 🔽🔽🔽
 */
 	nothing()
-	valuesFrom(dictionary: PageJSON) >> valuesFrom 6
-	if(Dictionary Value .contains "caption") { >> IFResult 38
-		valuesFrom(dictionary: Dictionary Value) >> valuesFrom 7
+	valueFor(key: "items.1", dictionary: PageJSON) >> valueFor 6
+	if(Dictionary Value .contains "caption") { >> IFResult 39
+		valueFor(key: "caption", dictionary: Dictionary Value) >> valueFor 7
 		if(Dictionary Value .contains "text") {
-			valuesFrom(dictionary: PageJSON) >> valuesFrom 8
-			replaceText(input: "${Dictionary Value}", find: "(\\u0026|\&amp\;)", replace: "&", isRegex: true) >> replaceText 3
-			replaceText(input: "${Updated Text}", find: "\/", replace: "/") >> replaceText 4
+			valueFor(key: "items.1.caption.text", dictionary: PageJSON) >> valueFor 8
+			replaceText(input: "${Dictionary Value}", find: "(\\u0026|\&amp\;)", replace: "&", isRegex: true) >> replaceText 5
+			replaceText(input: "${Updated Text}", find: "\/", replace: "/") >> replaceText 6
 var Caption = Updated Text
 		}
-	} >> IFResult 39
+	} >> IFResult 40
 /*
 Get caption 🔼🔼🔼
 
 */
-} else { >>  40
+} else { >>  41
 /*
 
 
@@ -437,10 +441,10 @@ Get profile picture or full story 🔽🔽🔽
 )) >> Profile choices
 	matchText(text: "${InputURL}", regex: "(?<=\.com\/).*?(?=(\?|$))") >> matchText 3
 var Username = Matches
-var 9C4492C7-5F21-4C4B-A39B-91D802134CC0 = """It seems you are using a profile URL for ￼.
+var C23FDDF3-0735-4D93-94C0-E63686650FF8 = """It seems you are using a profile URL for ￼.
 
 What would you like to do?"""
-text("${9C4492C7-5F21-4C4B-A39B-91D802134CC0}")
+text("${C23FDDF3-0735-4D93-94C0-E63686650FF8}")
 	choose(list: Profile choices, prompt: "${Text}") >> choose 5
 	downloadURL(url: "https://I.Instagram.com/api/v1/users/web_profile_info/?username=${Username}", method: GET, headers: , requestType: File, requestJSON: , requestVar: Text) >> downloadURL 5
 /*
@@ -449,7 +453,7 @@ Get: data.user.id
 ~~Get: data.user.profile_pic_url_hd~~
 Get: data.user.biography
 */
-	if(Chosen Item .contains "Full Story") { >> IFResult 40
+	if(Chosen Item .contains "Full Story") { >> IFResult 41
 		downloadURL(url: "https://i.instagram.com/api/v1/feed/reels_media/?reel_ids=${Contents of URL.as(Dictionary).key(data.user.id)}", method: GET, headers: , requestType: File, requestJSON: , requestVar: Text) >> downloadURL 6
 /*
 reels_media.1.items> repeat with each
@@ -461,11 +465,11 @@ Check for video_versions.1.url, else, get image_versions2.candidates.1.url
 			} else {
 				if(Repeat Item .contains "image_versions2") {
 //Unable to get shortcuts action is.workflow.actions.appendvariable
-				} >> IFResult 41
+				} >> IFResult 42
 			}
 		}
-	} >> IFResult 42
-	if(Chosen Item .contains "Profile Picture") { >> IFResult 43
+	} >> IFResult 43
+	if(Chosen Item .contains "Profile Picture") { >> IFResult 44
 /*
 Get: user.hd_profile_pic_url_info.url
 
@@ -474,39 +478,42 @@ https://stackoverflow.com/questions/70889527/how-to-generate-instagram-cdn-url-f
 		downloadURL(url: "https://i.instagram.com/api/v1/users/${Contents of URL.as(Dictionary).key(data.user.id)}/info/", method: GET, headers: , requestType: File, requestJSON: , requestVar: Text) >> downloadURL 7
 //Unable to get shortcuts action is.workflow.actions.appendvariable
 var Bio = Contents of URL
-	} >> IFResult 44
+	} >> IFResult 45
 /*
 Get profile picture 🔼🔼🔼
 
 
 */
-} >> IFResult 45
+} >> IFResult 46
 /*
 End of normal / profile mode if statement 🔼🔼🔼
 
 Start filtering URLs and getting the media 🔽🔽🔽
 */
 //Unable to get shortcuts action is.workflow.actions.setvariable
-replaceText(input: "${URLs}", find: "(\\u0026|\&amp\;)", replace: "&", isRegex: true) >> replaceText 5
-replaceText(input: "${Updated Text}", find: "\", replace: "", isRegex: false) >> replaceText 6
+replaceText(input: "${URLs}", find: "(\\u0026|\&amp\;)", replace: "&", isRegex: true) >> replaceText 7
+replaceText(input: "${Updated Text}", find: "\", replace: "", isRegex: false) >> replaceText 8
 repeatEach(Updated Text) { >> RepeatResult 2
 	if(ImgURLs .contains ""${Repeat Item}"") {
 	} else {
 //Unable to get shortcuts action is.workflow.actions.appendvariable
-	} >> IFResult 46
+	} >> IFResult 47
 	nothing()
 } >> RepeatResult 3
-text(text: "${CurrentDate} ${Username}") >> text 2
+text(text: "${Username} ${Variable}") >> text 2
 var FileName = Text
 repeatEach(ImgURLs) { >> RepeatResult 4
-	if(Repeat Item != nil) { >> IFResult 47
+	if(Repeat Item != nil) { >> IFResult 48
 		downloadURL(url: "${Repeat Item}") >> downloadURL 8
 		if(Contents of URL .contains "jpg") {
 var HasImages = Variable
-		} >> IFResult 48
-		setName(input: Contents of URL, name: "${FileName}") >> setName 1
+			text(text: "Image")
+		} else {
+			text(text: "Video")
+		} >> IFResult 49
+		setName(input: Contents of URL, name: "${If Result}") >> setName 1
 //Unable to get shortcuts action is.workflow.actions.appendvariable
-	} >> IFResult 49
+	} >> IFResult 50
 	nothing()
 } >> RepeatResult 5
 /*
@@ -514,13 +521,13 @@ Finish filtering URLs and getting media 🔼🔼🔼
 
 Save media and notifications🔽🔽🔽
 */
-if(AutoMode != 1) { >> IFResult 50
+if(AutoMode != 1) { >> IFResult 51
 	if(HasImages == 1) {
 		if(Settings .contains "overlayUsername") {
-var 00C0F1DE-A9BB-41AA-BF68-F34C2016660C = """Which of these options do you prefer for overlaying the username on the photos downloaded?
+var B14F2FBF-E7D1-44C3-B3D2-F369B89416E7 = """Which of these options do you prefer for overlaying the username on the photos downloaded?
 
 (Note: does not work on videos)"""
-text("${00C0F1DE-A9BB-41AA-BF68-F34C2016660C}")
+text("${B14F2FBF-E7D1-44C3-B3D2-F369B89416E7}")
 			list(items: (
     "Always Overlay Username",
     "Never Overlay Username",
@@ -529,7 +536,7 @@ text("${00C0F1DE-A9BB-41AA-BF68-F34C2016660C}")
 			choose(list: List, prompt: "${Text}") >> choose 6
 			setValue(key: "overlayUsername", value: "${Chosen Item}", dictionary: Settings) >> setValue 2
 var Settings = Dictionary
-		} >> IFResult 51
+		} >> IFResult 52
 		text(text: "${Settings.as(Dictionary).key(overlayUsername)}") >> text 3
 		if(Text .contains "Always") {
 var Overlay = Variable
@@ -538,31 +545,35 @@ var Overlay = Variable
 				choose(list: Yes No, prompt: "Do you want to overlay the username "${Username}" on the photos?") >> choose 7
 				if(Chosen Item == "Yes") {
 var Overlay = Variable
-				} >> IFResult 52
+				} >> IFResult 53
 			}
 		}
 	}
-} >> IFResult 53
+} >> IFResult 54
+calculate(input: "5/10") >> calculate
+number(value: Calculation Result) >> number 1
 count(input: Out) >> count 3
-if(Count > 1) { >> IFResult 54
+if(Count > 1) { >> IFResult 55
 	if(Settings .contains "multiMediaAll") {
 		text(text: "Which do you prefer when downloading multi media posts?") >> text 4
 		list(items: (
     "Always Download All Items",
     "Ask Me Which Items To Save"
 )) >> list 5
+		wait(seconds: Number)
 		choose(list: List, prompt: "${Text}") >> choose 8
 		setValue(key: "multiMediaAll", value: "${Chosen Item}", dictionary: Settings) >> setValue 3
 var Settings = Dictionary
-	} >> IFResult 55
+	} >> IFResult 56
 	text(text: "${Settings.as(Dictionary).key(multiMediaAll)}") >> text 5
 	if(Text .contains "Ask") {
+		wait(seconds: Number)
 		choose(list: Out, prompt: "What items do you want to save?", multiple: true, all: true) >> choose 9
 var Out = Chosen Item
-	} >> IFResult 56
-} >> IFResult 57
+	} >> IFResult 57
+} >> IFResult 58
 repeatEach(Out) { >> RepeatResult 6
-	if(Overlay == "1") {
+	if(Overlay == "1") { >> IFResult 59
 		if(Repeat Item .contains 1) {
 //Unable to get shortcuts action is.workflow.actions.getvariable
 		} else {
@@ -590,25 +601,27 @@ var UsernameWidth = UsernameWidth
 		}
 	} else {
 //Unable to get shortcuts action is.workflow.actions.getvariable
-	} >> IFResult 58
+	} >> IFResult 60
+	setName(input: If Result, name: "${FileName}") >> setName 2
 	if(StorageLoc .contains "iCloud") {
-		setName(input: If Result, name: "${If Result.get(File Extension)}.${ActionOutput.get(File Extension)}", dontIncludeExtension: false) >> setName 2
+		setName(input: If Result, name: "${FileName}.${Variable}", dontIncludeExtension: false) >> setName 3
 		saveFile(input: Renamed Item, ask: false, path: "${SName}/") >> saveFile 4
 	} else {
 		if(StorageLoc .contains "Share") {
 //Unable to get shortcuts action is.workflow.actions.appendvariable
 		} else {
-			saveToCameraRoll(image: If Result) >> saveToCameraRoll
+			saveToCameraRoll(image: Renamed Item) >> saveToCameraRoll
 		}
-	} >> IFResult 59
+	} >> IFResult 61
 //Unable to get shortcuts action is.workflow.actions.appendvariable
-	if(ShareChoose != nil) { >> IFResult 60
+	if(ShareChoose != nil) { >> IFResult 62
 	} else {
 		if(Settings .contains "showSaveNotifications") {
+			wait(seconds: Number)
 			choose(list: Yes No, prompt: "Do you wish to show notifications for items downloaded?") >> choose 10
 			setValue(key: "showSaveNotifications", value: "${Chosen Item}", dictionary: Settings) >> setValue 4
 var Settings = Dictionary
-		} >> IFResult 61
+		} >> IFResult 63
 		text(text: "${Settings.as(Dictionary).key(showSaveNotifications)}") >> text 7
 		if(Text == "Yes") {
 			imageDetail(detail: File Extension, image: If Result) >> imageDetail
@@ -616,35 +629,36 @@ var Settings = Dictionary
 				text(text: "Video") >> text 8
 			} else {
 				text(text: "Photo") >> text 9
-			} >> IFResult 62
-			sendNotification(body: "${StorageLoc} saved to ${Variable}", title: "${Dict.key(ShortcutName)}", sound: false, attachment: Repeat Item) >> sendNotification
-		} >> IFResult 63
-	} >> IFResult 64
+			} >> IFResult 64
+			sendNotification(body: "${If Result} saved to ${ActionOutput}", title: "${Dict.key(ShortcutName)}", sound: false, attachment: Repeat Item) >> sendNotification
+		} >> IFResult 65
+	} >> IFResult 66
 } >> RepeatResult 7
-if(ShareChoose != nil) { >> IFResult 65
+if(ShareChoose != nil) { >> IFResult 67
 	if(Settings != ""${InitialSettings}"") {
 		saveFile(input: Settings, ask: false, path: "${SName}/settings.json", overwrite: true) >> saveFile 5
-	} >> IFResult 66
+	} >> IFResult 68
+	wait(seconds: Number)
 	share(file: ShareChoose) >> share
 	exit()
-} >> IFResult 67
+} >> IFResult 69
 /*
 Save media and notifications🔼🔼🔼
 
 Show caption and ask to copy it 🔽🔽🔽
 */
-replaceText(input: "${InputURL}", find: "\/\?.*", isRegex: true) >> replaceText 7
-var B76A92BF-27F4-464B-A7E9-EA0CD57AB2DC = """￼
+replaceText(input: "${InputURL}", find: "\/\?.*", isRegex: true) >> replaceText 9
+var 732902C5-7ADB-4F81-96B9-882C70C85CBE = """￼
 
 ￼
 
 ￼￼"""
-text("${B76A92BF-27F4-464B-A7E9-EA0CD57AB2DC}")
-var 2B319675-6638-4E6C-B2A6-28CEFBD8C5B3 = """Do you want to copy the post's link, caption, and username below to clipboard? 
+text("${732902C5-7ADB-4F81-96B9-882C70C85CBE}")
+var 768D962B-0F44-4B6E-8DF9-7C35402A987D = """Do you want to copy the post's link, caption, and username below to clipboard? 
 Choose after closing this window
 __________
 ￼"""
-text("${2B319675-6638-4E6C-B2A6-28CEFBD8C5B3}")
+text("${768D962B-0F44-4B6E-8DF9-7C35402A987D}")
 if(AutoMode != 1) {
 	if(Settings .contains "copyToClipboard") {
 		text(text: "Which of these options do you prefer for copying the post text to your clipboard?") >> text 10
@@ -653,30 +667,33 @@ if(AutoMode != 1) {
     "Never Copy To Clipboard",
     "Ask Me Each Time"
 )) >> list 6
+		wait(seconds: Number)
 		choose(list: List, prompt: "${Text}") >> choose 11
 		setValue(key: "copyToClipboard", value: "${Chosen Item}", dictionary: Settings) >> setValue 5
 var Settings = Dictionary
-	} >> IFResult 68
+	} >> IFResult 70
 	text(text: "${Settings.as(Dictionary).key(copyToClipboard)}") >> text 11
 	if(Text .contains "Always") {
 var CopyPostToClip = Variable
 	} else {
 		if(Text .contains "Ask") {
+			wait(seconds: Number)
 			quicklook(input: Text)
+			wait(seconds: Number)
 			choose(list: Yes No, prompt: "") >> choose 12
 			if(Chosen Item == "Yes") {
 var CopyPostToClip = Variable
 			}
 		}
-	} >> IFResult 69
+	} >> IFResult 71
 	if(CopyPostToClip == "1") {
 		setClipboard(variable: PostText) >> setClipboard
-var 9E1E6B6B-1AB2-4A2D-9FB3-CDBD6B772219 = """Link, Username, and Caption has been copied to clipboard:
+var E3FF614E-6E82-4C51-A136-114C6F8003E7 = """Link, Username, and Caption has been copied to clipboard:
 ￼"""
-text("${9E1E6B6B-1AB2-4A2D-9FB3-CDBD6B772219}")
+text("${E3FF614E-6E82-4C51-A136-114C6F8003E7}")
 		alert(alert: "${Text}", title: "${SName}", cancel: false)
 	}
-} >> IFResult 70
+} >> IFResult 72
 if(StorageLoc .contains "iCloud") {
 	if(Settings .contains "savePostText") {
 		text(text: "Which of these options do you prefer for saving the post text to iCloud?") >> text 12
@@ -685,34 +702,37 @@ if(StorageLoc .contains "iCloud") {
     "Never Save Post Text To iCloud",
     "Ask Me Each Time"
 )) >> list 7
+		wait(seconds: Number)
 		choose(list: List, prompt: "${Text}") >> choose 13
 		setValue(key: "savePostText", value: "${Chosen Item}", dictionary: Settings) >> setValue 6
 var Settings = Dictionary
 		text(text: "${Settings.as(Dictionary).key(savePostText)}")
-	} >> IFResult 71
+	} >> IFResult 73
 	text(text: "${Settings.as(Dictionary).key(savePostText)}") >> text 13
 	if(Text .contains "Always") {
 var SavePostText = Variable
 	} else {
 		if(AutoMode != "1") {
 			if(Text .contains "Ask") {
-var F2A9D88D-7D63-4F3F-9711-2C60A2A2D4E9 = """Do you want to save the post's link, caption, and username below to iCloud? 
+var 858EC17F-08A3-48A6-B0CC-72857C13A49C = """Do you want to save the post's link, caption, and username below to iCloud? 
 Choose after closing this window
 __________
 ￼"""
-text("${F2A9D88D-7D63-4F3F-9711-2C60A2A2D4E9}")
+text("${858EC17F-08A3-48A6-B0CC-72857C13A49C}")
+				wait(seconds: Number)
 				quicklook(input: Text)
+				wait(seconds: Number)
 				choose(list: Yes No, prompt: "Do you want to save the post text?") >> choose 14
 				if(Chosen Item == "Yes") {
 var SavePostText = Variable
 				}
 			}
-		} >> IFResult 72
-	} >> IFResult 73
-} >> IFResult 74
+		} >> IFResult 74
+	} >> IFResult 75
+} >> IFResult 76
 if(SavePostText == "1") {
 	saveFile(input: PostText, ask: false, path: "${FileName}/${Variable}") >> saveFile 6
-} >> IFResult 75
+} >> IFResult 77
 /*
 
 
@@ -724,41 +744,47 @@ if(Settings .contains "repostPhoto") {
     "Always Prompt For Repost",
     "Never Prompt For Repost"
 )) >> list 8
+	wait(seconds: Number)
 	choose(list: List, prompt: "${Text}") >> choose 15
 	setValue(key: "repostPhoto", value: "${Chosen Item}", dictionary: Settings) >> setValue 7
 var Settings = Dictionary
 }
 text(text: "${Settings.as(Dictionary).key(repostPhoto)}") >> RepostPhotoText
-if(AutoMode != "1") {
+if(AutoMode != "1") { >> IFResult 78
 	if(RepostPhotoText .contains "Always") {
+		wait(seconds: Number)
 		choose(list: Yes No, prompt: "Do you want to repost a photo from the post?") >> Repost Chosen Item
 		if(Repost Chosen Item == "Yes") {
 var RepostPhoto = Variable
-		} >> IFResult 76
-	} >> IFResult 77
-} >> IFResult 78
+		} >> IFResult 79
+	} >> IFResult 80
+} >> IFResult 81
 text(text: "${Settings}") >> Settings
 text(text: "${InitialSettings}") >> InitialSettings
 if(Settings != ""${InitialSettings}"") {
 	saveFile(input: Settings, ask: false, path: "${SName}/settings.json", overwrite: true) >> saveFile 7
-} >> IFResult 79
-if(RepostPhoto == "1") { >> IFResult 80
+} >> IFResult 82
+if(RepostPhoto == "1") { >> IFResult 83
 	count(input: RepostPhotoChoose) >> count 5
 	if(Count > 1) {
-var 33F95892-B732-4AA5-B4B8-505C923A16DF = """In the next window, choose the photo from the post that you'd like to repost. 
+var 6E179C83-9274-45D8-A91C-4107F470BF30 = """In the next window, choose the photo from the post that you'd like to repost. 
 
 The caption will be copied to your clipboard for easy pasting."""
-text("${33F95892-B732-4AA5-B4B8-505C923A16DF}")
+text("${6E179C83-9274-45D8-A91C-4107F470BF30}")
+		wait(seconds: Number)
 		quicklook(input: Text)
+		wait(seconds: Number)
 		choose(list: RepostPhotoChoose, prompt: "Which photo to repost?") >> choose 16
 	} else {
 		text(text: "The caption has been copied to your clipboard for easy pasting.") >> text 15
+		wait(seconds: Number)
 		quicklook(input: Text)
 //Unable to get shortcuts action is.workflow.actions.getvariable
-	} >> IFResult 81
-var 79A9D6AF-A5A3-4361-8AF5-18DCEAD89AA1 = """Reposted with ￼
+	} >> IFResult 84
+var C8CB3A72-EB4A-4EEC-83D8-60A552E3BA15 = """Reposted with ￼
 ￼"""
-text("${79A9D6AF-A5A3-4361-8AF5-18DCEAD89AA1}")
+text("${C8CB3A72-EB4A-4EEC-83D8-60A552E3BA15}")
 	setClipboard(variable: Text)
+	wait(seconds: Number)
 //Unable to get shortcuts action com.burbn.instagram.openin
-} >> IFResult 82
+} >> IFResult 85
